@@ -1,0 +1,9 @@
+  DataSet/
+*.pt
+  *.pth
+  *.onnx
+  runs/
+  __pycache__/
+  *.pyc
+  *.md
+  !README.md
