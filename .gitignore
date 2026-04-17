@@ -1,9 +1,16 @@
-  DataSet/
+DataSet/COCO2017/
+DataSet/VOC2012/
+DataSet/Unified/**
+!DataSet/Unified/**/
+!DataSet/Unified/**/*.py
+!DataSet/Unified/**/*.pdf
+!DataSet/Unified/**/README.md
+Unified.tar.gz
 *.pt
-  *.pth
-  *.onnx
-  runs/
-  __pycache__/
-  *.pyc
-  *.md
-  !README.md
+*.pth
+*.onnx
+runs/
+__pycache__/
+*.pyc
+*.md
+!README.md
