@@ -5,6 +5,7 @@ DataSet/Unified/**
 !DataSet/Unified/**/*.py
 !DataSet/Unified/**/*.pdf
 !DataSet/Unified/**/README.md
+DataSet/Unified/data_augmentation/report/backgroud.pdf
 Unified.tar.gz
 *.pt
 *.pth
