@@ -1,0 +1,38 @@
+# Base training config for checkpoint 5.
+
+[data]
+train_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl"
+val_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl"
+image_size = 224
+grid_size = 7
+num_classes = 20
+train_max_samples = 8192
+val_max_samples = 2048
+
+[model]
+lambda_cls = 1.0
+lambda_box = 5.0
+
+[train]
+batch_size = 64
+num_workers = 32
+epochs = 20
+lr = 0.001
+shuffle = true
+seed = 42
+device = "auto"
+
+[logging]
+run_name = "checkpoint5_large"
+log_every_steps = 10
+runs_dir = "/home/lidz/YOLO/miniyolo/runs"
+output_dir = "/home/lidz/YOLO/miniyolo/outputs/checkpoint5"
+results_dir = "/home/lidz/YOLO/miniyolo/logs/train_results"
+
+[evaluation]
+eval_interval_epochs = 2
+map_iou_threshold = 0.5
+
+[visualization]
+vis_interval_epochs = 2
+max_visualization_samples = 4
