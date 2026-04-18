@@ -1,0 +1,19 @@
+{
+  "event_file": "/home/lidz/YOLO/miniyolo/runs/real_train/events.out.tfevents.1776441241.8x-4090-1.2192804.0",
+  "available_tags": [
+    "loss/box_epoch",
+    "loss/box_step",
+    "loss/classification_epoch",
+    "loss/classification_step",
+    "loss/total_epoch",
+    "loss/total_step"
+  ],
+  "final_values": {
+    "loss/total_step": 1.6107861995697021,
+    "loss/classification_step": 0.04959029331803322,
+    "loss/box_step": 0.3122391700744629,
+    "loss/total_epoch": 1.264148235321045,
+    "loss/classification_epoch": 0.052755601704120636,
+    "loss/box_epoch": 0.24227851629257202
+  }
+}

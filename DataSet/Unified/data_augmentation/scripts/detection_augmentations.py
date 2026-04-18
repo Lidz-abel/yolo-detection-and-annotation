@@ -9,10 +9,15 @@ from torchvision.transforms import functional as F
 from torchvision.transforms.functional import InterpolationMode
 
 
+# Keep each augmentation operating on an isolated copy so later transforms
+# never mutate the original sample in place.
 def clone_sample(sample: dict[str, Any]) -> dict[str, Any]:
     return {
+        # image: uint8 tensor with shape [C, H, W]
         "image": sample["image"].clone(),
+        # boxes: float tensor with shape [N, 4] in xyxy format
         "boxes": sample["boxes"].clone(),
+        # labels: long tensor with shape [N]
         "labels": sample["labels"].clone(),
         "sample_id": sample.get("sample_id"),
         "meta": dict(sample.get("meta", {})),
@@ -20,6 +25,7 @@ def clone_sample(sample: dict[str, Any]) -> dict[str, Any]:
 
 
 def image_size(image: torch.Tensor) -> tuple[int, int]:
+    # All image tensors in this project use channel-first layout: [C, H, W].
     return int(image.shape[-2]), int(image.shape[-1])
 
 
@@ -29,6 +35,8 @@ def sanitize_boxes(
     height: int,
     width: int,
 ) -> tuple[torch.Tensor, torch.Tensor]:
+    # Clip boxes to the valid image region and drop invalid boxes after transform.
+    # Input boxes shape: [N, 4], labels shape: [N].
     if boxes.numel() == 0:
         return boxes.reshape(0, 4).to(dtype=torch.float32), labels.reshape(0).to(dtype=torch.long)
 
@@ -68,6 +76,8 @@ class Compose:
         self.transforms = transforms
 
     def __call__(self, sample: dict[str, Any], sample_provider: Any | None = None) -> dict[str, Any]:
+        # MixUp and Mosaic need extra samples, so we pass a provider only to
+        # transforms that explicitly declare that requirement.
         for transform in self.transforms:
             if getattr(transform, "requires_sample_provider", False):
                 sample = transform(sample, sample_provider=sample_provider)
@@ -83,6 +93,7 @@ class RandomFlip:
 
     def __call__(self, sample: dict[str, Any]) -> dict[str, Any]:
         sample = clone_sample(sample)
+        # image keeps shape [C, H, W]; only pixel order and box coordinates change.
         image = sample["image"]
         boxes = sample["boxes"]
         labels = sample["labels"]
@@ -132,6 +143,8 @@ class ColorJitterTransform:
         if random.random() >= self.p:
             return sample
 
+        # Color jitter changes pixel values only, so image shape stays [C, H, W]
+        # and boxes / labels shapes stay [N, 4] and [N].
         image = sample["image"].to(dtype=torch.float32) / 255.0
         fn_ids = [0, 1, 2, 3]
         random.shuffle(fn_ids)
@@ -169,6 +182,8 @@ class RandomAffine:
         if random.random() >= self.p:
             return sample
 
+        # image: [C, H, W]
+        # boxes: [N, 4]
         image = sample["image"]
         boxes = sample["boxes"]
         labels = sample["labels"]
@@ -193,6 +208,8 @@ class RandomAffine:
         )
 
         if boxes.numel() > 0:
+            # Apply the same geometric transform to box corners, then rebuild
+            # each box from the transformed corner coordinates.
             center = torch.tensor([width * 0.5, height * 0.5], dtype=torch.float32)
             corners = boxes_to_corners(boxes).reshape(-1, 2)
             corners = (corners - center) * scale
@@ -224,6 +241,8 @@ class RandomCrop:
         if random.random() >= self.p:
             return sample
 
+        # Crop changes the spatial size, so image becomes [C, crop_h, crop_w].
+        # boxes remain [N, 4], but coordinates are shifted into the cropped view.
         image = sample["image"]
         boxes = sample["boxes"]
         labels = sample["labels"]
@@ -259,9 +278,13 @@ class MixUp:
             return sample
 
         other = clone_sample(sample_provider())
+        # MixUp expects both images to share the same spatial size before blending.
+        # After resizing if needed, both tensors are [C, H, W].
         image_a = sample["image"].to(dtype=torch.float32)
         image_b = other["image"].to(dtype=torch.float32)
         if image_a.shape[-2:] != image_b.shape[-2:]:
+            # Resize the second image to the first image size so the two images
+            # can be blended and their boxes remain in the same coordinate system.
             target_hw = list(image_a.shape[-2:])
             image_b = F.resize(image_b, target_hw, interpolation=InterpolationMode.BILINEAR)
             scale_x = image_a.shape[-1] / other["image"].shape[-1]
@@ -274,6 +297,7 @@ class MixUp:
         mixed = (lam * image_a + (1.0 - lam) * image_b).clamp(0.0, 255.0).to(dtype=torch.uint8)
 
         sample["image"] = mixed
+        # MixUp concatenates targets from both images, so box count becomes N1 + N2.
         sample["boxes"] = torch.cat([sample["boxes"], other["boxes"]], dim=0)
         sample["labels"] = torch.cat([sample["labels"], other["labels"]], dim=0)
         return sample
@@ -292,6 +316,8 @@ class Mosaic:
 
         samples = [sample] + [clone_sample(sample_provider()) for _ in range(3)]
         out_h, out_w = self.output_size
+        # Build one large canvas and place four resized samples into its quadrants.
+        # Output image shape is fixed as [3, out_h, out_w].
         canvas = torch.zeros((3, out_h, out_w), dtype=torch.uint8)
         xc = random.randint(int(out_w * 0.3), int(out_w * 0.7))
         yc = random.randint(int(out_h * 0.3), int(out_h * 0.7))
@@ -315,6 +341,7 @@ class Mosaic:
             boxes = part["boxes"].clone()
             labels = part["labels"].clone()
             if boxes.numel() > 0:
+                # Each sub-image uses its own scale and offset inside the final canvas.
                 boxes[:, 0::2] *= target_w / src_w
                 boxes[:, 1::2] *= target_h / src_h
                 boxes[:, 0::2] += x1
@@ -324,12 +351,16 @@ class Mosaic:
             all_labels.append(labels)
 
         sample["image"] = canvas
+        # Mosaic merges four target sets into one, so the final number of boxes is
+        # the sum of valid boxes preserved from all four sub-images.
         sample["boxes"] = torch.cat(all_boxes, dim=0) if all_boxes else torch.zeros((0, 4), dtype=torch.float32)
         sample["labels"] = torch.cat(all_labels, dim=0) if all_labels else torch.zeros((0,), dtype=torch.long)
         return sample
 
 
 def default_train_augmentation_pipeline() -> Compose:
+    # A compact training pipeline that mixes light geometric changes with
+    # heavier multi-image augmentations.
     return Compose(
         [
             RandomFlip(p_horizontal=0.5),

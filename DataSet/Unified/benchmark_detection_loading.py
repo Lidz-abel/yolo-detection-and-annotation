@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+import itertools
 import json
 import os
+import random
 import statistics
 import subprocess
 import time
@@ -38,14 +40,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--chunk-sizes", nargs="+", type=int, default=[64, 256, 1024])
     parser.add_argument("--batch-sizes", nargs="+", type=int, default=[16, 256])
     parser.add_argument("--shuffle-options", nargs="+", choices=["true", "false"], default=["false"])
-    parser.add_argument("--max-samples", type=int, default=None)
+    parser.add_argument("--max-samples", type=int, default=16384)
     parser.add_argument("--num-workers", nargs="+", type=int, default=[4])
     parser.add_argument("--pin-memory-options", nargs="+", choices=["true", "false"], default=["true"])
     parser.add_argument("--persistent-workers-options", nargs="+", choices=["true", "false"], default=["true"])
     parser.add_argument("--prefetch-factors", nargs="+", type=int, default=[2])
-    parser.add_argument("--max-batches", type=int, default=100)
-    parser.add_argument("--warmup-batches", type=int, default=1)
-    parser.add_argument("--repeats", type=int, default=3)
+    parser.add_argument("--max-batches", type=int, default=None)
+    parser.add_argument("--target-samples", type=int, default=8192)
+    parser.add_argument("--min-measured-batches", type=int, default=8)
+    parser.add_argument("--warmup-batches", type=int, default=3)
+    parser.add_argument("--repeats", type=int, default=5)
+    parser.add_argument("--shuffle-run-order", action="store_true")
+    parser.add_argument("--random-seed", type=int, default=20260417)
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument(
         "--output-csv",
@@ -98,6 +104,8 @@ def benchmark_loader(
     persistent_workers: bool,
     prefetch_factor: int | None,
     max_batches: int,
+    target_samples: int | None,
+    min_measured_batches: int,
     warmup_batches: int,
     device: str,
 ) -> dict:
@@ -156,6 +164,8 @@ def benchmark_loader(
 
         total_samples += len(batch["images"])
         batch_count += 1
+        if target_samples is not None and batch_count >= min_measured_batches and total_samples >= target_samples:
+            break
         if max_batches is not None and batch_count >= max_batches:
             break
 
@@ -170,6 +180,8 @@ def benchmark_loader(
         "prefetch_factor": prefetch_factor if num_workers > 0 else None,
         "warmup_batches": warmup_batches,
         "max_batches": max_batches,
+        "target_samples": target_samples,
+        "min_measured_batches": min_measured_batches,
         "observed_batches": batch_count,
         "observed_samples": total_samples,
         "first_batch_seconds": first_batch_seconds if first_batch_seconds is not None else 0.0,
@@ -235,6 +247,8 @@ def aggregate_results(results: list[dict]) -> list[dict]:
                 "prefetch_factor",
                 "warmup_batches",
                 "max_batches",
+                "target_samples",
+                "min_measured_batches",
             ]
         }
         base["repeats"] = len(rows)
@@ -262,73 +276,94 @@ def main() -> None:
     shuffle_options = [str_to_bool(value) for value in args.shuffle_options]
 
     raw_dataset = RawManifestDataset(args.raw_manifest, max_samples=args.max_samples)
-    for batch_size in args.batch_sizes:
-        for shuffle in shuffle_options:
-            for num_workers in args.num_workers:
-                for pin_memory in pin_memory_options:
-                    for persistent_workers in persistent_workers_options:
-                        for prefetch_factor in args.prefetch_factors:
-                            for repeat_idx in range(args.repeats):
-                                metrics = benchmark_loader(
-                                    dataset=raw_dataset,
-                                    batch_size=batch_size,
-                                    shuffle=shuffle,
-                                    num_workers=num_workers,
-                                    pin_memory=pin_memory,
-                                    persistent_workers=persistent_workers,
-                                    prefetch_factor=prefetch_factor,
-                                    max_batches=args.max_batches,
-                                    warmup_batches=args.warmup_batches,
-                                    device=args.device,
-                                )
-                                metrics.update(
-                                    {
-                                        "storage_mode": "raw",
-                                        "format": "raw",
-                                        "chunk_size": 1,
-                                        "dataset": manifest_stem,
-                                        "repeat_index": repeat_idx,
-                                        "shuffle": shuffle,
-                                    }
-                                )
-                                print(metrics)
-                                results.append(metrics)
+    run_specs = []
+    raw_param_grid = itertools.product(
+        args.batch_sizes,
+        shuffle_options,
+        args.num_workers,
+        pin_memory_options,
+        persistent_workers_options,
+        args.prefetch_factors,
+        range(args.repeats),
+    )
+    for batch_size, shuffle, num_workers, pin_memory, persistent_workers, prefetch_factor, repeat_idx in raw_param_grid:
+        run_specs.append(
+            {
+                "dataset": raw_dataset,
+                "storage_mode": "raw",
+                "format": "raw",
+                "chunk_size": 1,
+                "batch_size": batch_size,
+                "shuffle": shuffle,
+                "num_workers": num_workers,
+                "pin_memory": pin_memory,
+                "persistent_workers": persistent_workers,
+                "prefetch_factor": prefetch_factor,
+                "repeat_index": repeat_idx,
+            }
+        )
 
     for fmt in args.formats:
         for chunk_size in args.chunk_sizes:
             index_path = args.packed_root / fmt / manifest_stem / f"chunk_{chunk_size}" / "index.json"
-            dataset = ChunkedPackedDataset(index_path)
-            for batch_size in args.batch_sizes:
-                for shuffle in shuffle_options:
-                    for num_workers in args.num_workers:
-                        for pin_memory in pin_memory_options:
-                            for persistent_workers in persistent_workers_options:
-                                for prefetch_factor in args.prefetch_factors:
-                                    for repeat_idx in range(args.repeats):
-                                        metrics = benchmark_loader(
-                                            dataset=dataset,
-                                            batch_size=batch_size,
-                                            shuffle=shuffle,
-                                            num_workers=num_workers,
-                                            pin_memory=pin_memory,
-                                            persistent_workers=persistent_workers,
-                                            prefetch_factor=prefetch_factor,
-                                            max_batches=args.max_batches,
-                                            warmup_batches=args.warmup_batches,
-                                            device=args.device,
-                                        )
-                                        metrics.update(
-                                            {
-                                                "storage_mode": "chunked",
-                                                "format": fmt,
-                                                "chunk_size": chunk_size,
-                                                "dataset": manifest_stem,
-                                                "repeat_index": repeat_idx,
-                                                "shuffle": shuffle,
-                                            }
-                                        )
-                                        print(metrics)
-                                        results.append(metrics)
+            dataset = ChunkedPackedDataset(index_path, max_cached_chunks=4)
+            packed_param_grid = itertools.product(
+                args.batch_sizes,
+                shuffle_options,
+                args.num_workers,
+                pin_memory_options,
+                persistent_workers_options,
+                args.prefetch_factors,
+                range(args.repeats),
+            )
+            for batch_size, shuffle, num_workers, pin_memory, persistent_workers, prefetch_factor, repeat_idx in packed_param_grid:
+                run_specs.append(
+                    {
+                        "dataset": dataset,
+                        "storage_mode": "chunked",
+                        "format": fmt,
+                        "chunk_size": chunk_size,
+                        "batch_size": batch_size,
+                        "shuffle": shuffle,
+                        "num_workers": num_workers,
+                        "pin_memory": pin_memory,
+                        "persistent_workers": persistent_workers,
+                        "prefetch_factor": prefetch_factor,
+                        "repeat_index": repeat_idx,
+                    }
+                )
+
+    if args.shuffle_run_order:
+        rng = random.Random(args.random_seed)
+        rng.shuffle(run_specs)
+
+    for spec in run_specs:
+        metrics = benchmark_loader(
+            dataset=spec["dataset"],
+            batch_size=spec["batch_size"],
+            shuffle=spec["shuffle"],
+            num_workers=spec["num_workers"],
+            pin_memory=spec["pin_memory"],
+            persistent_workers=spec["persistent_workers"],
+            prefetch_factor=spec["prefetch_factor"],
+            max_batches=args.max_batches,
+            target_samples=args.target_samples,
+            min_measured_batches=args.min_measured_batches,
+            warmup_batches=args.warmup_batches,
+            device=args.device,
+        )
+        metrics.update(
+            {
+                "storage_mode": spec["storage_mode"],
+                "format": spec["format"],
+                "chunk_size": spec["chunk_size"],
+                "dataset": manifest_stem,
+                "repeat_index": spec["repeat_index"],
+                "shuffle": spec["shuffle"],
+            }
+        )
+        print(metrics)
+        results.append(metrics)
 
     aggregated = aggregate_results(results)
 
@@ -345,6 +380,8 @@ def main() -> None:
         "prefetch_factor",
         "warmup_batches",
         "max_batches",
+        "target_samples",
+        "min_measured_batches",
         "repeat_index",
         "observed_batches",
         "observed_samples",

@@ -11,6 +11,8 @@ from detection_augmentations import default_train_augmentation_pipeline, sanitiz
 
 
 def load_manifest(manifest_path: str | Path, max_samples: int | None = None) -> list[dict[str, Any]]:
+    # Read the unified jsonl manifest into memory so the Dataset can index
+    # samples directly by integer position.
     manifest_path = Path(manifest_path)
     records: list[dict[str, Any]] = []
     with manifest_path.open("r", encoding="utf-8") as handle:
@@ -42,9 +44,12 @@ class AugmentedDetectionDataset(Dataset):
 
     def _read_image(self, image_path: str) -> torch.Tensor:
         read_mode = ImageReadMode.RGB if self.image_mode.lower() == "rgb" else ImageReadMode.UNCHANGED
+        # torchvision.io.read_image returns a channel-first tensor: [C, H, W].
         return read_image(image_path, mode=read_mode)
 
     def _build_sample(self, index: int) -> dict[str, Any]:
+        # Convert one manifest record into the standard sample structure used
+        # by all augmentation operators.
         record = self.records[index]
         image = self._read_image(record["image_path"])
         boxes = torch.tensor(record["boxes"], dtype=torch.float32).reshape(-1, 4)
@@ -52,8 +57,11 @@ class AugmentedDetectionDataset(Dataset):
         boxes, labels = sanitize_boxes(boxes, labels, int(record["height"]), int(record["width"]))
         return {
             "sample_id": record["sample_id"],
+            # image: uint8 tensor with shape [C, H, W]
             "image": image,
+            # boxes: float tensor with shape [N, 4] in xyxy format
             "boxes": boxes,
+            # labels: long tensor with shape [N]
             "labels": labels,
             "meta": {
                 "dataset_source": record["dataset_source"],
@@ -68,6 +76,7 @@ class AugmentedDetectionDataset(Dataset):
     def _sample_provider(self) -> dict[str, Any]:
         import random
 
+        # MixUp and Mosaic request extra random samples through this helper.
         random_index = random.randrange(len(self.records))
         return self._build_sample(random_index)
 
@@ -77,13 +86,17 @@ class AugmentedDetectionDataset(Dataset):
             provider = self._sample_provider if self.enable_mixup_mosaic else None
             sample = self.augment(sample, sample_provider=provider)
 
+        # Return a detection-style structure that can be batched by a custom
+        # collate function during training or benchmarking.
         target = {
+            # target["boxes"]: [N, 4], target["labels"]: [N]
             "boxes": sample["boxes"],
             "labels": sample["labels"],
             "image_id": sample["meta"]["image_id"],
         }
         return {
             "sample_id": sample["sample_id"],
+            # Final training image tensor, still channel-first: [C, H, W]
             "image": sample["image"],
             "target": target,
             "meta": sample["meta"],

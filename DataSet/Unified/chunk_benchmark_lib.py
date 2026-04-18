@@ -6,6 +6,7 @@ import io
 import json
 import math
 import pickle
+from collections import OrderedDict
 from pathlib import Path
 from typing import Any
 
@@ -263,10 +264,11 @@ class RawManifestDataset(Dataset):
 
 
 class ChunkedPackedDataset(Dataset):
-    def __init__(self, index_path: str | Path, image_mode: str = "rgb"):
+    def __init__(self, index_path: str | Path, image_mode: str = "rgb", max_cached_chunks: int = 4):
         self.index_path = Path(index_path)
         self.index = json.loads(self.index_path.read_text(encoding="utf-8"))
         self.image_mode = image_mode
+        self.max_cached_chunks = max(1, int(max_cached_chunks))
         self.format_name = self.index["format"]
         self.chunk_paths = [
             (self.index_path.parent / chunk_info["file"]).resolve()
@@ -279,47 +281,52 @@ class ChunkedPackedDataset(Dataset):
             running += size
             self.cumulative_sizes.append(running)
 
-        self._cached_chunk_id: int | None = None
-        self._cached_records: list[dict[str, Any]] | None = None
-        self._cached_images: list[bytes] | None = None
+        # Cache a small number of recently used chunks so shuffle does not
+        # immediately evict everything when access bounces between chunks.
+        self._chunk_cache: OrderedDict[int, dict[str, Any]] = OrderedDict()
 
     def __len__(self) -> int:
         return self.cumulative_sizes[-1] if self.cumulative_sizes else 0
 
-    def _load_chunk(self, chunk_id: int) -> None:
+    def _get_chunk(self, chunk_id: int) -> dict[str, Any]:
+        cached = self._chunk_cache.get(chunk_id)
+        if cached is not None:
+            self._chunk_cache.move_to_end(chunk_id)
+            return cached
+
         payload = load_chunk(self.chunk_paths[chunk_id], self.format_name)
-        meta_blob = payload["meta_blob"]
-        meta_offsets = payload["meta_offsets"]
-        image_blob = payload["image_blob"]
-        image_offsets = payload["image_offsets"]
-
-        records = []
-        images = []
-        for idx in range(payload["sample_count"]):
-            meta_start = meta_offsets[idx]
-            meta_end = meta_offsets[idx + 1]
-            image_start = image_offsets[idx]
-            image_end = image_offsets[idx + 1]
-            records.append(json.loads(meta_blob[meta_start:meta_end].decode("utf-8")))
-            images.append(image_blob[image_start:image_end])
-
-        self._cached_chunk_id = chunk_id
-        self._cached_records = records
-        self._cached_images = images
+        cached = {
+            "meta_blob": payload["meta_blob"],
+            "meta_offsets": payload["meta_offsets"],
+            "image_blob": payload["image_blob"],
+            "image_offsets": payload["image_offsets"],
+            # Parse metadata lazily per sample so loading a new chunk is not O(chunk_size).
+            "record_cache": {},
+        }
+        self._chunk_cache[chunk_id] = cached
+        if len(self._chunk_cache) > self.max_cached_chunks:
+            self._chunk_cache.popitem(last=False)
+        return cached
 
     def __getitem__(self, index: int) -> dict[str, Any]:
         chunk_id = bisect.bisect_right(self.cumulative_sizes, index)
         start = 0 if chunk_id == 0 else self.cumulative_sizes[chunk_id - 1]
         local_index = index - start
 
-        if self._cached_chunk_id != chunk_id:
-            self._load_chunk(chunk_id)
+        chunk = self._get_chunk(chunk_id)
+        record_cache = chunk["record_cache"]
+        record = record_cache.get(local_index)
+        if record is None:
+            meta_offsets = chunk["meta_offsets"]
+            meta_start = meta_offsets[local_index]
+            meta_end = meta_offsets[local_index + 1]
+            record = json.loads(chunk["meta_blob"][meta_start:meta_end].decode("utf-8"))
+            record_cache[local_index] = record
 
-        assert self._cached_records is not None
-        assert self._cached_images is not None
-
-        record = self._cached_records[local_index]
-        image = decode_image_bytes(self._cached_images[local_index], mode=self.image_mode)
+        image_offsets = chunk["image_offsets"]
+        image_start = image_offsets[local_index]
+        image_end = image_offsets[local_index + 1]
+        image = decode_image_bytes(chunk["image_blob"][image_start:image_end], mode=self.image_mode)
         return {
             "sample_id": record["sample_id"],
             "image": image,
