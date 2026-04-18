@@ -1,0 +1,18 @@
+{
+  "run_id": "baseline_20260418_194937",
+  "run_name": "baseline",
+  "timestamp": "20260418_194937",
+  "project_root": "/home/lidz/YOLO/yolov0",
+  "config_path": "/home/lidz/YOLO/yolov0/configs/base_train.toml",
+  "config_snapshot": "/home/lidz/YOLO/yolov0/logs/records/baseline_20260418_194937/config.toml",
+  "tensorboard_dir": "/home/lidz/YOLO/yolov0/runs/baseline_20260418_194937",
+  "output_dir": "/home/lidz/YOLO/yolov0/outputs/baseline_20260418_194937",
+  "record_dir": "/home/lidz/YOLO/yolov0/logs/records/baseline_20260418_194937",
+  "git_commit": "8189ebd59595c5bd60ad5380756a73dd24808d8c",
+  "hostname": "8x-4090-1",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:16:10) [GCC 11.2.0]",
+  "username": "lidz",
+  "status": "bootstrap_ready",
+  "stage": "engineering_baseline"
+}

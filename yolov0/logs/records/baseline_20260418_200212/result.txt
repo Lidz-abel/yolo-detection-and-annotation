@@ -1,0 +1,56 @@
+run_id = baseline_20260418_200212
+timestamp = 20260418_200212
+status = baseline_ready
+stage = baseline_training
+project_root = /home/lidz/YOLO/yolov0
+config_path = /home/lidz/YOLO/yolov0/configs/base_train.toml
+config_snapshot = /home/lidz/YOLO/yolov0/logs/records/baseline_20260418_200212/config.toml
+tensorboard_dir = /home/lidz/YOLO/yolov0/runs/baseline_20260418_200212
+output_dir = /home/lidz/YOLO/yolov0/outputs/baseline_20260418_200212
+record_dir = /home/lidz/YOLO/yolov0/logs/records/baseline_20260418_200212
+git_commit = 8189ebd59595c5bd60ad5380756a73dd24808d8c
+device = cuda
+dataset_length = 65536
+model_output_shape = (1, 10, 10, 84)
+parameter_total = 8719156
+parameter_trainable = 8719156
+bootstrap_only = True
+
+config summary:
+run_name = baseline
+train_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl
+val_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl
+packing_format = pt
+image_size = 320
+grid_size = 10
+num_classes = 80
+train_max_samples = 65536
+val_max_samples = 4096
+model_name = baseline_cnn
+width_mult = 1.0
+depth_mult = 1.0
+use_residual = False
+box_type = mse
+cls_type = mse
+use_objectness = False
+iou_loss = none
+optimizer = adamw
+batch_size = 128
+epochs = 50
+lr = 0.001
+min_lr = 1e-05
+weight_decay = 0.0001
+scheduler = cosine
+num_workers = 48
+use_data_parallel = True
+bootstrap_only = True
+
+smoke summary:
+first_batch_shape = (128, 3, 320, 320)
+first_batch_total_loss = 1.2053412199020386
+first_batch_cls_loss = 0.01531083695590496
+first_batch_box_loss = 0.23800607025623322
+
+note:
+stage two baseline components are now connected: dataset, detector, loss, and optimizer.
+this entry currently performs a smoke pass by default and can be upgraded to full training next.

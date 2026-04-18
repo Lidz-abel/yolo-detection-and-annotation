@@ -1,0 +1,19 @@
+{
+  "run_id": "baseline_20260418_200212",
+  "run_name": "baseline",
+  "timestamp": "20260418_200212",
+  "project_root": "/home/lidz/YOLO/yolov0",
+  "config_path": "/home/lidz/YOLO/yolov0/configs/base_train.toml",
+  "config_snapshot": "/home/lidz/YOLO/yolov0/logs/records/baseline_20260418_200212/config.toml",
+  "tensorboard_dir": "/home/lidz/YOLO/yolov0/runs/baseline_20260418_200212",
+  "output_dir": "/home/lidz/YOLO/yolov0/outputs/baseline_20260418_200212",
+  "record_dir": "/home/lidz/YOLO/yolov0/logs/records/baseline_20260418_200212",
+  "git_commit": "8189ebd59595c5bd60ad5380756a73dd24808d8c",
+  "hostname": "8x-4090-1",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "baseline_ready",
+  "stage": "baseline_training",
+  "device": "cuda"
+}
