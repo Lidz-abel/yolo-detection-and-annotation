@@ -43,6 +43,8 @@ def train_one_epoch(
     mean_obj_target_sum = 0.0
     positive_cells_sum = 0.0
     collision_count_sum = 0.0
+    ignored_count_sum = 0.0
+    dropped_gt_count_sum = 0.0
     batch_count = 0
     start_time = time.perf_counter()
 
@@ -71,6 +73,8 @@ def train_one_epoch(
         mean_obj_target_sum += float(loss_dict["mean_obj_target"].item())
         positive_cells_sum += float(loss_dict["positive_cells_per_image"].item())
         collision_count_sum += float(loss_dict["collision_count"].item())
+        ignored_count_sum += float(loss_dict["ignored_count"].item())
+        dropped_gt_count_sum += float(loss_dict["dropped_gt_count"].item())
 
         writer.add_scalar("loss/total_step", total_loss.item(), global_step)
         writer.add_scalar("loss/box_step", loss_dict["loss_box"].item(), global_step)
@@ -82,6 +86,8 @@ def train_one_epoch(
         writer.add_scalar("metrics/mean_obj_target_step", loss_dict["mean_obj_target"].item(), global_step)
         writer.add_scalar("metrics/positive_cells_per_image_step", loss_dict["positive_cells_per_image"].item(), global_step)
         writer.add_scalar("metrics/collision_count_step", loss_dict["collision_count"].item(), global_step)
+        writer.add_scalar("metrics/ignored_count_step", loss_dict["ignored_count"].item(), global_step)
+        writer.add_scalar("metrics/dropped_gt_count_step", loss_dict["dropped_gt_count"].item(), global_step)
         writer.add_scalar("train/lr_step", optimizer.param_groups[0]["lr"], global_step)
 
         if batch_index == 1 or batch_index % log_every_steps == 0:
@@ -107,6 +113,8 @@ def train_one_epoch(
             "mean_obj_target": 0.0,
             "positive_cells_per_image": 0.0,
             "collision_count": 0.0,
+            "ignored_count": 0.0,
+            "dropped_gt_count": 0.0,
             "batch_count": 0,
             "duration_seconds": duration,
             "global_step": global_step,
@@ -122,6 +130,8 @@ def train_one_epoch(
     mean_obj_target_mean = mean_obj_target_sum / batch_count
     positive_cells_mean = positive_cells_sum / batch_count
     collision_count_mean = collision_count_sum / batch_count
+    ignored_count_mean = ignored_count_sum / batch_count
+    dropped_gt_count_mean = dropped_gt_count_sum / batch_count
 
     writer.add_scalar("loss/total_epoch", total_loss_mean, epoch_index)
     writer.add_scalar("loss/box_epoch", box_loss_mean, epoch_index)
@@ -133,6 +143,8 @@ def train_one_epoch(
     writer.add_scalar("metrics/mean_obj_target_epoch", mean_obj_target_mean, epoch_index)
     writer.add_scalar("metrics/positive_cells_per_image_epoch", positive_cells_mean, epoch_index)
     writer.add_scalar("metrics/collision_count_epoch", collision_count_mean, epoch_index)
+    writer.add_scalar("metrics/ignored_count_epoch", ignored_count_mean, epoch_index)
+    writer.add_scalar("metrics/dropped_gt_count_epoch", dropped_gt_count_mean, epoch_index)
     writer.add_scalar("train/lr_epoch", optimizer.param_groups[0]["lr"], epoch_index)
 
     return {
@@ -146,6 +158,8 @@ def train_one_epoch(
         "mean_obj_target": mean_obj_target_mean,
         "positive_cells_per_image": positive_cells_mean,
         "collision_count": collision_count_mean,
+        "ignored_count": ignored_count_mean,
+        "dropped_gt_count": dropped_gt_count_mean,
         "batch_count": batch_count,
         "duration_seconds": duration,
         "global_step": global_step,
@@ -174,6 +188,8 @@ def validate_one_epoch(
     mean_obj_target_sum = 0.0
     positive_cells_sum = 0.0
     collision_count_sum = 0.0
+    ignored_count_sum = 0.0
+    dropped_gt_count_sum = 0.0
     batch_count = 0
     start_time = time.perf_counter()
 
@@ -198,6 +214,8 @@ def validate_one_epoch(
             mean_obj_target_sum += float(loss_dict["mean_obj_target"].item())
             positive_cells_sum += float(loss_dict["positive_cells_per_image"].item())
             collision_count_sum += float(loss_dict["collision_count"].item())
+            ignored_count_sum += float(loss_dict["ignored_count"].item())
+            dropped_gt_count_sum += float(loss_dict["dropped_gt_count"].item())
 
     duration = time.perf_counter() - start_time
     if batch_count == 0:
@@ -212,6 +230,8 @@ def validate_one_epoch(
             "mean_obj_target": 0.0,
             "positive_cells_per_image": 0.0,
             "collision_count": 0.0,
+            "ignored_count": 0.0,
+            "dropped_gt_count": 0.0,
             "batch_count": 0,
             "duration_seconds": duration,
         }
@@ -227,6 +247,8 @@ def validate_one_epoch(
             "mean_obj_target": mean_obj_target_sum / batch_count,
             "positive_cells_per_image": positive_cells_sum / batch_count,
             "collision_count": collision_count_sum / batch_count,
+            "ignored_count": ignored_count_sum / batch_count,
+            "dropped_gt_count": dropped_gt_count_sum / batch_count,
             "batch_count": batch_count,
             "duration_seconds": duration,
         }
@@ -241,4 +263,6 @@ def validate_one_epoch(
     writer.add_scalar("val/mean_obj_target_epoch", metrics["mean_obj_target"], epoch_index)
     writer.add_scalar("val/positive_cells_per_image_epoch", metrics["positive_cells_per_image"], epoch_index)
     writer.add_scalar("val/collision_count_epoch", metrics["collision_count"], epoch_index)
+    writer.add_scalar("val/ignored_count_epoch", metrics["ignored_count"], epoch_index)
+    writer.add_scalar("val/dropped_gt_count_epoch", metrics["dropped_gt_count"], epoch_index)
     return metrics

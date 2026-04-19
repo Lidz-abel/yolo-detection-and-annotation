@@ -49,6 +49,8 @@ class YOLOLoss(nn.Module):
         object_mask = targets["object_mask"]
         noobj_mask = targets["noobj_mask"]
         collision_count = targets["collision_count"]
+        ignored_count = targets["ignored_count"]
+        dropped_gt_count = targets["dropped_gt_count"]
 
         num_pos = object_mask.sum().clamp(min=1.0)
         num_neg = noobj_mask.sum().clamp(min=1.0)
@@ -94,6 +96,8 @@ class YOLOLoss(nn.Module):
 
         positive_cells_per_image = object_mask.sum(dim=(1, 2)).mean()
         collision_count_mean = collision_count.float().mean()
+        ignored_count_mean = ignored_count.float().mean()
+        dropped_gt_count_mean = dropped_gt_count.float().mean()
 
         return {
             "total_loss": total_loss,
@@ -106,4 +110,6 @@ class YOLOLoss(nn.Module):
             "mean_obj_target": positive_obj_target[positive_mask].mean() if positive_mask.any() else pred_box.sum() * 0.0,
             "positive_cells_per_image": positive_cells_per_image,
             "collision_count": collision_count_mean,
+            "ignored_count": ignored_count_mean,
+            "dropped_gt_count": dropped_gt_count_mean,
         }

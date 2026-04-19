@@ -51,6 +51,7 @@ def summarize_config(config: dict) -> list[str]:
         f"use_residual = {model_cfg['use_residual']}",
         f"num_boxes = {model_cfg.get('num_boxes', 1)}",
         f"anchors = {model_cfg.get('anchors', 'n/a')}",
+        f"anchor_positive_iou = {model_cfg.get('anchor_positive_iou', 'n/a')}",
         f"anchor_ignore_iou = {model_cfg.get('anchor_ignore_iou', 'n/a')}",
         f"box_parameterization = {model_cfg.get('box_parameterization', 'legacy')}",
         f"box_type = {loss_cfg['box_type']}",

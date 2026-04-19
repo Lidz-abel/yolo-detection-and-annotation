@@ -51,6 +51,7 @@ class DetectionDataset(Dataset):
         num_classes=80,
         num_boxes=1,
         anchors=None,
+        anchor_positive_iou=0.25,
         anchor_ignore_iou=0.5,
         max_samples=None,
     ):
@@ -61,6 +62,7 @@ class DetectionDataset(Dataset):
         self.num_classes = num_classes
         self.num_boxes = num_boxes
         self.anchors = anchors or []
+        self.anchor_positive_iou = anchor_positive_iou
         self.anchor_ignore_iou = anchor_ignore_iou
 
         self.samples = load_manifest(self.manifest_path)
@@ -95,7 +97,16 @@ class DetectionDataset(Dataset):
             new_size=self.image_size,
         )
 
-        target_cls, target_box, target_obj, object_mask, noobj_mask, collision_count = encode_target(
+        (
+            target_cls,
+            target_box,
+            target_obj,
+            object_mask,
+            noobj_mask,
+            collision_count,
+            ignored_count,
+            dropped_gt_count,
+        ) = encode_target(
             boxes=resized_boxes,
             labels=labels,
             image_size=self.image_size,
@@ -103,6 +114,7 @@ class DetectionDataset(Dataset):
             num_classes=self.num_classes,
             num_boxes=self.num_boxes,
             anchors=self.anchors,
+            anchor_positive_iou=self.anchor_positive_iou,
             anchor_ignore_iou=self.anchor_ignore_iou,
         )
 
@@ -113,6 +125,8 @@ class DetectionDataset(Dataset):
             "object_mask": object_mask,
             "noobj_mask": noobj_mask,
             "collision_count": collision_count,
+            "ignored_count": ignored_count,
+            "dropped_gt_count": dropped_gt_count,
             "boxes": resized_boxes,
             "labels": labels,
             "sample_id": sample["sample_id"],
@@ -133,6 +147,8 @@ def detection_collate_fn(batch):
     object_mask = torch.stack([item[1]["object_mask"] for item in batch], dim=0)
     noobj_mask = torch.stack([item[1]["noobj_mask"] for item in batch], dim=0)
     collision_count = torch.stack([item[1]["collision_count"] for item in batch], dim=0)
+    ignored_count = torch.stack([item[1]["ignored_count"] for item in batch], dim=0)
+    dropped_gt_count = torch.stack([item[1]["dropped_gt_count"] for item in batch], dim=0)
 
     targets = {
         "target_cls": target_cls,
@@ -141,6 +157,8 @@ def detection_collate_fn(batch):
         "object_mask": object_mask,
         "noobj_mask": noobj_mask,
         "collision_count": collision_count,
+        "ignored_count": ignored_count,
+        "dropped_gt_count": dropped_gt_count,
         "boxes": [item[1]["boxes"] for item in batch],
         "labels": [item[1]["labels"] for item in batch],
         "sample_id": [item[1]["sample_id"] for item in batch],

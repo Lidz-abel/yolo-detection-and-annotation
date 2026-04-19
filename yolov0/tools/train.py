@@ -185,6 +185,7 @@ def main():
         num_classes=int(data_cfg["num_classes"]),
         num_boxes=num_boxes,
         anchors=anchors,
+        anchor_positive_iou=float(model_cfg.get("anchor_positive_iou", 0.25)),
         anchor_ignore_iou=float(model_cfg.get("anchor_ignore_iou", 0.5)),
         max_samples=int(data_cfg["train_max_samples"]),
     )
@@ -195,6 +196,7 @@ def main():
         num_classes=int(data_cfg["num_classes"]),
         num_boxes=num_boxes,
         anchors=anchors,
+        anchor_positive_iou=float(model_cfg.get("anchor_positive_iou", 0.25)),
         anchor_ignore_iou=float(model_cfg.get("anchor_ignore_iou", 0.5)),
         max_samples=int(data_cfg["val_max_samples"]),
     )
@@ -392,6 +394,7 @@ def main():
             "obj = {obj_loss:.6f} | cls = {cls_loss:.6f} | giou = {mean_giou:.6f} | "
             "obj_target = {mean_obj_target:.6f} | "
             "pos_cells = {positive_cells_per_image:.6f} | collisions = {collision_count:.6f} | "
+            "ignored = {ignored_count:.6f} | dropped_gt = {dropped_gt_count:.6f} | "
             "batches = {batch_count} | time = {duration_seconds:.3f}s".format(**item)
         )
 
@@ -403,6 +406,7 @@ def main():
                 "obj = {obj_loss:.6f} | cls = {cls_loss:.6f} | giou = {mean_giou:.6f} | "
                 "obj_target = {mean_obj_target:.6f} | "
                 "pos_cells = {positive_cells_per_image:.6f} | collisions = {collision_count:.6f} | "
+                "ignored = {ignored_count:.6f} | dropped_gt = {dropped_gt_count:.6f} | "
                 "batches = {batch_count} | time = {duration_seconds:.3f}s".format(**item)
             )
     else:
