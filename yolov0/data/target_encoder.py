@@ -14,6 +14,19 @@ def _anchor_iou(box_wh: torch.Tensor, anchors: torch.Tensor) -> torch.Tensor:
     return intersection / union.clamp(min=1e-7)
 
 
+def _anchor_shape_ratio(box_wh: torch.Tensor, anchors: torch.Tensor) -> torch.Tensor:
+    """Measure width-height ratio mismatch against anchors; smaller is better."""
+    width_ratio = torch.maximum(
+        box_wh[0] / anchors[:, 0].clamp(min=1e-7),
+        anchors[:, 0] / box_wh[0].clamp(min=1e-7),
+    )
+    height_ratio = torch.maximum(
+        box_wh[1] / anchors[:, 1].clamp(min=1e-7),
+        anchors[:, 1] / box_wh[1].clamp(min=1e-7),
+    )
+    return torch.maximum(width_ratio, height_ratio)
+
+
 def encode_target(
     boxes,
     labels,
@@ -24,6 +37,8 @@ def encode_target(
     anchors=None,
     anchor_positive_iou=0.25,
     anchor_ignore_iou=0.5,
+    anchor_match_metric="iou",
+    anchor_shape_ratio=4.0,
 ):
     """Map resized xyxy boxes to a grid with box, class, and objectness targets."""
     if num_boxes > 1 and anchors:
@@ -97,27 +112,46 @@ def encode_target(
     if num_boxes > 1 and anchors:
         positive_iou = float(anchor_positive_iou)
         ignore_iou = float(anchor_ignore_iou)
+        match_metric = str(anchor_match_metric).lower()
+        positive_ratio = float(anchor_shape_ratio)
 
         for (grid_y, grid_x), entries in cell_assignments.items():
             if len(entries) > 1:
                 collision_count += float(len(entries) - 1)
 
             gt_count = len(entries)
-            iou_matrix = torch.stack(
-                [_anchor_iou(entry["box_wh"], anchors_tensor) for entry in entries],
-                dim=0,
-            )
+            if match_metric == "shape_ratio":
+                fit_matrix = torch.stack(
+                    [_anchor_shape_ratio(entry["box_wh"], anchors_tensor) for entry in entries],
+                    dim=0,
+                )
+                fit_is_better = "lower"
+            else:
+                fit_matrix = torch.stack(
+                    [_anchor_iou(entry["box_wh"], anchors_tensor) for entry in entries],
+                    dim=0,
+                )
+                fit_is_better = "higher"
             assigned_anchor_for_gt = [-1] * gt_count
             assigned_gt_for_anchor = [-1] * num_boxes
 
             # Pass 1: give each GT one anchor when possible, preferring the best IoU fit.
-            gt_priority = sorted(
-                range(gt_count),
-                key=lambda gt_idx: float(iou_matrix[gt_idx].max().item()),
-                reverse=True,
-            )
+            if fit_is_better == "lower":
+                gt_priority = sorted(
+                    range(gt_count),
+                    key=lambda gt_idx: float(fit_matrix[gt_idx].min().item()),
+                )
+            else:
+                gt_priority = sorted(
+                    range(gt_count),
+                    key=lambda gt_idx: float(fit_matrix[gt_idx].max().item()),
+                    reverse=True,
+                )
             for gt_idx in gt_priority:
-                anchor_order = torch.argsort(iou_matrix[gt_idx], descending=True).tolist()
+                anchor_order = torch.argsort(
+                    fit_matrix[gt_idx],
+                    descending=(fit_is_better == "higher"),
+                ).tolist()
                 for anchor_idx in anchor_order:
                     if assigned_gt_for_anchor[anchor_idx] == -1:
                         assigned_anchor_for_gt[gt_idx] = anchor_idx
@@ -132,14 +166,22 @@ def encode_target(
                 for anchor_idx in range(num_boxes):
                     if assigned_gt_for_anchor[anchor_idx] != -1:
                         continue
-                    if float(iou_matrix[gt_idx, anchor_idx].item()) >= positive_iou:
-                        extra_candidates.append((float(iou_matrix[gt_idx, anchor_idx].item()), gt_idx, anchor_idx))
-            extra_candidates.sort(reverse=True)
+                    score = float(fit_matrix[gt_idx, anchor_idx].item())
+                    if fit_is_better == "lower":
+                        if score <= positive_ratio:
+                            extra_candidates.append((score, gt_idx, anchor_idx))
+                    else:
+                        if score >= positive_iou:
+                            extra_candidates.append((score, gt_idx, anchor_idx))
+            extra_candidates.sort(reverse=(fit_is_better == "higher"))
             for _, gt_idx, anchor_idx in extra_candidates:
                 if assigned_gt_for_anchor[anchor_idx] == -1:
                     assigned_gt_for_anchor[anchor_idx] = gt_idx
 
-            max_iou_per_anchor = iou_matrix.max(dim=0).values
+            if fit_is_better == "lower":
+                best_fit_per_anchor = fit_matrix.min(dim=0).values
+            else:
+                best_fit_per_anchor = fit_matrix.max(dim=0).values
             for anchor_idx in range(num_boxes):
                 gt_idx = assigned_gt_for_anchor[anchor_idx]
                 if gt_idx != -1:
@@ -150,9 +192,15 @@ def encode_target(
                     target_cls[grid_y, grid_x, anchor_idx].zero_()
                     target_cls[grid_y, grid_x, anchor_idx, entry["label"]] = 1
                     target_box[grid_y, grid_x, anchor_idx] = entry["box_target"]
-                elif float(max_iou_per_anchor[anchor_idx].item()) >= ignore_iou:
-                    noobj_mask[grid_y, grid_x, anchor_idx] = 0
-                    ignored_count += 1
+                else:
+                    best_fit = float(best_fit_per_anchor[anchor_idx].item())
+                    if fit_is_better == "lower":
+                        if best_fit <= positive_ratio:
+                            noobj_mask[grid_y, grid_x, anchor_idx] = 0
+                            ignored_count += 1
+                    elif best_fit >= ignore_iou:
+                        noobj_mask[grid_y, grid_x, anchor_idx] = 0
+                        ignored_count += 1
 
     return (
         target_cls,

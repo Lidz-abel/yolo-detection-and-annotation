@@ -53,6 +53,8 @@ class DetectionDataset(Dataset):
         anchors=None,
         anchor_positive_iou=0.25,
         anchor_ignore_iou=0.5,
+        anchor_match_metric="iou",
+        anchor_shape_ratio=4.0,
         max_samples=None,
     ):
         super().__init__()
@@ -64,6 +66,8 @@ class DetectionDataset(Dataset):
         self.anchors = anchors or []
         self.anchor_positive_iou = anchor_positive_iou
         self.anchor_ignore_iou = anchor_ignore_iou
+        self.anchor_match_metric = anchor_match_metric
+        self.anchor_shape_ratio = anchor_shape_ratio
 
         self.samples = load_manifest(self.manifest_path)
         # A non-positive max_samples means "use the full manifest".
@@ -116,6 +120,8 @@ class DetectionDataset(Dataset):
             anchors=self.anchors,
             anchor_positive_iou=self.anchor_positive_iou,
             anchor_ignore_iou=self.anchor_ignore_iou,
+            anchor_match_metric=self.anchor_match_metric,
+            anchor_shape_ratio=self.anchor_shape_ratio,
         )
 
         target = {

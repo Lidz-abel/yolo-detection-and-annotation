@@ -81,7 +81,10 @@ def main():
         num_classes=int(data_cfg["num_classes"]),
         num_boxes=num_boxes,
         anchors=anchors,
+        anchor_positive_iou=float(model_cfg.get("anchor_positive_iou", 0.25)),
         anchor_ignore_iou=float(model_cfg.get("anchor_ignore_iou", 0.5)),
+        anchor_match_metric=str(model_cfg.get("anchor_match_metric", "iou")),
+        anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
         max_samples=args.max_samples,
     )
 

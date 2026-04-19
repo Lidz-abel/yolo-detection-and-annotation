@@ -53,6 +53,8 @@ def summarize_config(config: dict) -> list[str]:
         f"anchors = {model_cfg.get('anchors', 'n/a')}",
         f"anchor_positive_iou = {model_cfg.get('anchor_positive_iou', 'n/a')}",
         f"anchor_ignore_iou = {model_cfg.get('anchor_ignore_iou', 'n/a')}",
+        f"anchor_match_metric = {model_cfg.get('anchor_match_metric', 'iou')}",
+        f"anchor_shape_ratio = {model_cfg.get('anchor_shape_ratio', 'n/a')}",
         f"box_parameterization = {model_cfg.get('box_parameterization', 'legacy')}",
         f"box_type = {loss_cfg['box_type']}",
         f"cls_type = {loss_cfg['cls_type']}",
