@@ -49,6 +49,7 @@ def summarize_config(config: dict) -> list[str]:
         f"width_mult = {model_cfg['width_mult']}",
         f"depth_mult = {model_cfg['depth_mult']}",
         f"use_residual = {model_cfg['use_residual']}",
+        f"head_type = {model_cfg.get('head_type', 'shared')}",
         f"num_boxes = {model_cfg.get('num_boxes', 1)}",
         f"anchors = {model_cfg.get('anchors', 'n/a')}",
         f"anchor_positive_iou = {model_cfg.get('anchor_positive_iou', 'n/a')}",

@@ -1,0 +1,50 @@
+{
+  "anchors": [
+    [
+      0.052141,
+      0.076305
+    ],
+    [
+      0.199926,
+      0.288289
+    ],
+    [
+      0.609263,
+      0.649287
+    ]
+  ],
+  "batch_size": 1.0,
+  "box_parameterization": "yolov5",
+  "checkpoint_path": "/home/lidz/YOLO/yolov0/outputs/deep_residual_three_box_qualitycls_decoupled_20260420_014124/best.pth",
+  "config_path": "/home/lidz/YOLO/yolov0/configs/deep_residual_three_box_qualitycls_decoupled.toml",
+  "conv2d_flops": 42657331200.0,
+  "device": "cuda",
+  "duration_seconds": 0.9167500339681283,
+  "false_positives": 242854.0,
+  "images_per_second": 109.08098859528005,
+  "linear_flops": 0.0,
+  "map50": 0.07786516278327879,
+  "measure_iters": 100.0,
+  "milliseconds_per_batch": 9.167500339681283,
+  "model_name": "deep_residual",
+  "num_boxes": 3,
+  "num_evaluated_classes": 79.0,
+  "num_ground_truth": 52568.0,
+  "num_predictions": 256503.0,
+  "num_samples": 10823.0,
+  "output_shape": [
+    1,
+    10,
+    10,
+    255
+  ],
+  "params_total": 28921951,
+  "params_trainable": 28921951,
+  "precision": 0.05321185327267128,
+  "recall": 0.2596446507380916,
+  "split": "val",
+  "total_flops": 42657331200.0,
+  "total_gflops": 42.6573312,
+  "true_positives": 13649.0,
+  "warmup_iters": 20.0
+}

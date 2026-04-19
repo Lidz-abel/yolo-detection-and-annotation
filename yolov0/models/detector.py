@@ -1,9 +1,9 @@
-"""Compose a selected backbone and the detection head into one detector."""
+"""Compose a selected backbone and detection head into one detector."""
 
 import torch.nn as nn
 
 from models.backbone import BaselineBackbone, ResNet18LikeBackbone
-from models.head import DetectionHead
+from models.head import DecoupledDetectionHead, DetectionHead
 
 
 class YOLOv0Baseline(nn.Module):
@@ -17,10 +17,12 @@ class YOLOv0Baseline(nn.Module):
         depth_mult=1.0,
         use_residual=False,
         num_boxes=1,
+        head_type="shared",
     ):
         super().__init__()
         self.backbone = self._build_backbone(model_name, width_mult, depth_mult, use_residual)
-        self.head = DetectionHead(
+        self.head = self._build_head(
+            head_type=head_type,
             in_channels=self.backbone.out_channels,
             num_classes=num_classes,
             width_mult=width_mult,
@@ -42,6 +44,25 @@ class YOLOv0Baseline(nn.Module):
                 depth_mult=depth_mult,
             )
         raise ValueError(f"Unsupported model_name: {model_name}")
+
+    @staticmethod
+    def _build_head(head_type, in_channels, num_classes, width_mult, num_boxes):
+        """Select the shared or decoupled detection head from config."""
+        if head_type == "shared":
+            return DetectionHead(
+                in_channels=in_channels,
+                num_classes=num_classes,
+                width_mult=width_mult,
+                num_boxes=num_boxes,
+            )
+        if head_type == "decoupled":
+            return DecoupledDetectionHead(
+                in_channels=in_channels,
+                num_classes=num_classes,
+                width_mult=width_mult,
+                num_boxes=num_boxes,
+            )
+        raise ValueError(f"Unsupported head_type: {head_type}")
 
     def forward(self, x):
         features = self.backbone(x)

@@ -97,6 +97,7 @@ def main():
         depth_mult=float(model_cfg["depth_mult"]),
         use_residual=bool(model_cfg["use_residual"]),
         num_boxes=num_boxes,
+        head_type=str(model_cfg.get("head_type", "shared")),
     ).to(device)
     if device.type == "cuda" and torch.cuda.device_count() > 1 and bool(train_cfg["use_data_parallel"]):
         model = torch.nn.DataParallel(model)

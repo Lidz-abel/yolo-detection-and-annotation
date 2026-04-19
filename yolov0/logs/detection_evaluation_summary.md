@@ -111,6 +111,7 @@ The following formal evaluation JSON files were produced:
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_tight_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_ignore_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_qualitycls_coco_eval.json`
+- `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_qualitycls_decoupled_coco_eval.json`
 
 ### 4.1 Result Table
 
@@ -126,6 +127,7 @@ The following formal evaluation JSON files were produced:
 | `deep_residual` + three-box + v5-box + soft-obj + shape-match + tight | 3 | 26.56M | 42.19G | 120.57 | 0.000159 | 0.000496 | 0.000126 | 0.001103 |
 | `deep_residual` + three-box + v5-box + soft-obj + shape-match + ignore | 3 | 26.56M | 42.19G | 120.01 | 0.000135 | 0.000432 | 0.000022 | 0.001175 |
 | `deep_residual` + three-box + quality-cls | 3 | 26.56M | 42.19G | 100.69 | 0.000097 | 0.000415 | 0.000007 | 0.000782 |
+| `deep_residual` + three-box + quality-cls + decoupled | 3 | 28.92M | 42.66G | 93.81 | 0.000206 | 0.000814 | 0.000021 | 0.002500 |
 
 ## 5. Main Interpretation
 
@@ -292,6 +294,43 @@ of the next step:
 - decoupling the classification branch from the regression/objectness branch
 
 instead of keeping all three tasks tied to the same head representation.
+
+### 5.8 Round-5B is the strongest Stage-C result so far
+
+The new Stage-C round-5B variant:
+
+- keeps the round-5A quality-aware cls target
+- keeps the round-4B `shape-matching + ignore band`
+- replaces the shared detection head with a decoupled head
+
+This version is the first Stage-C branch that clearly improves both:
+
+- ranking quality
+- proposal coverage
+
+relative to the earlier three-box variants.
+
+The strongest signals are:
+
+- internal `mAP@0.5` jumps to about `0.0779`
+- internal recall rises to about `0.2596`
+- COCO `AP50` rises to about `0.000814`
+- COCO `AR@100` rises to about `0.002500`
+
+It also exceeds the previous practical baseline:
+
+- `deep_residual + single-box`
+
+on both:
+
+- COCO `AP50`
+- COCO `AR@100`
+
+So round-5B should be interpreted as:
+
+- evidence that head coupling was one of the main remaining Stage-C bottlenecks
+- the first three-box branch with clear practical value under the current checkpoint-6 protocol
+- the new baseline for any further Stage-C matcher work
 - not a decisive quality breakthrough
 
 ### 5.7 Round-4A improves AP50 by tightening the three-box mechanism
