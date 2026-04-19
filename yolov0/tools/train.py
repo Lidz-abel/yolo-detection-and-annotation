@@ -113,6 +113,8 @@ def build_criterion(data_cfg, model_cfg, loss_cfg):
             lambda_cls=float(loss_cfg["lambda_cls"]),
             num_boxes=int(model_cfg.get("num_boxes", 1)),
             anchors=parse_anchor_string(model_cfg.get("anchors")),
+            box_parameterization=str(model_cfg.get("box_parameterization", "legacy")),
+            soft_objectness_target=str(loss_cfg.get("soft_objectness_target", "hard")),
         )
     return DetectionLoss(
         num_classes=int(data_cfg["num_classes"]),
@@ -337,6 +339,7 @@ def main():
             num_classes=int(data_cfg["num_classes"]),
             num_boxes=num_boxes,
             anchors=anchors,
+            box_parameterization=str(model_cfg.get("box_parameterization", "legacy")),
             max_samples=int(visualization_cfg.get("max_samples", 4)),
             score_threshold=float(visualization_cfg.get("score_threshold", 0.05)),
             top_k=int(visualization_cfg.get("top_k", 10)),
@@ -387,6 +390,7 @@ def main():
         summary_lines.append(
             "epoch = {epoch:03d} | total = {total_loss:.6f} | box = {box_loss:.6f} | "
             "obj = {obj_loss:.6f} | cls = {cls_loss:.6f} | giou = {mean_giou:.6f} | "
+            "obj_target = {mean_obj_target:.6f} | "
             "pos_cells = {positive_cells_per_image:.6f} | collisions = {collision_count:.6f} | "
             "batches = {batch_count} | time = {duration_seconds:.3f}s".format(**item)
         )
@@ -397,6 +401,7 @@ def main():
             summary_lines.append(
                 "epoch = {epoch:03d} | total = {total_loss:.6f} | box = {box_loss:.6f} | "
                 "obj = {obj_loss:.6f} | cls = {cls_loss:.6f} | giou = {mean_giou:.6f} | "
+                "obj_target = {mean_obj_target:.6f} | "
                 "pos_cells = {positive_cells_per_image:.6f} | collisions = {collision_count:.6f} | "
                 "batches = {batch_count} | time = {duration_seconds:.3f}s".format(**item)
             )

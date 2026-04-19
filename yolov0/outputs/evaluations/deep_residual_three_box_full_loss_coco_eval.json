@@ -1,0 +1,48 @@
+{
+  "anchors": [
+    [
+      0.052141,
+      0.076305
+    ],
+    [
+      0.199926,
+      0.288289
+    ],
+    [
+      0.609263,
+      0.649287
+    ]
+  ],
+  "batch_size": 1.0,
+  "checkpoint_path": "/home/lidz/YOLO/yolov0/outputs/deep_residual_three_box_full_loss_20260419_043041/best.pth",
+  "coco_ap": 2.6468157082906668e-05,
+  "coco_ap50": 0.00012180214090325138,
+  "coco_ap75": 8.418721284211611e-06,
+  "coco_ar1": 0.0002309786844857844,
+  "coco_ar10": 0.0007120098695445451,
+  "coco_ar100": 0.0009988255410134726,
+  "config_path": "/home/lidz/YOLO/yolov0/configs/deep_residual_three_box_full_loss.toml",
+  "conv2d_flops": 42185472000.0,
+  "device": "cuda",
+  "duration_seconds": 0.8588463150663301,
+  "images_per_second": 116.43526699218222,
+  "linear_flops": 0.0,
+  "manifest_path": "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl",
+  "measure_iters": 100.0,
+  "milliseconds_per_batch": 8.588463150663301,
+  "model_name": "deep_residual",
+  "num_boxes": 3,
+  "num_predictions": 288686.0,
+  "num_samples": 5000.0,
+  "output_shape": [
+    1,
+    10,
+    10,
+    255
+  ],
+  "params_total": 26560607,
+  "params_trainable": 26560607,
+  "total_flops": 42185472000.0,
+  "total_gflops": 42.185472,
+  "warmup_iters": 20.0
+}

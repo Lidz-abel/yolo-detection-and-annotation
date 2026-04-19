@@ -1,0 +1,38 @@
+# Experiment Result Index
+
+本文件用于维护“实验名称 -> 运行结果文件”的正式映射。
+
+后续在撰写 `checkpoint06_version02` 报告时，必须以本索引为准，将每一个进入正文、对比表或图表的实验，明确对应到：
+
+- 正式配置文件
+- `run_id`
+- `result.txt`
+- `metadata.json`
+- 评估结果文件
+- 主输出目录
+
+## 当前正式实验索引
+
+### Backbone 阶段
+
+| 实验名 | run_id | 配置文件 | 结果文本 | 元数据 | 主输出目录 |
+| --- | --- | --- | --- | --- | --- |
+| baseline_formal | `baseline_formal_20260418_202723` | [baseline_formal.toml](/home/lidz/YOLO/yolov0/configs/baseline_formal.toml:1) | [result.txt](/home/lidz/YOLO/yolov0/logs/records/baseline_formal_20260418_202723/result.txt:1) | [metadata.json](/home/lidz/YOLO/yolov0/logs/records/baseline_formal_20260418_202723/metadata.json:1) | [outputs](/home/lidz/YOLO/yolov0/outputs/baseline_formal_20260418_202723:1) |
+| deep_cnn_formal | `deep_cnn_formal_20260418_213605` | [deep_cnn_formal.toml](/home/lidz/YOLO/yolov0/configs/deep_cnn_formal.toml:1) | [result.txt](/home/lidz/YOLO/yolov0/logs/records/deep_cnn_formal_20260418_213605/result.txt:1) | [metadata.json](/home/lidz/YOLO/yolov0/logs/records/deep_cnn_formal_20260418_213605/metadata.json:1) | [outputs](/home/lidz/YOLO/yolov0/outputs/deep_cnn_formal_20260418_213605:1) |
+| residual_small_formal | `residual_small_formal_20260418_230104` | [residual_small_formal.toml](/home/lidz/YOLO/yolov0/configs/residual_small_formal.toml:1) | [result.txt](/home/lidz/YOLO/yolov0/logs/records/residual_small_formal_20260418_230104/result.txt:1) | [metadata.json](/home/lidz/YOLO/yolov0/logs/records/residual_small_formal_20260418_230104/metadata.json:1) | [outputs](/home/lidz/YOLO/yolov0/outputs/residual_small_formal_20260418_230104:1) |
+| resnet18_like_formal | `resnet18_like_formal_20260419_002723` | [resnet18_like_formal.toml](/home/lidz/YOLO/yolov0/configs/resnet18_like_formal.toml:1) | [result.txt](/home/lidz/YOLO/yolov0/logs/records/resnet18_like_formal_20260419_002723/result.txt:1) | [metadata.json](/home/lidz/YOLO/yolov0/logs/records/resnet18_like_formal_20260419_002723/metadata.json:1) | [outputs](/home/lidz/YOLO/yolov0/outputs/resnet18_like_formal_20260419_002723:1) |
+
+### Full-Loss 阶段
+
+| 实验名 | run_id | 配置文件 | 结果文本 | 元数据 | 评估结果 | 主输出目录 |
+| --- | --- | --- | --- | --- | --- | --- |
+| deep_cnn_single_box_full_loss | `deep_cnn_single_box_full_loss_20260419_020616` | [deep_cnn_single_box_full_loss.toml](/home/lidz/YOLO/yolov0/configs/deep_cnn_single_box_full_loss.toml:1) | [result.txt](/home/lidz/YOLO/yolov0/logs/records/deep_cnn_single_box_full_loss_20260419_020616/result.txt:1) | [metadata.json](/home/lidz/YOLO/yolov0/logs/records/deep_cnn_single_box_full_loss_20260419_020616/metadata.json:1) | [eval.json](/home/lidz/YOLO/yolov0/outputs/evaluations/deep_cnn_single_box_full_loss_eval.json:1), [coco_eval.json](/home/lidz/YOLO/yolov0/outputs/evaluations/deep_cnn_single_box_full_loss_coco_eval.json:1) | [outputs](/home/lidz/YOLO/yolov0/outputs/deep_cnn_single_box_full_loss_20260419_020616:1) |
+| deep_residual_single_box_full_loss | `deep_residual_single_box_full_loss_20260419_031404` | [deep_residual_single_box_full_loss.toml](/home/lidz/YOLO/yolov0/configs/deep_residual_single_box_full_loss.toml:1) | [result.txt](/home/lidz/YOLO/yolov0/logs/records/deep_residual_single_box_full_loss_20260419_031404/result.txt:1) | [metadata.json](/home/lidz/YOLO/yolov0/logs/records/deep_residual_single_box_full_loss_20260419_031404/metadata.json:1) | [eval.json](/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_single_box_full_loss_eval.json:1), [coco_eval.json](/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_single_box_full_loss_coco_eval.json:1) | [outputs](/home/lidz/YOLO/yolov0/outputs/deep_residual_single_box_full_loss_20260419_031404:1) |
+| deep_residual_three_box_full_loss | `deep_residual_three_box_full_loss_20260419_043041` | [deep_residual_three_box_full_loss.toml](/home/lidz/YOLO/yolov0/configs/deep_residual_three_box_full_loss.toml:1) | [result.txt](/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_full_loss_20260419_043041/result.txt:1) | [metadata.json](/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_full_loss_20260419_043041/metadata.json:1) | [eval.json](/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_full_loss_eval.json:1), [coco_eval.json](/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_full_loss_coco_eval.json:1) | [outputs](/home/lidz/YOLO/yolov0/outputs/deep_residual_three_box_full_loss_20260419_043041:1) |
+| deep_residual_three_box_v5box_softobj | `deep_residual_three_box_v5box_softobj_20260419_135531` | [deep_residual_three_box_v5box_softobj.toml](/home/lidz/YOLO/yolov0/configs/deep_residual_three_box_v5box_softobj.toml:1) | [result.txt](/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_v5box_softobj_20260419_135531/result.txt:1) | [metadata.json](/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_v5box_softobj_20260419_135531/metadata.json:1) | [eval.json](/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_eval.json:1), [coco_eval.json](/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_coco_eval.json:1) | [outputs](/home/lidz/YOLO/yolov0/outputs/deep_residual_three_box_v5box_softobj_20260419_135531:1) |
+
+## 使用规则
+
+1. 后续每完成一轮正式 full-run 实验，都必须在本文件追加一行索引。  
+2. 进入 `checkpoint06_version02` 报告正文的实验，必须能在本文件中找到对应项。  
+3. 如果某次实验没有完整索引项，则该实验不能作为正式结论引用。  

@@ -23,15 +23,32 @@ def _make_grid_like(tensor: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
     return grid_x.unsqueeze(0), grid_y.unsqueeze(0)
 
 
-def decode_box_predictions(box_pred: torch.Tensor, anchors: torch.Tensor | None = None) -> torch.Tensor:
+def decode_box_predictions(
+    box_pred: torch.Tensor,
+    anchors: torch.Tensor | None = None,
+    box_parameterization: str = "legacy",
+) -> torch.Tensor:
     """Decode one-box or multi-box predictions into normalized `xyxy` boxes."""
     grid_x, grid_y = _make_grid_like(box_pred)
     grid_size = float(box_pred.shape[1])
 
-    tx = torch.sigmoid(box_pred[..., 0])
-    ty = torch.sigmoid(box_pred[..., 1])
-    tw = torch.sigmoid(box_pred[..., 2])
-    th = torch.sigmoid(box_pred[..., 3])
+    raw_tx = box_pred[..., 0]
+    raw_ty = box_pred[..., 1]
+    raw_tw = box_pred[..., 2]
+    raw_th = box_pred[..., 3]
+
+    if box_parameterization == "yolov5":
+        # Allow the center to move beyond the current cell and allow the width
+        # and height to grow beyond the raw anchor size, as in YOLOv5-style decoding.
+        tx = torch.sigmoid(raw_tx) * 2.0 - 0.5
+        ty = torch.sigmoid(raw_ty) * 2.0 - 0.5
+        tw = (torch.sigmoid(raw_tw) * 2.0).pow(2)
+        th = (torch.sigmoid(raw_th) * 2.0).pow(2)
+    else:
+        tx = torch.sigmoid(raw_tx)
+        ty = torch.sigmoid(raw_ty)
+        tw = torch.sigmoid(raw_tw)
+        th = torch.sigmoid(raw_th)
 
     cx = (tx + grid_x) / grid_size
     cy = (ty + grid_y) / grid_size
@@ -55,7 +72,7 @@ def decode_box_predictions(box_pred: torch.Tensor, anchors: torch.Tensor | None 
 
 def decode_single_box_predictions(box_pred: torch.Tensor) -> torch.Tensor:
     """Decode the legacy single-box prediction path into normalized `xyxy` boxes."""
-    return decode_box_predictions(box_pred, anchors=None)
+    return decode_box_predictions(box_pred, anchors=None, box_parameterization="legacy")
 
 
 def target_boxes_to_xyxy(target_box: torch.Tensor) -> torch.Tensor:

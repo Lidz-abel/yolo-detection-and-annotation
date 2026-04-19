@@ -5,7 +5,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from utils.box_ops import decode_box_predictions, generalized_box_iou, target_boxes_to_xyxy
+from utils.box_ops import box_iou_xyxy, decode_box_predictions, generalized_box_iou, target_boxes_to_xyxy
 
 
 class YOLOLoss(nn.Module):
@@ -20,6 +20,8 @@ class YOLOLoss(nn.Module):
         lambda_cls=1.0,
         num_boxes=1,
         anchors=None,
+        box_parameterization="legacy",
+        soft_objectness_target="hard",
     ):
         super().__init__()
         self.num_classes = num_classes
@@ -29,6 +31,8 @@ class YOLOLoss(nn.Module):
         self.lambda_cls = lambda_cls
         self.num_boxes = num_boxes
         self.anchors = anchors or []
+        self.box_parameterization = box_parameterization
+        self.soft_objectness_target = soft_objectness_target
         self.bce = nn.BCEWithLogitsLoss(reduction="none")
 
     def forward(self, pred, targets):
@@ -52,9 +56,14 @@ class YOLOLoss(nn.Module):
         anchor_tensor = None
         if self.num_boxes > 1 and self.anchors:
             anchor_tensor = torch.tensor(self.anchors, dtype=pred_box.dtype, device=pred_box.device)
-        decoded_pred_boxes = decode_box_predictions(pred_box, anchors=anchor_tensor)
+        decoded_pred_boxes = decode_box_predictions(
+            pred_box,
+            anchors=anchor_tensor,
+            box_parameterization=self.box_parameterization,
+        )
         decoded_target_boxes = target_boxes_to_xyxy(target_box)
         giou = generalized_box_iou(decoded_pred_boxes, decoded_target_boxes)
+        iou = box_iou_xyxy(decoded_pred_boxes, decoded_target_boxes)
 
         positive_mask = object_mask > 0
         if positive_mask.any():
@@ -65,7 +74,12 @@ class YOLOLoss(nn.Module):
             loss_box = zero
             mean_giou = zero
 
-        loss_obj_pos = (self.bce(pred_obj, target_obj) * object_mask).sum() / num_pos
+        if self.soft_objectness_target == "iou":
+            positive_obj_target = iou.detach().clamp(min=0.0, max=1.0)
+        else:
+            positive_obj_target = target_obj
+
+        loss_obj_pos = (self.bce(pred_obj, positive_obj_target) * object_mask).sum() / num_pos
         loss_obj_neg = (self.bce(pred_obj, target_obj) * noobj_mask).sum() / num_neg
         loss_obj = loss_obj_pos + self.lambda_noobj * loss_obj_neg
 
@@ -89,6 +103,7 @@ class YOLOLoss(nn.Module):
             "loss_obj_pos": loss_obj_pos,
             "loss_obj_neg": loss_obj_neg,
             "mean_giou": mean_giou,
+            "mean_obj_target": positive_obj_target[positive_mask].mean() if positive_mask.any() else pred_box.sum() * 0.0,
             "positive_cells_per_image": positive_cells_per_image,
             "collision_count": collision_count_mean,
         }

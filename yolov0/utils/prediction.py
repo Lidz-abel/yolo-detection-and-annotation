@@ -1,10 +1,29 @@
-"""Prediction decoding helpers used by visualization and later evaluation scripts."""
+"""Prediction decoding helpers used by visualization and evaluation scripts."""
 
 from __future__ import annotations
 
 import torch
 
-from utils.box_ops import decode_box_predictions
+from utils.box_ops import box_iou_xyxy, decode_box_predictions
+
+
+def _nms_indices(boxes: torch.Tensor, scores: torch.Tensor, iou_threshold: float) -> torch.Tensor:
+    """Run a simple score-sorted NMS over one set of boxes without extra deps."""
+    if boxes.numel() == 0:
+        return boxes.new_zeros((0,), dtype=torch.long)
+
+    order = torch.argsort(scores, descending=True)
+    keep: list[int] = []
+    while order.numel() > 0:
+        current = int(order[0].item())
+        keep.append(current)
+        if order.numel() == 1:
+            break
+        current_box = boxes[current].unsqueeze(0)
+        remaining = order[1:]
+        ious = box_iou_xyxy(current_box.expand(remaining.numel(), -1), boxes[remaining])
+        order = remaining[ious <= iou_threshold]
+    return boxes.new_tensor(keep, dtype=torch.long)
 
 
 def decode_predictions_for_image(
@@ -13,8 +32,10 @@ def decode_predictions_for_image(
     num_classes: int,
     num_boxes: int = 1,
     anchors: list[tuple[float, float]] | None = None,
+    box_parameterization: str = "legacy",
     score_threshold: float = 0.05,
     top_k: int = 10,
+    nms_iou_threshold: float = 0.5,
 ) -> list[dict]:
     """Decode one image prediction tensor into ranked box dictionaries."""
     if pred.dim() != 3:
@@ -27,7 +48,11 @@ def decode_predictions_for_image(
     else:
         anchor_tensor = None
 
-    decoded_boxes = decode_box_predictions(pred[..., 0:4], anchors=anchor_tensor)[0]
+    decoded_boxes = decode_box_predictions(
+        pred[..., 0:4],
+        anchors=anchor_tensor,
+        box_parameterization=box_parameterization,
+    )[0]
     obj_scores = torch.sigmoid(pred[..., 4])[0]
     cls_scores = torch.sigmoid(pred[..., 5:])[0]
     best_cls_scores, class_ids = cls_scores.max(dim=-1)
@@ -45,7 +70,22 @@ def decode_predictions_for_image(
     flat_boxes = flat_boxes[keep]
     flat_class_ids = flat_class_ids[keep]
 
-    order = torch.argsort(flat_scores, descending=True)
+    if nms_iou_threshold > 0:
+        kept_orders = []
+        for class_id in torch.unique(flat_class_ids).tolist():
+            class_mask = flat_class_ids == class_id
+            class_indices = torch.nonzero(class_mask, as_tuple=False).squeeze(1)
+            class_keep = _nms_indices(
+                flat_boxes[class_mask],
+                flat_scores[class_mask],
+                iou_threshold=nms_iou_threshold,
+            )
+            kept_orders.append(class_indices[class_keep])
+        order = torch.cat(kept_orders, dim=0) if kept_orders else flat_scores.new_zeros((0,), dtype=torch.long)
+        if order.numel() > 0:
+            order = order[torch.argsort(flat_scores[order], descending=True)]
+    else:
+        order = torch.argsort(flat_scores, descending=True)
     order = order[:top_k]
 
     predictions = []
@@ -72,6 +112,7 @@ def decode_single_box_predictions_for_image(
     num_classes: int,
     score_threshold: float = 0.05,
     top_k: int = 10,
+    nms_iou_threshold: float = 0.5,
 ) -> list[dict]:
     """Keep the old single-box entrypoint as a thin wrapper."""
     return decode_predictions_for_image(
@@ -80,6 +121,8 @@ def decode_single_box_predictions_for_image(
         num_classes=num_classes,
         num_boxes=1,
         anchors=None,
+        box_parameterization="legacy",
         score_threshold=score_threshold,
         top_k=top_k,
+        nms_iou_threshold=nms_iou_threshold,
     )

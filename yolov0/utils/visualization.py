@@ -48,6 +48,7 @@ def save_visualization_set(
     num_classes: int,
     num_boxes: int = 1,
     anchors: list[tuple[float, float]] | None = None,
+    box_parameterization: str = "legacy",
     max_samples: int = 4,
     score_threshold: float = 0.05,
     top_k: int = 10,
@@ -67,6 +68,7 @@ def save_visualization_set(
                 num_classes=num_classes,
                 num_boxes=num_boxes,
                 anchors=anchors,
+                box_parameterization=box_parameterization,
                 score_threshold=score_threshold,
                 top_k=top_k,
             )
