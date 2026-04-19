@@ -108,6 +108,7 @@ The following formal evaluation JSON files were produced:
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_assign_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_clamp_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_coco_eval.json`
+- `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_tight_coco_eval.json`
 
 ### 4.1 Result Table
 
@@ -120,6 +121,7 @@ The following formal evaluation JSON files were produced:
 | `deep_residual` + three-box + v5-box + soft-obj + assign | 3 | 26.56M | 42.19G | 110.19 | 0.000056 | 0.000286 | 0.000002 | 0.001014 |
 | `deep_residual` + three-box + v5-box + soft-obj + clamp | 3 | 26.56M | 42.19G | 116.71 | 0.000073 | 0.000296 | 0.000003 | 0.001090 |
 | `deep_residual` + three-box + v5-box + soft-obj + shape-match | 3 | 26.56M | 42.19G | 122.42 | 0.000095 | 0.000343 | 0.000002 | 0.001332 |
+| `deep_residual` + three-box + v5-box + soft-obj + shape-match + tight | 3 | 26.56M | 42.19G | 120.57 | 0.000159 | 0.000496 | 0.000126 | 0.001103 |
 
 ## 5. Main Interpretation
 
@@ -256,11 +258,44 @@ So round-3B should be interpreted as:
 - a valid stability-oriented fix
 - not a decisive quality breakthrough
 
+### 5.7 Round-4A improves AP50 by tightening the three-box system
+
+The new Stage-C round-4A variant:
+
+- keeps `shape-matching`
+- tightens `anchor_shape_ratio` from `4.0` to `2.5`
+- lowers `soft_objectness_min` from `0.4` to `0.05`
+- raises the visualization threshold for cleaner GT-vs-Pred inspection
+
+This round changes no backbone code and does not touch the core loss
+structure. It is a pure tightening experiment.
+
+Under evaluation, round-4A shows a very specific trade-off:
+
+- internal `num_predictions` drops from about `301567`
+  to about `293968`
+- internal `precision` rises slightly
+- internal `mAP@0.5` falls slightly
+- COCO `AP50` rises sharply from about `0.000343`
+  to about `0.000496`
+- COCO `AR@100` falls from about `0.001332`
+  to about `0.001103`
+
+So round-4A should be interpreted as:
+
+- a successful reduction of over-prediction
+- a clear improvement in ranking / precision quality
+- a partial sacrifice of recall
+
+This is important because it confirms that the current Stage-C problem is
+no longer only “can the three-box head cover enough objects?” but also
+“can it stop rewarding too many low-quality boxes?”
+
 The current best practical branch is therefore still:
 
 - `deep_residual + single-box full loss`
 
-### 5.4 The current detector is still extremely weak in absolute terms
+### 5.8 The current detector is still extremely weak in absolute terms
 
 All COCO AP values are near zero.
 

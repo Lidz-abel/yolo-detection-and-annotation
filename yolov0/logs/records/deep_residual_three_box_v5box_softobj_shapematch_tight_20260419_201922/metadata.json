@@ -1,0 +1,32 @@
+{
+  "run_id": "deep_residual_three_box_v5box_softobj_shapematch_tight_20260419_201922",
+  "run_name": "deep_residual_three_box_v5box_softobj_shapematch_tight",
+  "timestamp": "20260419_201922",
+  "project_root": "/home/lidz/YOLO/yolov0",
+  "config_path": "/home/lidz/YOLO/yolov0/configs/deep_residual_three_box_v5box_softobj_shapematch_tight.toml",
+  "config_snapshot": "logs/records/deep_residual_three_box_v5box_softobj_shapematch_tight_20260419_201922/config.toml",
+  "tensorboard_dir": "runs/deep_residual_three_box_v5box_softobj_shapematch_tight_20260419_201922",
+  "output_dir": "outputs/deep_residual_three_box_v5box_softobj_shapematch_tight_20260419_201922",
+  "record_dir": "logs/records/deep_residual_three_box_v5box_softobj_shapematch_tight_20260419_201922",
+  "git_commit": "e2b900357330b962363b9470848d7224d23e8f36",
+  "hostname": "8x-4090-1",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "completed",
+  "stage": "full_loss_training",
+  "device": "cuda",
+  "last_epoch": 20,
+  "best_epoch": 15,
+  "best_val_loss": 2.6209931678550187,
+  "global_step": 9700,
+  "model_output_shape": [
+    1,
+    10,
+    10,
+    255
+  ],
+  "parameter_total": 26560607,
+  "parameter_trainable": 26560607,
+  "visualization_dir": "outputs/deep_residual_three_box_v5box_softobj_shapematch_tight_20260419_201922/visualizations"
+}
