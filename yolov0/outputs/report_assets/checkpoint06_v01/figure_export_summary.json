@@ -1,0 +1,17 @@
+{
+  "export_dir": "/home/lidz/YOLO/yolov0/outputs/report_assets/checkpoint06_v01",
+  "runs": {
+    "baseline_cnn": "/home/lidz/YOLO/yolov0/logs/records/baseline_formal_20260418_202723/result.txt",
+    "deep_cnn": "/home/lidz/YOLO/yolov0/logs/records/deep_cnn_formal_20260418_213605/result.txt",
+    "residual_small": "/home/lidz/YOLO/yolov0/logs/records/residual_small_formal_20260418_230104/result.txt",
+    "resnet18_like": "/home/lidz/YOLO/yolov0/logs/records/resnet18_like_formal_20260419_002723/result.txt",
+    "stage_a": "/home/lidz/YOLO/yolov0/logs/records/deep_cnn_single_box_full_loss_20260419_020616/result.txt",
+    "stage_b": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_single_box_full_loss_20260419_031404/result.txt",
+    "stage_c": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_full_loss_20260419_043041/result.txt"
+  },
+  "coco_evals": {
+    "stage_a": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_cnn_single_box_full_loss_coco_eval.json",
+    "stage_b": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_single_box_full_loss_coco_eval.json",
+    "stage_c": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_full_loss_coco_eval.json"
+  }
+}
