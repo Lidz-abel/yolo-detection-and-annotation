@@ -1,0 +1,61 @@
+# Formal config for the first residual backbone comparison.
+# This run keeps the current data and optimization setup fixed and only adds residual blocks.
+
+[data]
+train_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl"
+val_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl"
+# Keep the same image size and grid so only the backbone structure changes here.
+image_size = 320
+grid_size = 10
+num_classes = 80
+train_max_samples = 0
+val_max_samples = 0
+packing_format = "pt"
+
+[model]
+name = "residual_small"
+width_mult = 1.0
+depth_mult = 1.0
+use_residual = true
+
+[loss]
+box_type = "mse"
+cls_type = "mse"
+use_objectness = false
+iou_loss = "none"
+lambda_box = 5.0
+lambda_cls = 1.0
+
+[train]
+batch_size = 256
+epochs = 20
+optimizer = "adamw"
+lr = 0.001
+min_lr = 0.00001
+weight_decay = 0.0001
+scheduler = "cosine"
+shuffle = true
+seed = 42
+device = "auto"
+num_workers = 64
+pin_memory = true
+persistent_workers = true
+prefetch_factor = 4
+use_data_parallel = true
+max_steps_per_epoch = 0
+max_val_steps = 0
+
+[logging]
+run_name = "residual_small_formal"
+runs_dir = "/home/lidz/YOLO/yolov0/runs"
+output_dir = "/home/lidz/YOLO/yolov0/outputs"
+records_dir = "/home/lidz/YOLO/yolov0/logs/records"
+log_every_steps = 20
+save_interval_epochs = 5
+
+[evaluation]
+val_interval_epochs = 1
+
+[visualization]
+vis_interval_epochs = 5
+max_samples = 4

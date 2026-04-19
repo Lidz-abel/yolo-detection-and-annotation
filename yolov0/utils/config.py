@@ -49,10 +49,15 @@ def summarize_config(config: dict) -> list[str]:
         f"width_mult = {model_cfg['width_mult']}",
         f"depth_mult = {model_cfg['depth_mult']}",
         f"use_residual = {model_cfg['use_residual']}",
+        f"num_boxes = {model_cfg.get('num_boxes', 1)}",
+        f"anchors = {model_cfg.get('anchors', 'n/a')}",
+        f"anchor_ignore_iou = {model_cfg.get('anchor_ignore_iou', 'n/a')}",
         f"box_type = {loss_cfg['box_type']}",
         f"cls_type = {loss_cfg['cls_type']}",
         f"use_objectness = {loss_cfg['use_objectness']}",
         f"iou_loss = {loss_cfg['iou_loss']}",
+        f"lambda_obj = {loss_cfg.get('lambda_obj', 'n/a')}",
+        f"lambda_noobj = {loss_cfg.get('lambda_noobj', 'n/a')}",
         f"optimizer = {train_cfg['optimizer']}",
         f"batch_size = {train_cfg['batch_size']}",
         f"epochs = {train_cfg['epochs']}",
@@ -62,5 +67,27 @@ def summarize_config(config: dict) -> list[str]:
         f"scheduler = {train_cfg['scheduler']}",
         f"num_workers = {train_cfg['num_workers']}",
         f"use_data_parallel = {train_cfg['use_data_parallel']}",
-        f"bootstrap_only = {train_cfg['bootstrap_only']}",
+        f"max_steps_per_epoch = {train_cfg['max_steps_per_epoch']}",
+        f"max_val_steps = {train_cfg['max_val_steps']}",
+        f"val_interval_epochs = {config['evaluation']['val_interval_epochs']}",
+        f"vis_interval_epochs = {config['visualization'].get('vis_interval_epochs', 'n/a')}",
+        f"vis_max_samples = {config['visualization'].get('max_samples', 'n/a')}",
     ]
+
+
+def parse_anchor_string(raw: str | None) -> list[tuple[float, float]]:
+    """Parse a compact `w,h;w,h;...` anchor string into float pairs."""
+    if raw is None:
+        return []
+    text = str(raw).strip()
+    if not text:
+        return []
+
+    anchors = []
+    for item in text.split(";"):
+        item = item.strip()
+        if not item:
+            continue
+        width, height = item.split(",", 1)
+        anchors.append((float(width.strip()), float(height.strip())))
+    return anchors

@@ -1,4 +1,4 @@
-"""Dataset utilities for the first yolov0 baseline training path."""
+"""Dataset utilities for the yolov0 training paths."""
 
 import json
 from pathlib import Path
@@ -41,7 +41,7 @@ def resize_boxes_xyxy(boxes, orig_width, orig_height, new_size):
 
 
 class DetectionDataset(Dataset):
-    """Load unified manifest samples and produce image plus YOLO targets."""
+    """Load unified manifest samples and produce images plus detector targets."""
 
     def __init__(
         self,
@@ -49,6 +49,9 @@ class DetectionDataset(Dataset):
         image_size=320,
         grid_size=10,
         num_classes=80,
+        num_boxes=1,
+        anchors=None,
+        anchor_ignore_iou=0.5,
         max_samples=None,
     ):
         super().__init__()
@@ -56,9 +59,13 @@ class DetectionDataset(Dataset):
         self.image_size = image_size
         self.grid_size = grid_size
         self.num_classes = num_classes
+        self.num_boxes = num_boxes
+        self.anchors = anchors or []
+        self.anchor_ignore_iou = anchor_ignore_iou
 
         self.samples = load_manifest(self.manifest_path)
-        if max_samples is not None:
+        # A non-positive max_samples means "use the full manifest".
+        if max_samples is not None and int(max_samples) > 0:
             self.samples = self.samples[:max_samples]
 
     def __len__(self):
@@ -88,18 +95,24 @@ class DetectionDataset(Dataset):
             new_size=self.image_size,
         )
 
-        target_cls, target_box, object_mask = encode_target(
+        target_cls, target_box, target_obj, object_mask, noobj_mask, collision_count = encode_target(
             boxes=resized_boxes,
             labels=labels,
             image_size=self.image_size,
             grid_size=self.grid_size,
             num_classes=self.num_classes,
+            num_boxes=self.num_boxes,
+            anchors=self.anchors,
+            anchor_ignore_iou=self.anchor_ignore_iou,
         )
 
         target = {
             "target_cls": target_cls,
             "target_box": target_box,
+            "target_obj": target_obj,
             "object_mask": object_mask,
+            "noobj_mask": noobj_mask,
+            "collision_count": collision_count,
             "boxes": resized_boxes,
             "labels": labels,
             "sample_id": sample["sample_id"],
@@ -116,12 +129,18 @@ def detection_collate_fn(batch):
     images = torch.stack([item[0] for item in batch], dim=0)
     target_cls = torch.stack([item[1]["target_cls"] for item in batch], dim=0)
     target_box = torch.stack([item[1]["target_box"] for item in batch], dim=0)
+    target_obj = torch.stack([item[1]["target_obj"] for item in batch], dim=0)
     object_mask = torch.stack([item[1]["object_mask"] for item in batch], dim=0)
+    noobj_mask = torch.stack([item[1]["noobj_mask"] for item in batch], dim=0)
+    collision_count = torch.stack([item[1]["collision_count"] for item in batch], dim=0)
 
     targets = {
         "target_cls": target_cls,
         "target_box": target_box,
+        "target_obj": target_obj,
         "object_mask": object_mask,
+        "noobj_mask": noobj_mask,
+        "collision_count": collision_count,
         "boxes": [item[1]["boxes"] for item in batch],
         "labels": [item[1]["labels"] for item in batch],
         "sample_id": [item[1]["sample_id"] for item in batch],

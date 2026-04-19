@@ -1,0 +1,31 @@
+{
+  "run_id": "baseline_smoke_20260418_201121",
+  "run_name": "baseline_smoke",
+  "timestamp": "20260418_201121",
+  "project_root": "/home/lidz/YOLO/yolov0",
+  "config_path": "/tmp/yolov0_base_smoke.toml",
+  "config_snapshot": "/home/lidz/YOLO/yolov0/logs/records/baseline_smoke_20260418_201121/config.toml",
+  "tensorboard_dir": "/home/lidz/YOLO/yolov0/runs/baseline_smoke_20260418_201121",
+  "output_dir": "/home/lidz/YOLO/yolov0/outputs/baseline_smoke_20260418_201121",
+  "record_dir": "/home/lidz/YOLO/yolov0/logs/records/baseline_smoke_20260418_201121",
+  "git_commit": "1adb62aa58a6c8ae45caf4115554d9c58634c4e1",
+  "hostname": "8x-4090-1",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "completed",
+  "stage": "baseline_training",
+  "device": "cuda",
+  "last_epoch": 1,
+  "best_epoch": 1,
+  "best_val_loss": 2.1061627864837646,
+  "global_step": 2,
+  "model_output_shape": [
+    1,
+    10,
+    10,
+    84
+  ],
+  "parameter_total": 8719156,
+  "parameter_trainable": 8719156
+}

@@ -1,0 +1,46 @@
+run_name = checkpoint5_fulltrain
+timestamp = 20260418_175839
+config = configs/train_base.toml
+device = cuda
+train_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl
+image_size = 224
+grid_size = 7
+num_classes = 80
+train_max_samples = 200000
+batch_size = 256
+epochs = 20
+lr = 0.001
+min_lr = 1e-05
+scheduler = cosine
+num_workers = 64
+pin_memory = True
+persistent_workers = True
+prefetch_factor = 4
+use_data_parallel = True
+eval_interval_epochs = 5
+map_iou_threshold = 0.5
+model_path = /home/lidz/YOLO/miniyolo/outputs/checkpoint5/checkpoint5_fulltrain_20260418_175839.pth
+config_snapshot = /home/lidz/YOLO/miniyolo/logs/train_results/checkpoint5_fulltrain_20260418_175839.toml
+progress_output_dir = /home/lidz/YOLO/miniyolo/outputs/checkpoint5/checkpoint5_fulltrain_progress
+
+epoch summaries:
+epoch 01: total=0.3546, cls=0.0130, box=0.0683
+epoch 02: total=0.3282, cls=0.0128, box=0.0631
+epoch 03: total=0.3002, cls=0.0127, box=0.0575
+epoch 04: total=0.2722, cls=0.0125, box=0.0519
+epoch 05: total=0.2581, cls=0.0123, box=0.0492, map50=0.0001, mean_pred_score=0.0196, num_predictions=32469
+epoch 06: total=0.2492, cls=0.0122, box=0.0474
+epoch 07: total=0.2424, cls=0.0122, box=0.0460
+epoch 08: total=0.2368, cls=0.0121, box=0.0449
+epoch 09: total=0.2318, cls=0.0120, box=0.0440
+epoch 10: total=0.2275, cls=0.0119, box=0.0431, map50=0.0002, mean_pred_score=0.0197, num_predictions=32469
+epoch 11: total=0.2229, cls=0.0119, box=0.0422
+epoch 12: total=0.2187, cls=0.0118, box=0.0414
+epoch 13: total=0.2148, cls=0.0118, box=0.0406
+epoch 14: total=0.2107, cls=0.0118, box=0.0398
+epoch 15: total=0.2068, cls=0.0117, box=0.0390, map50=0.0003, mean_pred_score=0.0196, num_predictions=32469
+epoch 16: total=0.2031, cls=0.0117, box=0.0383
+epoch 17: total=0.1999, cls=0.0117, box=0.0376
+epoch 18: total=0.1973, cls=0.0117, box=0.0371
+epoch 19: total=0.1955, cls=0.0117, box=0.0368
+epoch 20: total=0.1944, cls=0.0117, box=0.0365, map50=0.0003, mean_pred_score=0.0200, num_predictions=32469

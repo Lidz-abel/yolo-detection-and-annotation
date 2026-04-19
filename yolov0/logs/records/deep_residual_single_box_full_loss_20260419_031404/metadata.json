@@ -1,0 +1,32 @@
+{
+  "run_id": "deep_residual_single_box_full_loss_20260419_031404",
+  "run_name": "deep_residual_single_box_full_loss",
+  "timestamp": "20260419_031404",
+  "project_root": "/home/lidz/YOLO/yolov0",
+  "config_path": "/home/lidz/YOLO/yolov0/configs/deep_residual_single_box_full_loss.toml",
+  "config_snapshot": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_single_box_full_loss_20260419_031404/config.toml",
+  "tensorboard_dir": "/home/lidz/YOLO/yolov0/runs/deep_residual_single_box_full_loss_20260419_031404",
+  "output_dir": "/home/lidz/YOLO/yolov0/outputs/deep_residual_single_box_full_loss_20260419_031404",
+  "record_dir": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_single_box_full_loss_20260419_031404",
+  "git_commit": "1adb62aa58a6c8ae45caf4115554d9c58634c4e1",
+  "hostname": "8x-4090-1",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "completed",
+  "stage": "full_loss_training",
+  "device": "cuda",
+  "last_epoch": 20,
+  "best_epoch": 16,
+  "best_val_loss": 2.351891099020492,
+  "global_step": 9700,
+  "model_output_shape": [
+    1,
+    10,
+    10,
+    85
+  ],
+  "parameter_total": 26516917,
+  "parameter_trainable": 26516917,
+  "visualization_dir": "/home/lidz/YOLO/yolov0/outputs/deep_residual_single_box_full_loss_20260419_031404/visualizations"
+}

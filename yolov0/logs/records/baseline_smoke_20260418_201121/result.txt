@@ -1,0 +1,61 @@
+run_id = baseline_smoke_20260418_201121
+timestamp = 20260418_201121
+status = completed
+stage = baseline_training
+project_root = /home/lidz/YOLO/yolov0
+config_path = /tmp/yolov0_base_smoke.toml
+config_snapshot = /home/lidz/YOLO/yolov0/logs/records/baseline_smoke_20260418_201121/config.toml
+tensorboard_dir = /home/lidz/YOLO/yolov0/runs/baseline_smoke_20260418_201121
+output_dir = /home/lidz/YOLO/yolov0/outputs/baseline_smoke_20260418_201121
+record_dir = /home/lidz/YOLO/yolov0/logs/records/baseline_smoke_20260418_201121
+git_commit = 1adb62aa58a6c8ae45caf4115554d9c58634c4e1
+device = cuda
+gpu_count = 8
+train_dataset_length = 128
+val_dataset_length = 32
+model_output_shape = (1, 10, 10, 84)
+parameter_total = 8719156
+parameter_trainable = 8719156
+
+config summary:
+run_name = baseline_smoke
+train_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl
+val_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl
+packing_format = pt
+image_size = 320
+grid_size = 10
+num_classes = 80
+train_max_samples = 128
+val_max_samples = 32
+model_name = baseline_cnn
+width_mult = 1.0
+depth_mult = 1.0
+use_residual = False
+box_type = mse
+cls_type = mse
+use_objectness = False
+iou_loss = none
+optimizer = adamw
+batch_size = 8
+epochs = 1
+lr = 0.001
+min_lr = 1e-05
+weight_decay = 0.0001
+scheduler = cosine
+num_workers = 0
+use_data_parallel = False
+max_steps_per_epoch = 2
+max_val_steps = 1
+val_interval_epochs = 1
+
+train history:
+epoch = 001 | total = 5.869471 | cls = 0.240459 | box = 1.125802 | batches = 2 | time = 0.424s
+
+val history:
+epoch = 001 | total = 2.106163 | cls = 0.015079 | box = 0.418217 | batches = 1 | time = 0.104s
+
+artifacts:
+last_checkpoint = /home/lidz/YOLO/yolov0/outputs/baseline_smoke_20260418_201121/last.pth
+best_checkpoint = /home/lidz/YOLO/yolov0/outputs/baseline_smoke_20260418_201121/best.pth
+best_epoch = 1
+best_val_loss = 2.1061627864837646

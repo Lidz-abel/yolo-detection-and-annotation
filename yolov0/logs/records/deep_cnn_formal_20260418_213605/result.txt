@@ -1,0 +1,99 @@
+run_id = deep_cnn_formal_20260418_213605
+timestamp = 20260418_213605
+status = completed
+stage = baseline_training
+project_root = /home/lidz/YOLO/yolov0
+config_path = /home/lidz/YOLO/yolov0/configs/deep_cnn_formal.toml
+config_snapshot = /home/lidz/YOLO/yolov0/logs/records/deep_cnn_formal_20260418_213605/config.toml
+tensorboard_dir = /home/lidz/YOLO/yolov0/runs/deep_cnn_formal_20260418_213605
+output_dir = /home/lidz/YOLO/yolov0/outputs/deep_cnn_formal_20260418_213605
+record_dir = /home/lidz/YOLO/yolov0/logs/records/deep_cnn_formal_20260418_213605
+git_commit = 1adb62aa58a6c8ae45caf4115554d9c58634c4e1
+device = cuda
+gpu_count = 8
+train_dataset_length = 124004
+val_dataset_length = 10823
+model_output_shape = (1, 10, 10, 84)
+parameter_total = 17664180
+parameter_trainable = 17664180
+
+config summary:
+run_name = deep_cnn_formal
+train_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl
+val_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl
+packing_format = pt
+image_size = 320
+grid_size = 10
+num_classes = 80
+train_max_samples = 0
+val_max_samples = 0
+model_name = deep_cnn
+width_mult = 1.0
+depth_mult = 2.0
+use_residual = False
+box_type = mse
+cls_type = mse
+use_objectness = False
+iou_loss = none
+optimizer = adamw
+batch_size = 256
+epochs = 20
+lr = 0.001
+min_lr = 1e-05
+weight_decay = 0.0001
+scheduler = cosine
+num_workers = 64
+use_data_parallel = True
+max_steps_per_epoch = 0
+max_val_steps = 0
+val_interval_epochs = 1
+
+train history:
+epoch = 001 | total = 0.412816 | cls = 0.014491 | box = 0.079665 | batches = 485 | time = 216.130s
+epoch = 002 | total = 0.293193 | cls = 0.012129 | box = 0.056213 | batches = 485 | time = 181.150s
+epoch = 003 | total = 0.268585 | cls = 0.011894 | box = 0.051338 | batches = 485 | time = 176.063s
+epoch = 004 | total = 0.250598 | cls = 0.011713 | box = 0.047777 | batches = 485 | time = 176.897s
+epoch = 005 | total = 0.235927 | cls = 0.011533 | box = 0.044879 | batches = 485 | time = 184.501s
+epoch = 006 | total = 0.224163 | cls = 0.011384 | box = 0.042556 | batches = 485 | time = 190.800s
+epoch = 007 | total = 0.214225 | cls = 0.011249 | box = 0.040595 | batches = 485 | time = 183.517s
+epoch = 008 | total = 0.205536 | cls = 0.011132 | box = 0.038881 | batches = 485 | time = 176.421s
+epoch = 009 | total = 0.197922 | cls = 0.011013 | box = 0.037382 | batches = 485 | time = 184.172s
+epoch = 010 | total = 0.190222 | cls = 0.010918 | box = 0.035861 | batches = 485 | time = 174.900s
+epoch = 011 | total = 0.182321 | cls = 0.010819 | box = 0.034301 | batches = 485 | time = 187.027s
+epoch = 012 | total = 0.173862 | cls = 0.010732 | box = 0.032626 | batches = 485 | time = 177.896s
+epoch = 013 | total = 0.163775 | cls = 0.010647 | box = 0.030626 | batches = 485 | time = 179.082s
+epoch = 014 | total = 0.151891 | cls = 0.010566 | box = 0.028265 | batches = 485 | time = 183.380s
+epoch = 015 | total = 0.137533 | cls = 0.010489 | box = 0.025409 | batches = 485 | time = 180.320s
+epoch = 016 | total = 0.120975 | cls = 0.010423 | box = 0.022110 | batches = 485 | time = 178.853s
+epoch = 017 | total = 0.103941 | cls = 0.010370 | box = 0.018714 | batches = 485 | time = 184.285s
+epoch = 018 | total = 0.088793 | cls = 0.010324 | box = 0.015694 | batches = 485 | time = 182.155s
+epoch = 019 | total = 0.077404 | cls = 0.010295 | box = 0.013422 | batches = 485 | time = 184.212s
+epoch = 020 | total = 0.070670 | cls = 0.010284 | box = 0.012077 | batches = 485 | time = 182.033s
+
+val history:
+epoch = 001 | total = 0.365654 | cls = 0.013180 | box = 0.070495 | batches = 43 | time = 17.942s
+epoch = 002 | total = 0.294069 | cls = 0.013032 | box = 0.056207 | batches = 43 | time = 13.503s
+epoch = 003 | total = 0.278886 | cls = 0.012893 | box = 0.053199 | batches = 43 | time = 14.049s
+epoch = 004 | total = 0.254043 | cls = 0.012901 | box = 0.048228 | batches = 43 | time = 13.811s
+epoch = 005 | total = 0.237815 | cls = 0.012787 | box = 0.045006 | batches = 43 | time = 13.804s
+epoch = 006 | total = 0.231465 | cls = 0.012733 | box = 0.043746 | batches = 43 | time = 13.434s
+epoch = 007 | total = 0.240398 | cls = 0.012810 | box = 0.045517 | batches = 43 | time = 14.865s
+epoch = 008 | total = 0.217965 | cls = 0.012465 | box = 0.041100 | batches = 43 | time = 13.588s
+epoch = 009 | total = 0.206053 | cls = 0.012992 | box = 0.038612 | batches = 43 | time = 14.480s
+epoch = 010 | total = 0.210400 | cls = 0.013164 | box = 0.039447 | batches = 43 | time = 14.344s
+epoch = 011 | total = 0.206364 | cls = 0.012856 | box = 0.038702 | batches = 43 | time = 13.371s
+epoch = 012 | total = 0.203133 | cls = 0.012380 | box = 0.038151 | batches = 43 | time = 13.073s
+epoch = 013 | total = 0.206198 | cls = 0.012722 | box = 0.038695 | batches = 43 | time = 13.029s
+epoch = 014 | total = 0.201727 | cls = 0.013082 | box = 0.037729 | batches = 43 | time = 14.318s
+epoch = 015 | total = 0.204838 | cls = 0.012556 | box = 0.038456 | batches = 43 | time = 14.031s
+epoch = 016 | total = 0.205157 | cls = 0.013069 | box = 0.038418 | batches = 43 | time = 13.290s
+epoch = 017 | total = 0.211250 | cls = 0.012619 | box = 0.039726 | batches = 43 | time = 13.465s
+epoch = 018 | total = 0.216396 | cls = 0.012733 | box = 0.040733 | batches = 43 | time = 15.759s
+epoch = 019 | total = 0.219948 | cls = 0.012782 | box = 0.041433 | batches = 43 | time = 15.143s
+epoch = 020 | total = 0.223911 | cls = 0.012831 | box = 0.042216 | batches = 43 | time = 14.098s
+
+artifacts:
+last_checkpoint = /home/lidz/YOLO/yolov0/outputs/deep_cnn_formal_20260418_213605/last.pth
+best_checkpoint = /home/lidz/YOLO/yolov0/outputs/deep_cnn_formal_20260418_213605/best.pth
+best_epoch = 14
+best_val_loss = 0.2017274412304856

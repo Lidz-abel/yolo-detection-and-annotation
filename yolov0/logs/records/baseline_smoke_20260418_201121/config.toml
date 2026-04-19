@@ -1,0 +1,60 @@
+# Conservative baseline config for the first trainable yolov0 baseline.
+# This file is the default entrypoint for subsequent baseline experiments.
+
+[data]
+train_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl"
+val_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl"
+image_size = 320
+grid_size = 10
+num_classes = 80
+train_max_samples = 128
+val_max_samples = 32
+packing_format = "pt"
+
+[model]
+name = "baseline_cnn"
+width_mult = 1.0
+depth_mult = 1.0
+use_residual = false
+
+[loss]
+box_type = "mse"
+cls_type = "mse"
+use_objectness = false
+iou_loss = "none"
+lambda_box = 5.0
+lambda_cls = 1.0
+
+[train]
+batch_size = 8
+epochs = 1
+optimizer = "adamw"
+lr = 0.001
+min_lr = 0.00001
+weight_decay = 0.0001
+scheduler = "cosine"
+shuffle = true
+seed = 42
+device = "auto"
+num_workers = 0
+pin_memory = false
+persistent_workers = false
+prefetch_factor = 4
+use_data_parallel = false
+max_steps_per_epoch = 2
+max_val_steps = 1
+
+[logging]
+run_name = "baseline_smoke"
+runs_dir = "/home/lidz/YOLO/yolov0/runs"
+output_dir = "/home/lidz/YOLO/yolov0/outputs"
+records_dir = "/home/lidz/YOLO/yolov0/logs/records"
+log_every_steps = 1
+save_interval_epochs = 1
+
+[evaluation]
+val_interval_epochs = 1
+
+[visualization]
+vis_interval_epochs = 5
+max_samples = 4

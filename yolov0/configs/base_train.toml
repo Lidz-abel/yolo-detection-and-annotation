@@ -4,6 +4,8 @@
 [data]
 train_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl"
 val_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl"
+# Current baseline keeps a moderate input size and a 10x10 prediction grid.
+# Finer grid density is a planned controlled variable for later comparison.
 image_size = 320
 grid_size = 10
 num_classes = 80
@@ -41,8 +43,8 @@ pin_memory = true
 persistent_workers = true
 prefetch_factor = 4
 use_data_parallel = true
-bootstrap_only = true
 max_steps_per_epoch = 0
+max_val_steps = 0
 
 [logging]
 run_name = "baseline"
@@ -50,12 +52,10 @@ runs_dir = "/home/lidz/YOLO/yolov0/runs"
 output_dir = "/home/lidz/YOLO/yolov0/outputs"
 records_dir = "/home/lidz/YOLO/yolov0/logs/records"
 log_every_steps = 20
+save_interval_epochs = 5
 
 [evaluation]
-eval_interval_epochs = 5
-map_iou_threshold = 0.5
-score_threshold = 0.05
-top_k = 10
+val_interval_epochs = 1
 
 [visualization]
 vis_interval_epochs = 5

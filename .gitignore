@@ -6,6 +6,10 @@ DataSet/Unified/**
 !DataSet/Unified/**/*.pdf
 !DataSet/Unified/**/README.md
 DataSet/Unified/data_augmentation/report/backgroud.pdf
+miniyolo/report/*
+!miniyolo/report/*.pdf
+yolov0/report/*
+!yolov0/report/*.pdf
 Unified.tar.gz
 *.pt
 *.pth
