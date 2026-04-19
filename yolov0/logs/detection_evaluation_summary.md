@@ -106,6 +106,7 @@ The following formal evaluation JSON files were produced:
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_full_loss_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_assign_coco_eval.json`
+- `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_clamp_coco_eval.json`
 
 ### 4.1 Result Table
 
@@ -116,6 +117,7 @@ The following formal evaluation JSON files were produced:
 | `deep_residual` + three-box | 3 | 26.56M | 42.19G | 116.44 | 0.000026 | 0.000122 | 0.000008 | 0.000999 |
 | `deep_residual` + three-box + v5-box + soft-obj | 3 | 26.56M | 42.19G | 124.12 | 0.000069 | 0.000299 | 0.000006 | 0.001134 |
 | `deep_residual` + three-box + v5-box + soft-obj + assign | 3 | 26.56M | 42.19G | 110.19 | 0.000056 | 0.000286 | 0.000002 | 0.001014 |
+| `deep_residual` + three-box + v5-box + soft-obj + clamp | 3 | 26.56M | 42.19G | 116.71 | 0.000073 | 0.000296 | 0.000003 | 0.001090 |
 
 ## 5. Main Interpretation
 
@@ -186,6 +188,31 @@ So the round-2 assignment rewrite is:
 Even after the round-1 fixes, the three-box system remains worse than the
 single-box residual baseline.
 
+### 5.5 Round-3B improves training stability more than final detection quality
+
+The new Stage-C round-3B variant:
+
+- keeps the current anchors
+- keeps YOLOv5-style box parameterization
+- keeps IoU-based soft objectness
+- adds a positive objectness floor with:
+  - `soft_objectness_min = 0.4`
+
+This version shows a useful behavior change:
+
+- the validation loss trajectory is smoother than round-2
+- `COCO AP50` recovers from round-2 and returns close to round-1
+
+However:
+
+- internal `mAP@0.5` falls below round-2
+- `COCO AP50` still does not beat round-1
+
+So round-3B should be interpreted as:
+
+- a valid stability-oriented fix
+- not a decisive quality breakthrough
+
 The current best practical branch is therefore still:
 
 - `deep_residual + single-box full loss`
@@ -217,7 +244,7 @@ At this moment:
 - the best current practical branch is still:
   - `deep_residual + single-box full loss`
 - the original three-box implementation is no longer the latest baseline
-- the stage-C round-1 and round-2 variants are both accepted engineering
+- the stage-C round-1, round-2, and round-3B variants are all accepted engineering
   branches
 - but neither improved three-box variant is yet superior to the
   single-box residual system
@@ -226,9 +253,9 @@ So the next design discussion should focus on:
 
 - how to improve stage C further
 - especially:
-  - anchor design
-  - objectness-quality coupling
-  - matching and crowded-cell assignment
+  - matching standard itself
+  - crowded-cell assignment
+  - anchor usage rather than anchor numeric refit
 
 The first two Stage-C round-1 fixes should now be treated as accepted:
 
@@ -240,6 +267,13 @@ The Stage-C round-2 assignment rewrite should be treated as:
 - a completed and formally evaluated branch
 - informative for diagnosis
 - but not the new best reference branch
+
+The Stage-C round-3B objectness-floor change should be treated as:
+
+- a completed and formally evaluated branch
+- helpful for optimization stability
+- insufficient on its own to make the three-box line surpass the best
+  single-box residual baseline
 
 rather than immediately assuming that a three-box head is already better
 just because it is structurally richer.

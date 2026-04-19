@@ -115,6 +115,7 @@ def build_criterion(data_cfg, model_cfg, loss_cfg):
             anchors=parse_anchor_string(model_cfg.get("anchors")),
             box_parameterization=str(model_cfg.get("box_parameterization", "legacy")),
             soft_objectness_target=str(loss_cfg.get("soft_objectness_target", "hard")),
+            soft_objectness_min=float(loss_cfg.get("soft_objectness_min", 0.0)),
         )
     return DetectionLoss(
         num_classes=int(data_cfg["num_classes"]),

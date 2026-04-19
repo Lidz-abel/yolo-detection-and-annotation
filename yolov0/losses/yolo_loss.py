@@ -22,6 +22,7 @@ class YOLOLoss(nn.Module):
         anchors=None,
         box_parameterization="legacy",
         soft_objectness_target="hard",
+        soft_objectness_min=0.0,
     ):
         super().__init__()
         self.num_classes = num_classes
@@ -33,6 +34,7 @@ class YOLOLoss(nn.Module):
         self.anchors = anchors or []
         self.box_parameterization = box_parameterization
         self.soft_objectness_target = soft_objectness_target
+        self.soft_objectness_min = soft_objectness_min
         self.bce = nn.BCEWithLogitsLoss(reduction="none")
 
     def forward(self, pred, targets):
@@ -77,7 +79,9 @@ class YOLOLoss(nn.Module):
             mean_giou = zero
 
         if self.soft_objectness_target == "iou":
-            positive_obj_target = iou.detach().clamp(min=0.0, max=1.0)
+            # Keep a floor on positive obj targets so early bad boxes do not
+            # collapse every positive sample into an almost-background target.
+            positive_obj_target = iou.detach().clamp(min=self.soft_objectness_min, max=1.0)
         else:
             positive_obj_target = target_obj
 
