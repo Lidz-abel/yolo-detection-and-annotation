@@ -41,6 +41,7 @@ def train_one_epoch(
     obj_neg_loss_sum = 0.0
     mean_giou_sum = 0.0
     mean_obj_target_sum = 0.0
+    mean_cls_target_sum = 0.0
     positive_cells_sum = 0.0
     collision_count_sum = 0.0
     ignored_count_sum = 0.0
@@ -71,6 +72,7 @@ def train_one_epoch(
         obj_neg_loss_sum += float(loss_dict["loss_obj_neg"].item())
         mean_giou_sum += float(loss_dict["mean_giou"].item())
         mean_obj_target_sum += float(loss_dict["mean_obj_target"].item())
+        mean_cls_target_sum += float(loss_dict["mean_cls_target"].item())
         positive_cells_sum += float(loss_dict["positive_cells_per_image"].item())
         collision_count_sum += float(loss_dict["collision_count"].item())
         ignored_count_sum += float(loss_dict["ignored_count"].item())
@@ -84,6 +86,7 @@ def train_one_epoch(
         writer.add_scalar("loss/objectness_negative_step", loss_dict["loss_obj_neg"].item(), global_step)
         writer.add_scalar("metrics/mean_giou_step", loss_dict["mean_giou"].item(), global_step)
         writer.add_scalar("metrics/mean_obj_target_step", loss_dict["mean_obj_target"].item(), global_step)
+        writer.add_scalar("metrics/mean_cls_target_step", loss_dict["mean_cls_target"].item(), global_step)
         writer.add_scalar("metrics/positive_cells_per_image_step", loss_dict["positive_cells_per_image"].item(), global_step)
         writer.add_scalar("metrics/collision_count_step", loss_dict["collision_count"].item(), global_step)
         writer.add_scalar("metrics/ignored_count_step", loss_dict["ignored_count"].item(), global_step)
@@ -111,6 +114,7 @@ def train_one_epoch(
             "obj_neg_loss": 0.0,
             "mean_giou": 0.0,
             "mean_obj_target": 0.0,
+            "mean_cls_target": 0.0,
             "positive_cells_per_image": 0.0,
             "collision_count": 0.0,
             "ignored_count": 0.0,
@@ -128,6 +132,7 @@ def train_one_epoch(
     obj_neg_loss_mean = obj_neg_loss_sum / batch_count
     mean_giou_mean = mean_giou_sum / batch_count
     mean_obj_target_mean = mean_obj_target_sum / batch_count
+    mean_cls_target_mean = mean_cls_target_sum / batch_count
     positive_cells_mean = positive_cells_sum / batch_count
     collision_count_mean = collision_count_sum / batch_count
     ignored_count_mean = ignored_count_sum / batch_count
@@ -141,6 +146,7 @@ def train_one_epoch(
     writer.add_scalar("loss/objectness_negative_epoch", obj_neg_loss_mean, epoch_index)
     writer.add_scalar("metrics/mean_giou_epoch", mean_giou_mean, epoch_index)
     writer.add_scalar("metrics/mean_obj_target_epoch", mean_obj_target_mean, epoch_index)
+    writer.add_scalar("metrics/mean_cls_target_epoch", mean_cls_target_mean, epoch_index)
     writer.add_scalar("metrics/positive_cells_per_image_epoch", positive_cells_mean, epoch_index)
     writer.add_scalar("metrics/collision_count_epoch", collision_count_mean, epoch_index)
     writer.add_scalar("metrics/ignored_count_epoch", ignored_count_mean, epoch_index)
@@ -156,6 +162,7 @@ def train_one_epoch(
         "obj_neg_loss": obj_neg_loss_mean,
         "mean_giou": mean_giou_mean,
         "mean_obj_target": mean_obj_target_mean,
+        "mean_cls_target": mean_cls_target_mean,
         "positive_cells_per_image": positive_cells_mean,
         "collision_count": collision_count_mean,
         "ignored_count": ignored_count_mean,
@@ -186,6 +193,7 @@ def validate_one_epoch(
     obj_neg_loss_sum = 0.0
     mean_giou_sum = 0.0
     mean_obj_target_sum = 0.0
+    mean_cls_target_sum = 0.0
     positive_cells_sum = 0.0
     collision_count_sum = 0.0
     ignored_count_sum = 0.0
@@ -212,6 +220,7 @@ def validate_one_epoch(
             obj_neg_loss_sum += float(loss_dict["loss_obj_neg"].item())
             mean_giou_sum += float(loss_dict["mean_giou"].item())
             mean_obj_target_sum += float(loss_dict["mean_obj_target"].item())
+            mean_cls_target_sum += float(loss_dict["mean_cls_target"].item())
             positive_cells_sum += float(loss_dict["positive_cells_per_image"].item())
             collision_count_sum += float(loss_dict["collision_count"].item())
             ignored_count_sum += float(loss_dict["ignored_count"].item())
@@ -228,6 +237,7 @@ def validate_one_epoch(
             "obj_neg_loss": 0.0,
             "mean_giou": 0.0,
             "mean_obj_target": 0.0,
+            "mean_cls_target": 0.0,
             "positive_cells_per_image": 0.0,
             "collision_count": 0.0,
             "ignored_count": 0.0,
@@ -245,6 +255,7 @@ def validate_one_epoch(
             "obj_neg_loss": obj_neg_loss_sum / batch_count,
             "mean_giou": mean_giou_sum / batch_count,
             "mean_obj_target": mean_obj_target_sum / batch_count,
+            "mean_cls_target": mean_cls_target_sum / batch_count,
             "positive_cells_per_image": positive_cells_sum / batch_count,
             "collision_count": collision_count_sum / batch_count,
             "ignored_count": ignored_count_sum / batch_count,
@@ -261,6 +272,7 @@ def validate_one_epoch(
     writer.add_scalar("val/objectness_negative_epoch", metrics["obj_neg_loss"], epoch_index)
     writer.add_scalar("val/mean_giou_epoch", metrics["mean_giou"], epoch_index)
     writer.add_scalar("val/mean_obj_target_epoch", metrics["mean_obj_target"], epoch_index)
+    writer.add_scalar("val/mean_cls_target_epoch", metrics["mean_cls_target"], epoch_index)
     writer.add_scalar("val/positive_cells_per_image_epoch", metrics["positive_cells_per_image"], epoch_index)
     writer.add_scalar("val/collision_count_epoch", metrics["collision_count"], epoch_index)
     writer.add_scalar("val/ignored_count_epoch", metrics["ignored_count"], epoch_index)

@@ -63,6 +63,7 @@ def summarize_config(config: dict) -> list[str]:
         f"iou_loss = {loss_cfg['iou_loss']}",
         f"soft_objectness_target = {loss_cfg.get('soft_objectness_target', 'hard')}",
         f"soft_objectness_min = {loss_cfg.get('soft_objectness_min', 0.0)}",
+        f"soft_classification_target = {loss_cfg.get('soft_classification_target', 'hard')}",
         f"lambda_obj = {loss_cfg.get('lambda_obj', 'n/a')}",
         f"lambda_noobj = {loss_cfg.get('lambda_noobj', 'n/a')}",
         f"optimizer = {train_cfg['optimizer']}",

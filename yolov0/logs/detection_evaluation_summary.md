@@ -110,6 +110,7 @@ The following formal evaluation JSON files were produced:
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_tight_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_ignore_coco_eval.json`
+- `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_qualitycls_coco_eval.json`
 
 ### 4.1 Result Table
 
@@ -124,6 +125,7 @@ The following formal evaluation JSON files were produced:
 | `deep_residual` + three-box + v5-box + soft-obj + shape-match | 3 | 26.56M | 42.19G | 122.42 | 0.000095 | 0.000343 | 0.000002 | 0.001332 |
 | `deep_residual` + three-box + v5-box + soft-obj + shape-match + tight | 3 | 26.56M | 42.19G | 120.57 | 0.000159 | 0.000496 | 0.000126 | 0.001103 |
 | `deep_residual` + three-box + v5-box + soft-obj + shape-match + ignore | 3 | 26.56M | 42.19G | 120.01 | 0.000135 | 0.000432 | 0.000022 | 0.001175 |
+| `deep_residual` + three-box + quality-cls | 3 | 26.56M | 42.19G | 100.69 | 0.000097 | 0.000415 | 0.000007 | 0.000782 |
 
 ## 5. Main Interpretation
 
@@ -258,6 +260,38 @@ However:
 So round-3B should be interpreted as:
 
 - a valid stability-oriented fix
+### 5.7 Round-5A confirms that cls scoring is one of the current bottlenecks
+
+The new Stage-C round-5A variant:
+
+- keeps the current `shape-matching + ignore band`
+- keeps the current YOLOv5-style box parameterization
+- keeps IoU-based soft objectness with a floor
+- replaces hard one-hot positive cls targets with IoU-aware soft cls targets
+
+This version shows a very specific tradeoff:
+
+- internal precision rises sharply
+- total predicted boxes drop substantially
+- but recall and `AR@100` fall noticeably
+
+Under the stricter metrics:
+
+- `AP50` is below round-4A
+- `AR@100` is below round-4B
+
+So round-5A should be interpreted as:
+
+- strong evidence that three-box quality ranking is still a real bottleneck
+- evidence that quality-aware classification can suppress low-quality duplicate boxes
+- but also evidence that this first implementation is too aggressive and over-suppresses borderline positives
+
+In other words, round-5A is valuable mainly because it confirms the direction
+of the next step:
+
+- decoupling the classification branch from the regression/objectness branch
+
+instead of keeping all three tasks tied to the same head representation.
 - not a decisive quality breakthrough
 
 ### 5.7 Round-4A improves AP50 by tightening the three-box mechanism

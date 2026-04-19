@@ -23,6 +23,7 @@ class YOLOLoss(nn.Module):
         box_parameterization="legacy",
         soft_objectness_target="hard",
         soft_objectness_min=0.0,
+        soft_classification_target="hard",
     ):
         super().__init__()
         self.num_classes = num_classes
@@ -35,6 +36,7 @@ class YOLOLoss(nn.Module):
         self.box_parameterization = box_parameterization
         self.soft_objectness_target = soft_objectness_target
         self.soft_objectness_min = soft_objectness_min
+        self.soft_classification_target = soft_classification_target
         self.bce = nn.BCEWithLogitsLoss(reduction="none")
 
     def forward(self, pred, targets):
@@ -85,12 +87,20 @@ class YOLOLoss(nn.Module):
         else:
             positive_obj_target = target_obj
 
+        if self.soft_classification_target == "iou":
+            # Replace the one-hot positive target of the matched class with the
+            # current box quality so low-IoU matches receive weaker cls reward.
+            positive_cls_target = iou.detach().clamp(min=0.0, max=1.0)
+            soft_target_cls = target_cls * positive_cls_target.unsqueeze(-1)
+        else:
+            soft_target_cls = target_cls
+
         loss_obj_pos = (self.bce(pred_obj, positive_obj_target) * object_mask).sum() / num_pos
         loss_obj_neg = (self.bce(pred_obj, target_obj) * noobj_mask).sum() / num_neg
         loss_obj = loss_obj_pos + self.lambda_noobj * loss_obj_neg
 
         cls_mask = object_mask.unsqueeze(-1)
-        loss_cls = (self.bce(pred_cls, target_cls) * cls_mask).sum() / (num_pos * self.num_classes)
+        loss_cls = (self.bce(pred_cls, soft_target_cls) * cls_mask).sum() / (num_pos * self.num_classes)
 
         total_loss = (
             self.lambda_box * loss_box
@@ -112,6 +122,7 @@ class YOLOLoss(nn.Module):
             "loss_obj_neg": loss_obj_neg,
             "mean_giou": mean_giou,
             "mean_obj_target": positive_obj_target[positive_mask].mean() if positive_mask.any() else pred_box.sum() * 0.0,
+            "mean_cls_target": soft_target_cls[positive_mask].max(dim=-1).values.mean() if positive_mask.any() else pred_box.sum() * 0.0,
             "positive_cells_per_image": positive_cells_per_image,
             "collision_count": collision_count_mean,
             "ignored_count": ignored_count_mean,
