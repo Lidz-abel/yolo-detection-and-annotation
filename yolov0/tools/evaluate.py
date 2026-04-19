@@ -85,6 +85,7 @@ def main():
         anchor_ignore_iou=float(model_cfg.get("anchor_ignore_iou", 0.5)),
         anchor_match_metric=str(model_cfg.get("anchor_match_metric", "iou")),
         anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
+        anchor_ignore_shape_ratio=model_cfg.get("anchor_ignore_shape_ratio"),
         max_samples=args.max_samples,
     )
 

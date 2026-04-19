@@ -39,6 +39,7 @@ def encode_target(
     anchor_ignore_iou=0.5,
     anchor_match_metric="iou",
     anchor_shape_ratio=4.0,
+    anchor_ignore_shape_ratio=None,
 ):
     """Map resized xyxy boxes to a grid with box, class, and objectness targets."""
     if num_boxes > 1 and anchors:
@@ -114,6 +115,11 @@ def encode_target(
         ignore_iou = float(anchor_ignore_iou)
         match_metric = str(anchor_match_metric).lower()
         positive_ratio = float(anchor_shape_ratio)
+        ignore_ratio = (
+            float(anchor_ignore_shape_ratio)
+            if anchor_ignore_shape_ratio is not None
+            else float(anchor_shape_ratio) + 1.5
+        )
 
         for (grid_y, grid_x), entries in cell_assignments.items():
             if len(entries) > 1:
@@ -195,7 +201,7 @@ def encode_target(
                 else:
                     best_fit = float(best_fit_per_anchor[anchor_idx].item())
                     if fit_is_better == "lower":
-                        if best_fit <= positive_ratio:
+                        if best_fit <= ignore_ratio:
                             noobj_mask[grid_y, grid_x, anchor_idx] = 0
                             ignored_count += 1
                     elif best_fit >= ignore_iou:

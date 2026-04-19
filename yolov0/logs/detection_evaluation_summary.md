@@ -109,6 +109,7 @@ The following formal evaluation JSON files were produced:
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_clamp_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_tight_coco_eval.json`
+- `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_ignore_coco_eval.json`
 
 ### 4.1 Result Table
 
@@ -122,6 +123,7 @@ The following formal evaluation JSON files were produced:
 | `deep_residual` + three-box + v5-box + soft-obj + clamp | 3 | 26.56M | 42.19G | 116.71 | 0.000073 | 0.000296 | 0.000003 | 0.001090 |
 | `deep_residual` + three-box + v5-box + soft-obj + shape-match | 3 | 26.56M | 42.19G | 122.42 | 0.000095 | 0.000343 | 0.000002 | 0.001332 |
 | `deep_residual` + three-box + v5-box + soft-obj + shape-match + tight | 3 | 26.56M | 42.19G | 120.57 | 0.000159 | 0.000496 | 0.000126 | 0.001103 |
+| `deep_residual` + three-box + v5-box + soft-obj + shape-match + ignore | 3 | 26.56M | 42.19G | 120.01 | 0.000135 | 0.000432 | 0.000022 | 0.001175 |
 
 ## 5. Main Interpretation
 
@@ -257,6 +259,65 @@ So round-3B should be interpreted as:
 
 - a valid stability-oriented fix
 - not a decisive quality breakthrough
+
+### 5.7 Round-4A improves AP50 by tightening the three-box mechanism
+
+The new Stage-C round-4A variant:
+
+- tightens `anchor_shape_ratio` from `4.0` to `2.5`
+- lowers `soft_objectness_min` from `0.4` to `0.05`
+- keeps the current `shape-matching` assignment framework unchanged
+
+This variant does **not** improve every metric, but it changes the three-box
+behavior in a useful direction:
+
+- the number of predictions drops
+- internal precision rises slightly
+- COCO `AP50` rises clearly
+
+At the same time:
+
+- recall drops slightly
+- `AR@100` also falls slightly
+
+So round-4A should be interpreted as:
+
+- a precision-oriented tightening step
+- the first Stage-C variant that noticeably reduces overprediction while
+  improving official-style `AP50`
+
+### 5.8 Round-4B activates a real ignore band and shifts the tradeoff back toward recall
+
+The new Stage-C round-4B variant:
+
+- keeps the round-4A tight `shape_ratio` setting
+- introduces `anchor_ignore_shape_ratio = 4.0`
+- activates a real `positive / ignore / negative` split in the
+  `shape-matching` branch
+
+This version is important mainly because the ignore mechanism is now truly
+working:
+
+- `ignored_count` becomes clearly non-zero in both train and val
+
+Under the internal and COCO-style metrics, round-4B behaves like a recall-
+oriented counterpart to round-4A:
+
+- internal `mAP@0.5` rises back above round-4A
+- internal recall rises
+- COCO `AR@100` rises above round-4A
+
+but:
+
+- internal precision falls
+- COCO `AP50` falls from the round-4A peak
+- prediction count increases again
+
+So round-4B should be interpreted as:
+
+- a successful ignore-band activation
+- evidence that Stage C is now trading between coverage and ranking quality
+- not yet the final best three-box variant if `AP50` is the main priority
 
 ### 5.7 Round-4A improves AP50 by tightening the three-box system
 

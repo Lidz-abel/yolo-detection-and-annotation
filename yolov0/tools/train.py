@@ -190,6 +190,7 @@ def main():
         anchor_ignore_iou=float(model_cfg.get("anchor_ignore_iou", 0.5)),
         anchor_match_metric=str(model_cfg.get("anchor_match_metric", "iou")),
         anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
+        anchor_ignore_shape_ratio=model_cfg.get("anchor_ignore_shape_ratio"),
         max_samples=int(data_cfg["train_max_samples"]),
     )
     val_dataset = DetectionDataset(
@@ -203,6 +204,7 @@ def main():
         anchor_ignore_iou=float(model_cfg.get("anchor_ignore_iou", 0.5)),
         anchor_match_metric=str(model_cfg.get("anchor_match_metric", "iou")),
         anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
+        anchor_ignore_shape_ratio=model_cfg.get("anchor_ignore_shape_ratio"),
         max_samples=int(data_cfg["val_max_samples"]),
     )
     train_loader = build_loader(train_dataset, int(train_cfg["batch_size"]), bool(train_cfg["shuffle"]), train_cfg)
