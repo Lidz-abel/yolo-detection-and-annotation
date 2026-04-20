@@ -117,6 +117,12 @@ def build_criterion(data_cfg, model_cfg, loss_cfg):
             soft_objectness_target=str(loss_cfg.get("soft_objectness_target", "hard")),
             soft_objectness_min=float(loss_cfg.get("soft_objectness_min", 0.0)),
             soft_classification_target=str(loss_cfg.get("soft_classification_target", "hard")),
+            assignment_strategy=str(loss_cfg.get("assignment_strategy", "static")),
+            dynamic_topk=int(loss_cfg.get("dynamic_topk", 2)),
+            dynamic_center_radius=int(loss_cfg.get("dynamic_center_radius", 1)),
+            dynamic_box_cost=float(loss_cfg.get("dynamic_box_cost", 3.0)),
+            dynamic_cls_cost=float(loss_cfg.get("dynamic_cls_cost", 1.0)),
+            dynamic_ignore_iou=float(loss_cfg.get("dynamic_ignore_iou", 0.5)),
         )
     return DetectionLoss(
         num_classes=int(data_cfg["num_classes"]),

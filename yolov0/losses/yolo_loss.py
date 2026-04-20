@@ -24,6 +24,12 @@ class YOLOLoss(nn.Module):
         soft_objectness_target="hard",
         soft_objectness_min=0.0,
         soft_classification_target="hard",
+        assignment_strategy="static",
+        dynamic_topk=2,
+        dynamic_center_radius=1,
+        dynamic_box_cost=3.0,
+        dynamic_cls_cost=1.0,
+        dynamic_ignore_iou=0.5,
     ):
         super().__init__()
         self.num_classes = num_classes
@@ -37,7 +43,197 @@ class YOLOLoss(nn.Module):
         self.soft_objectness_target = soft_objectness_target
         self.soft_objectness_min = soft_objectness_min
         self.soft_classification_target = soft_classification_target
+        self.assignment_strategy = assignment_strategy
+        self.dynamic_topk = dynamic_topk
+        self.dynamic_center_radius = dynamic_center_radius
+        self.dynamic_box_cost = dynamic_box_cost
+        self.dynamic_cls_cost = dynamic_cls_cost
+        self.dynamic_ignore_iou = dynamic_ignore_iou
         self.bce = nn.BCEWithLogitsLoss(reduction="none")
+
+    def _build_dynamic_targets(self, pred_cls, decoded_pred_boxes, targets):
+        """Assign positives dynamically from current predictions and GT boxes."""
+        batch_size, grid_h, grid_w, num_boxes, _ = decoded_pred_boxes.shape
+        device = decoded_pred_boxes.device
+        dtype = decoded_pred_boxes.dtype
+        num_classes = pred_cls.shape[-1]
+
+        target_box = torch.zeros(batch_size, grid_h, grid_w, num_boxes, 4, device=device, dtype=dtype)
+        target_obj = torch.zeros(batch_size, grid_h, grid_w, num_boxes, device=device, dtype=dtype)
+        target_cls = torch.zeros(batch_size, grid_h, grid_w, num_boxes, num_classes, device=device, dtype=dtype)
+        object_mask = torch.zeros(batch_size, grid_h, grid_w, num_boxes, device=device, dtype=dtype)
+        noobj_mask = torch.ones(batch_size, grid_h, grid_w, num_boxes, device=device, dtype=dtype)
+        collision_count = torch.zeros(batch_size, device=device, dtype=dtype)
+        ignored_count = torch.zeros(batch_size, device=device, dtype=dtype)
+        dropped_gt_count = torch.zeros(batch_size, device=device, dtype=dtype)
+
+        slot_grid_y, slot_grid_x, slot_anchor = self._make_slot_indices(
+            grid_h=grid_h,
+            grid_w=grid_w,
+            num_boxes=num_boxes,
+            device=device,
+            dtype=dtype,
+        )
+        num_slots = slot_grid_y.numel()
+
+        with torch.no_grad():
+            pred_boxes_detached = decoded_pred_boxes.detach().view(batch_size, num_slots, 4)
+            pred_cls_detached = pred_cls.detach().view(batch_size, num_slots, num_classes)
+            resized_sizes = targets["resized_size"].to(device)
+
+            for batch_index in range(batch_size):
+                gt_boxes_abs = targets["boxes"][batch_index].to(device=device, dtype=dtype)
+                gt_labels = targets["labels"][batch_index].to(device=device)
+                if gt_boxes_abs.numel() == 0:
+                    continue
+
+                image_h = float(resized_sizes[batch_index, 0].item())
+                image_w = float(resized_sizes[batch_index, 1].item())
+                gt_boxes = gt_boxes_abs.clone()
+                gt_boxes[:, [0, 2]] /= max(image_w, 1.0)
+                gt_boxes[:, [1, 3]] /= max(image_h, 1.0)
+
+                gt_cx = (gt_boxes[:, 0] + gt_boxes[:, 2]) / 2.0
+                gt_cy = (gt_boxes[:, 1] + gt_boxes[:, 3]) / 2.0
+                gt_w = gt_boxes[:, 2] - gt_boxes[:, 0]
+                gt_h = gt_boxes[:, 3] - gt_boxes[:, 1]
+                gt_grid_x = torch.clamp((gt_cx * grid_w).long(), 0, grid_w - 1)
+                gt_grid_y = torch.clamp((gt_cy * grid_h).long(), 0, grid_h - 1)
+
+                unique_cells, counts = torch.unique(
+                    torch.stack([gt_grid_y, gt_grid_x], dim=1),
+                    dim=0,
+                    return_counts=True,
+                )
+                if unique_cells.numel() > 0:
+                    collision_count[batch_index] = torch.clamp(counts.float() - 1.0, min=0.0).sum()
+
+                gt_candidate_lists: list[list[tuple[float, int]]] = []
+                pred_boxes_image = pred_boxes_detached[batch_index]
+                pred_cls_image = pred_cls_detached[batch_index]
+
+                for gt_index in range(gt_boxes.shape[0]):
+                    center_mask = (
+                        (slot_grid_x - gt_grid_x[gt_index]).abs() <= self.dynamic_center_radius
+                    ) & (
+                        (slot_grid_y - gt_grid_y[gt_index]).abs() <= self.dynamic_center_radius
+                    )
+                    candidate_indices = torch.nonzero(center_mask, as_tuple=False).flatten()
+                    if candidate_indices.numel() == 0:
+                        same_cell_mask = (slot_grid_x == gt_grid_x[gt_index]) & (slot_grid_y == gt_grid_y[gt_index])
+                        candidate_indices = torch.nonzero(same_cell_mask, as_tuple=False).flatten()
+                    if candidate_indices.numel() == 0:
+                        candidate_indices = torch.arange(num_slots, device=device)
+
+                    gt_box = gt_boxes[gt_index].unsqueeze(0).expand(candidate_indices.numel(), 4)
+                    iou_scores = box_iou_xyxy(pred_boxes_image[candidate_indices], gt_box)
+                    gt_onehot = torch.zeros(num_classes, device=device, dtype=dtype)
+                    gt_onehot[int(gt_labels[gt_index].item())] = 1.0
+                    cls_cost = self.bce(
+                        pred_cls_image[candidate_indices],
+                        gt_onehot.unsqueeze(0).expand(candidate_indices.numel(), num_classes),
+                    ).mean(dim=-1)
+                    total_cost = self.dynamic_box_cost * (1.0 - iou_scores) + self.dynamic_cls_cost * cls_cost
+                    sorted_cost, order = torch.sort(total_cost, descending=False)
+                    ordered_candidates = candidate_indices[order]
+                    gt_candidate_lists.append(
+                        [
+                            (float(sorted_cost[idx].item()), int(ordered_candidates[idx].item()))
+                            for idx in range(min(self.dynamic_topk, ordered_candidates.numel()))
+                        ]
+                    )
+
+                assigned_slots: set[int] = set()
+                assigned_pairs: list[tuple[int, int]] = []
+                best_candidate_costs = [
+                    candidates[0][0] if candidates else float("inf")
+                    for candidates in gt_candidate_lists
+                ]
+                gt_order = sorted(range(len(gt_candidate_lists)), key=lambda idx: best_candidate_costs[idx])
+
+                # Pass 1 keeps the strongest candidate for every GT whenever possible.
+                for gt_index in gt_order:
+                    picked_slot = None
+                    for _, slot_index in gt_candidate_lists[gt_index]:
+                        if slot_index not in assigned_slots:
+                            picked_slot = slot_index
+                            break
+                    if picked_slot is None:
+                        dropped_gt_count[batch_index] += 1.0
+                        continue
+                    assigned_slots.add(picked_slot)
+                    assigned_pairs.append((gt_index, picked_slot))
+
+                # Pass 2 expands to a small number of extra low-cost slots per GT.
+                for gt_index in gt_order:
+                    current_slots = [slot for pair_gt, slot in assigned_pairs if pair_gt == gt_index]
+                    allowed_slots = max(self.dynamic_topk - len(current_slots), 0)
+                    if allowed_slots == 0:
+                        continue
+                    for _, slot_index in gt_candidate_lists[gt_index]:
+                        if slot_index in assigned_slots:
+                            continue
+                        assigned_slots.add(slot_index)
+                        assigned_pairs.append((gt_index, slot_index))
+                        allowed_slots -= 1
+                        if allowed_slots == 0:
+                            break
+
+                for gt_index, slot_index in assigned_pairs:
+                    grid_y = int(slot_grid_y[slot_index].item())
+                    grid_x = int(slot_grid_x[slot_index].item())
+                    anchor_index = int(slot_anchor[slot_index].item())
+                    cell_x = gt_cx[gt_index] * grid_w - float(grid_x)
+                    cell_y = gt_cy[gt_index] * grid_h - float(grid_y)
+                    target_box[batch_index, grid_y, grid_x, anchor_index] = torch.tensor(
+                        [cell_x, cell_y, gt_w[gt_index], gt_h[gt_index]],
+                        dtype=dtype,
+                        device=device,
+                    )
+                    target_obj[batch_index, grid_y, grid_x, anchor_index] = 1.0
+                    object_mask[batch_index, grid_y, grid_x, anchor_index] = 1.0
+                    noobj_mask[batch_index, grid_y, grid_x, anchor_index] = 0.0
+                    target_cls[batch_index, grid_y, grid_x, anchor_index, int(gt_labels[gt_index].item())] = 1.0
+
+                if gt_boxes.shape[0] > 0:
+                    gt_boxes_expanded = gt_boxes.unsqueeze(0).expand(num_slots, gt_boxes.shape[0], 4)
+                    pred_boxes_expanded = pred_boxes_image.unsqueeze(1).expand(num_slots, gt_boxes.shape[0], 4)
+                    slot_gt_iou = box_iou_xyxy(pred_boxes_expanded, gt_boxes_expanded)
+                    max_iou_per_slot = slot_gt_iou.max(dim=1).values
+                    ignore_mask = (max_iou_per_slot >= self.dynamic_ignore_iou)
+                    for slot_index in torch.nonzero(ignore_mask, as_tuple=False).flatten():
+                        if int(slot_index.item()) in assigned_slots:
+                            continue
+                        grid_y = int(slot_grid_y[slot_index].item())
+                        grid_x = int(slot_grid_x[slot_index].item())
+                        anchor_index = int(slot_anchor[slot_index].item())
+                        noobj_mask[batch_index, grid_y, grid_x, anchor_index] = 0.0
+                        ignored_count[batch_index] += 1.0
+
+        return {
+            "target_box": target_box,
+            "target_obj": target_obj,
+            "target_cls": target_cls,
+            "object_mask": object_mask,
+            "noobj_mask": noobj_mask,
+            "collision_count": collision_count,
+            "ignored_count": ignored_count,
+            "dropped_gt_count": dropped_gt_count,
+        }
+
+    @staticmethod
+    def _make_slot_indices(grid_h, grid_w, num_boxes, device, dtype):
+        """Create flattened `(grid_y, grid_x, anchor_idx)` lookup tensors."""
+        grid_y, grid_x = torch.meshgrid(
+            torch.arange(grid_h, device=device, dtype=dtype),
+            torch.arange(grid_w, device=device, dtype=dtype),
+            indexing="ij",
+        )
+        grid_y = grid_y.unsqueeze(-1).expand(grid_h, grid_w, num_boxes).reshape(-1)
+        grid_x = grid_x.unsqueeze(-1).expand(grid_h, grid_w, num_boxes).reshape(-1)
+        anchor_idx = torch.arange(num_boxes, device=device, dtype=dtype).view(1, 1, num_boxes)
+        anchor_idx = anchor_idx.expand(grid_h, grid_w, num_boxes).reshape(-1)
+        return grid_y.long(), grid_x.long(), anchor_idx.long()
 
     def forward(self, pred, targets):
         """Return a dict of loss tensors and monitoring metrics for one batch."""
@@ -47,18 +243,6 @@ class YOLOLoss(nn.Module):
         pred_obj = pred[..., 4]
         pred_cls = pred[..., 5:]
 
-        target_box = targets["target_box"]
-        target_obj = targets["target_obj"]
-        target_cls = targets["target_cls"]
-        object_mask = targets["object_mask"]
-        noobj_mask = targets["noobj_mask"]
-        collision_count = targets["collision_count"]
-        ignored_count = targets["ignored_count"]
-        dropped_gt_count = targets["dropped_gt_count"]
-
-        num_pos = object_mask.sum().clamp(min=1.0)
-        num_neg = noobj_mask.sum().clamp(min=1.0)
-
         anchor_tensor = None
         if self.num_boxes > 1 and self.anchors:
             anchor_tensor = torch.tensor(self.anchors, dtype=pred_box.dtype, device=pred_box.device)
@@ -67,6 +251,34 @@ class YOLOLoss(nn.Module):
             anchors=anchor_tensor,
             box_parameterization=self.box_parameterization,
         )
+
+        if self.assignment_strategy == "dynamic_cost" and self.num_boxes > 1:
+            dynamic_targets = self._build_dynamic_targets(
+                pred_cls=pred_cls,
+                decoded_pred_boxes=decoded_pred_boxes,
+                targets=targets,
+            )
+            target_box = dynamic_targets["target_box"]
+            target_obj = dynamic_targets["target_obj"]
+            target_cls = dynamic_targets["target_cls"]
+            object_mask = dynamic_targets["object_mask"]
+            noobj_mask = dynamic_targets["noobj_mask"]
+            collision_count = dynamic_targets["collision_count"]
+            ignored_count = dynamic_targets["ignored_count"]
+            dropped_gt_count = dynamic_targets["dropped_gt_count"]
+        else:
+            target_box = targets["target_box"]
+            target_obj = targets["target_obj"]
+            target_cls = targets["target_cls"]
+            object_mask = targets["object_mask"]
+            noobj_mask = targets["noobj_mask"]
+            collision_count = targets["collision_count"]
+            ignored_count = targets["ignored_count"]
+            dropped_gt_count = targets["dropped_gt_count"]
+
+        num_pos = object_mask.sum().clamp(min=1.0)
+        num_neg = noobj_mask.sum().clamp(min=1.0)
+
         decoded_target_boxes = target_boxes_to_xyxy(target_box)
         giou = generalized_box_iou(decoded_pred_boxes, decoded_target_boxes)
         iou = box_iou_xyxy(decoded_pred_boxes, decoded_target_boxes)

@@ -1,0 +1,36 @@
+{
+  "export_dir": "/home/lidz/YOLO/yolov0/outputs/report_assets/checkpoint06_v02",
+  "run_results": {
+    "stage_a": "/home/lidz/YOLO/yolov0/logs/records/deep_cnn_single_box_full_loss_20260419_020616/result.txt",
+    "stage_b": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_single_box_full_loss_20260419_031404/result.txt",
+    "stage_c_base": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_full_loss_20260419_043041/result.txt",
+    "round1": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_v5box_softobj_20260419_135531/result.txt",
+    "round2": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_v5box_softobj_assign_20260419_152713/result.txt",
+    "round3b": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_v5box_softobj_clamp_20260419_171735/result.txt",
+    "round3c": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_v5box_softobj_shapematch_20260419_184314/result.txt",
+    "round4a": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_v5box_softobj_shapematch_tight_20260419_201922/result.txt",
+    "round4b": "/home/lidz/YOLO/yolov0/logs/records/deep_residual_three_box_v5box_softobj_shapematch_ignore_20260419_215025/result.txt"
+  },
+  "eval_results": {
+    "stage_a": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_cnn_single_box_full_loss_eval.json",
+    "stage_b": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_single_box_full_loss_eval.json",
+    "stage_c_base": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_full_loss_eval.json",
+    "round1": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_eval.json",
+    "round2": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_assign_eval.json",
+    "round3b": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_clamp_eval.json",
+    "round3c": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_eval.json",
+    "round4a": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_tight_eval.json",
+    "round4b": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_ignore_eval.json"
+  },
+  "coco_results": {
+    "stage_a": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_cnn_single_box_full_loss_coco_eval.json",
+    "stage_b": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_single_box_full_loss_coco_eval.json",
+    "stage_c_base": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_full_loss_coco_eval.json",
+    "round1": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_coco_eval.json",
+    "round2": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_assign_coco_eval.json",
+    "round3b": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_clamp_coco_eval.json",
+    "round3c": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_coco_eval.json",
+    "round4a": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_tight_coco_eval.json",
+    "round4b": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_ignore_coco_eval.json"
+  }
+}
