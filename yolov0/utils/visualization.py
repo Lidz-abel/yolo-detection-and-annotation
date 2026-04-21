@@ -52,6 +52,8 @@ def save_visualization_set(
     max_samples: int = 4,
     score_threshold: float = 0.05,
     top_k: int = 10,
+    score_alpha: float = 1.0,
+    score_beta: float = 1.0,
 ):
     """Run prediction on a fixed dataset prefix and save GT-vs-pred visualization images."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -71,6 +73,8 @@ def save_visualization_set(
                 box_parameterization=box_parameterization,
                 score_threshold=score_threshold,
                 top_k=top_k,
+                score_alpha=score_alpha,
+                score_beta=score_beta,
             )
             image = tensor_to_pil(image_tensor)
             image = draw_gt_and_predictions(image, target["boxes"], target["labels"], predictions)

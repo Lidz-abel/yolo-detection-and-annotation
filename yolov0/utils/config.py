@@ -87,6 +87,12 @@ def summarize_config(config: dict) -> list[str]:
         f"val_interval_epochs = {config['evaluation']['val_interval_epochs']}",
         f"vis_interval_epochs = {config['visualization'].get('vis_interval_epochs', 'n/a')}",
         f"vis_max_samples = {config['visualization'].get('max_samples', 'n/a')}",
+        f"eval_score_threshold = {config['evaluation'].get('score_threshold', 'n/a')}",
+        f"eval_score_alpha = {config['evaluation'].get('score_alpha', 1.0)}",
+        f"eval_score_beta = {config['evaluation'].get('score_beta', 1.0)}",
+        f"vis_score_threshold = {config['visualization'].get('score_threshold', 'n/a')}",
+        f"vis_score_alpha = {config['visualization'].get('score_alpha', 1.0)}",
+        f"vis_score_beta = {config['visualization'].get('score_beta', 1.0)}",
     ]
 
 

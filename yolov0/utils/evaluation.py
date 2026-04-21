@@ -33,6 +33,8 @@ def evaluate_detector(
     top_k: int = 100,
     nms_iou_threshold: float = 0.5,
     map_iou_threshold: float = 0.5,
+    score_alpha: float = 1.0,
+    score_beta: float = 1.0,
 ) -> dict[str, float]:
     """Evaluate mAP@0.5, precision, and recall on one dataset split."""
     was_training = model.training
@@ -58,6 +60,8 @@ def evaluate_detector(
                 score_threshold=score_threshold,
                 top_k=top_k,
                 nms_iou_threshold=nms_iou_threshold,
+                score_alpha=score_alpha,
+                score_beta=score_beta,
             )
             total_predictions += len(predictions)
 

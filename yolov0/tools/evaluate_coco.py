@@ -39,6 +39,8 @@ def parse_args():
     )
     parser.add_argument("--max-samples", type=int, default=0, help="Optional dataset cap.")
     parser.add_argument("--score-threshold", type=float, default=0.05, help="Decode score threshold.")
+    parser.add_argument("--score-alpha", type=float, default=1.0, help="Objectness exponent used in ranking.")
+    parser.add_argument("--score-beta", type=float, default=1.0, help="Classification exponent used in ranking.")
     parser.add_argument("--top-k", type=int, default=100, help="Maximum kept predictions per image.")
     parser.add_argument("--nms-iou-threshold", type=float, default=0.5, help="Class-wise NMS IoU threshold.")
     parser.add_argument("--fps-batch-size", type=int, default=1, help="Batch size used for FPS benchmark.")
@@ -129,6 +131,8 @@ def main():
         box_parameterization=box_parameterization,
         max_samples=args.max_samples,
         score_threshold=float(args.score_threshold),
+        score_alpha=float(args.score_alpha),
+        score_beta=float(args.score_beta),
         top_k=int(args.top_k),
         nms_iou_threshold=float(args.nms_iou_threshold),
     )
@@ -142,6 +146,8 @@ def main():
         "num_boxes": num_boxes,
         "anchors": anchors,
         "box_parameterization": box_parameterization,
+        "score_alpha": float(args.score_alpha),
+        "score_beta": float(args.score_beta),
         "output_shape": output_shape,
         "params_total": params["total"],
         "params_trainable": params["trainable"],

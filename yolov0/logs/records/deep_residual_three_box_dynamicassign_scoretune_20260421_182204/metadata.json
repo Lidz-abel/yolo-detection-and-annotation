@@ -1,0 +1,22 @@
+{
+  "run_id": "deep_residual_three_box_dynamicassign_scoretune_20260421_182204",
+  "run_name": "deep_residual_three_box_dynamicassign_scoretune",
+  "timestamp": "20260421_182204",
+  "project_root": "/home/lidz/YOLO/yolov0",
+  "config_path": "/home/lidz/YOLO/yolov0/configs/deep_residual_three_box_dynamicassign_scoretune.toml",
+  "config_snapshot": "logs/records/deep_residual_three_box_dynamicassign_scoretune_20260421_182204/config.toml",
+  "tensorboard_dir": "runs/deep_residual_three_box_dynamicassign_scoretune_20260421_182204",
+  "output_dir": "outputs/deep_residual_three_box_dynamicassign_scoretune_20260421_182204",
+  "record_dir": "logs/records/deep_residual_three_box_dynamicassign_scoretune_20260421_182204",
+  "git_commit": "3de22bbb54be798e2fac365c0e38b26c37d3b7a4",
+  "hostname": "8x-4090-1",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "completed",
+  "stage": "stagec_round6a_score_eval",
+  "source_checkpoint": "/home/lidz/YOLO/yolov0/outputs/deep_residual_three_box_dynamicassign_20260420_030501/best.pth",
+  "eval_json": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_scoretune_eval.json",
+  "coco_eval_json": "/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_scoretune_coco_eval.json",
+  "visualization_dir": "outputs/deep_residual_three_box_dynamicassign_scoretune_20260421_182204/visualizations"
+}

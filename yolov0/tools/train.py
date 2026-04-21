@@ -360,6 +360,8 @@ def main():
             max_samples=int(visualization_cfg.get("max_samples", 4)),
             score_threshold=float(visualization_cfg.get("score_threshold", 0.05)),
             top_k=int(visualization_cfg.get("top_k", 10)),
+            score_alpha=float(visualization_cfg.get("score_alpha", 1.0)),
+            score_beta=float(visualization_cfg.get("score_beta", 1.0)),
         )
 
     metadata = update_metadata(

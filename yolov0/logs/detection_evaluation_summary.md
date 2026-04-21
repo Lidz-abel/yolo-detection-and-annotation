@@ -113,6 +113,7 @@ The following formal evaluation JSON files were produced:
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_qualitycls_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_qualitycls_decoupled_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_coco_eval.json`
+- `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_scoretune_coco_eval.json`
 
 ### 4.1 Result Table
 
@@ -130,6 +131,7 @@ The following formal evaluation JSON files were produced:
 | `deep_residual` + three-box + quality-cls | 3 | 26.56M | 42.19G | 100.69 | 0.000097 | 0.000415 | 0.000007 | 0.000782 |
 | `deep_residual` + three-box + quality-cls + decoupled | 3 | 28.92M | 42.66G | 93.81 | 0.000206 | 0.000814 | 0.000021 | 0.002500 |
 | `deep_residual` + three-box + dynamic-assign | 3 | 28.92M | 42.66G | 98.41 | 0.000299 | 0.001150 | 0.000120 | 0.003097 |
+| `deep_residual` + three-box + dynamic-assign + score-tune | 3 | 28.92M | 42.66G | 90.26 | 0.000348 | 0.001336 | 0.000154 | 0.002482 |
 
 ## 5. Main Interpretation
 
@@ -317,6 +319,41 @@ So round-5A should be interpreted as:
 
 - strong evidence that three-box quality ranking is still a real bottleneck
 - evidence that quality-aware classification can suppress low-quality duplicate boxes
+
+### 5.8 Round-6A improves AP50 by retuning the final ranking formula
+
+The new Round-6A variant:
+
+- keeps the Round-5C checkpoint fixed
+- does not retrain the detector
+- changes the final score to:
+  - `score = obj^2.0 * cls^1.0`
+
+Its internal engineering metrics are:
+
+- `mAP@0.5 = 0.085815`
+- `precision = 0.084336`
+- `recall = 0.280456`
+- `num_predictions = 174813`
+
+Its COCO subset metrics are:
+
+- `AP50 = 0.001336`
+- `AR@100 = 0.002482`
+
+Compared with Round 5C, this means:
+
+- the number of predicted boxes drops sharply
+- precision rises substantially
+- AP50 rises further
+- recall and AR@100 fall moderately
+
+So Round 6A should be interpreted as:
+
+- strong evidence that the current three-box bottleneck is not only assignment
+- direct evidence that better ranking alone can still lift AP50
+- a signal that future training-side changes should continue to align `obj`
+  and `cls` with box quality
 - but also evidence that this first implementation is too aggressive and over-suppresses borderline positives
 
 In other words, round-5A is valuable mainly because it confirms the direction

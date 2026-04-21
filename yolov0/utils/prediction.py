@@ -36,6 +36,8 @@ def decode_predictions_for_image(
     score_threshold: float = 0.05,
     top_k: int = 10,
     nms_iou_threshold: float = 0.5,
+    score_alpha: float = 1.0,
+    score_beta: float = 1.0,
 ) -> list[dict]:
     """Decode one image prediction tensor into ranked box dictionaries."""
     if pred.dim() != 3:
@@ -56,7 +58,10 @@ def decode_predictions_for_image(
     obj_scores = torch.sigmoid(pred[..., 4])[0]
     cls_scores = torch.sigmoid(pred[..., 5:])[0]
     best_cls_scores, class_ids = cls_scores.max(dim=-1)
-    scores = obj_scores * best_cls_scores
+    # Round 6A uses a power-product score so objectness can dominate ranking
+    # without retraining the detector. The default exponents keep legacy
+    # behavior unchanged.
+    scores = obj_scores.pow(score_alpha) * best_cls_scores.pow(score_beta)
 
     flat_scores = scores.reshape(-1)
     flat_boxes = decoded_boxes.reshape(-1, 4)
@@ -113,6 +118,8 @@ def decode_single_box_predictions_for_image(
     score_threshold: float = 0.05,
     top_k: int = 10,
     nms_iou_threshold: float = 0.5,
+    score_alpha: float = 1.0,
+    score_beta: float = 1.0,
 ) -> list[dict]:
     """Keep the old single-box entrypoint as a thin wrapper."""
     return decode_predictions_for_image(
@@ -125,4 +132,6 @@ def decode_single_box_predictions_for_image(
         score_threshold=score_threshold,
         top_k=top_k,
         nms_iou_threshold=nms_iou_threshold,
+        score_alpha=score_alpha,
+        score_beta=score_beta,
     )

@@ -94,6 +94,8 @@ def evaluate_coco_subset(
     score_threshold: float = 0.05,
     top_k: int = 100,
     nms_iou_threshold: float = 0.5,
+    score_alpha: float = 1.0,
+    score_beta: float = 1.0,
 ) -> dict[str, float]:
     """Evaluate one detector on the COCO subset using pycocotools."""
     contiguous_to_original, categories = load_coco_category_info(metadata_path, split="val")
@@ -122,6 +124,8 @@ def evaluate_coco_subset(
                 score_threshold=score_threshold,
                 top_k=top_k,
                 nms_iou_threshold=nms_iou_threshold,
+                score_alpha=score_alpha,
+                score_beta=score_beta,
             )
 
             image_id = int(target["sample_id"].split("_")[-1])
