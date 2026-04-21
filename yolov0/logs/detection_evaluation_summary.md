@@ -112,6 +112,7 @@ The following formal evaluation JSON files were produced:
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_v5box_softobj_shapematch_ignore_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_qualitycls_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_qualitycls_decoupled_coco_eval.json`
+- `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_coco_eval.json`
 
 ### 4.1 Result Table
 
@@ -128,6 +129,7 @@ The following formal evaluation JSON files were produced:
 | `deep_residual` + three-box + v5-box + soft-obj + shape-match + ignore | 3 | 26.56M | 42.19G | 120.01 | 0.000135 | 0.000432 | 0.000022 | 0.001175 |
 | `deep_residual` + three-box + quality-cls | 3 | 26.56M | 42.19G | 100.69 | 0.000097 | 0.000415 | 0.000007 | 0.000782 |
 | `deep_residual` + three-box + quality-cls + decoupled | 3 | 28.92M | 42.66G | 93.81 | 0.000206 | 0.000814 | 0.000021 | 0.002500 |
+| `deep_residual` + three-box + dynamic-assign | 3 | 28.92M | 42.66G | 98.41 | 0.000299 | 0.001150 | 0.000120 | 0.003097 |
 
 ## 5. Main Interpretation
 
@@ -217,6 +219,35 @@ So round-3C should be interpreted as:
 
 - the strongest three-box variant so far
 - strong evidence that matching standard, rather than just anchor count, is the core bottleneck
+
+### 5.5 Round-5C pushes the three-box line beyond the Round-5B baseline
+
+The new Round-5C variant:
+
+- keeps the Round-5B decoupled head
+- keeps quality-aware classification
+- keeps the current anchors and YOLOv5-style box parameterization
+- replaces the static positive assignment with a dynamic cost-based assignment
+
+Its COCO subset metrics are:
+
+- `AP50 = 0.001150`
+- `AR@100 = 0.003097`
+
+Its internal engineering metrics are:
+
+- `mAP@0.5 = 0.086128`
+- `precision = 0.048140`
+- `recall = 0.306746`
+
+This means Round 5C becomes the new strongest three-box branch so far.
+Its main tradeoff is not stability, but prediction volume:
+
+- `num_predictions = 334960`
+
+So the next bottleneck is no longer whether the model can cover targets,
+but how to keep the improved recall while further improving ranking quality
+and suppressing surplus boxes.
 
 ### 5.5 Stage C still underperforms the single-box residual baseline
 
