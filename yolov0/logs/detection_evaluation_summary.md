@@ -115,6 +115,7 @@ The following formal evaluation JSON files were produced:
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_scoretune_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_topk1_coco_eval.json`
+- `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_varifocal_coco_eval.json`
 
 ### 4.1 Result Table
 
@@ -135,6 +136,7 @@ The following formal evaluation JSON files were produced:
 | `deep_residual` + three-box + dynamic-assign + topk1 | 3 | 28.92M | 42.66G | 102.39 | 0.000175 | 0.000854 | 0.000011 | 0.003093 |
 | `deep_residual` + three-box + dynamic-assign + score-tune | 3 | 28.92M | 42.66G | 90.26 | 0.000348 | 0.001336 | 0.000154 | 0.002482 |
 | `deep_residual` + three-box + dynamic-assign + topk1 | 3 | 28.92M | 42.66G | 106.60 | 0.000175 | 0.000854 | 0.000011 | 0.003093 |
+| `deep_residual` + three-box + dynamic-assign + varifocal | 3 | 28.92M | 42.66G | 393.89 | 0.000179 | 0.000814 | 0.000035 | 0.002625 |
 
 ## 5. Main Interpretation
 
@@ -300,6 +302,41 @@ The practical takeaway is:
 - keep Round 5C as the strongest training-side three-box baseline
 - keep Round 6A as the strongest inference-side score-tuning result
 - do not carry Round 6C forward as the base for the next experiment
+
+### 5.8 Round-6B improves validation loss but not formal detection quality
+
+Round 6B keeps the Round 5C training structure and introduces:
+
+- `cls_loss_mode = varifocal`
+- `varifocal_alpha = 0.75`
+- `varifocal_gamma = 2.0`
+
+Its best training-side result is:
+
+- `best val total = 2.278960`
+
+which is better than Round 5C on validation loss.
+
+However, the formal detection results are:
+
+- internal `mAP@0.5 = 0.079361`
+- internal `precision = 0.045218`
+- internal `recall = 0.302465`
+- COCO `AP50 = 0.000814`
+- COCO `AR@100 = 0.002625`
+
+Compared with Round 5C:
+
+- `mAP@0.5` is lower
+- `precision` is lower
+- `AP50` is lower
+- `num_predictions` is higher
+
+So Round 6B should be interpreted as:
+
+- a useful training-side experiment
+- evidence that lower validation loss does not automatically mean better detection ranking
+- not a replacement for Round 5C as the current main training baseline
 
 ### 5.5 Stage C still underperforms the single-box residual baseline
 

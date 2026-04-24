@@ -41,6 +41,30 @@ def parse_args():
         default=None,
         help="Optional runtime seed override.",
     )
+    parser.add_argument(
+        "--resume-checkpoint",
+        type=str,
+        default="",
+        help="Optional checkpoint path used to resume weights for the current run.",
+    )
+    parser.add_argument(
+        "--resume-epoch",
+        type=int,
+        default=0,
+        help="Last fully completed epoch in the source run when resuming.",
+    )
+    parser.add_argument(
+        "--resume-best-epoch",
+        type=int,
+        default=0,
+        help="Best epoch observed in the source run when resuming.",
+    )
+    parser.add_argument(
+        "--resume-best-val-loss",
+        type=float,
+        default=float("inf"),
+        help="Best validation loss observed in the source run when resuming.",
+    )
     return parser.parse_args()
 
 
@@ -117,6 +141,9 @@ def build_criterion(data_cfg, model_cfg, loss_cfg):
             soft_objectness_target=str(loss_cfg.get("soft_objectness_target", "hard")),
             soft_objectness_min=float(loss_cfg.get("soft_objectness_min", 0.0)),
             soft_classification_target=str(loss_cfg.get("soft_classification_target", "hard")),
+            cls_loss_mode=str(loss_cfg.get("cls_loss_mode", "bce")),
+            varifocal_alpha=float(loss_cfg.get("varifocal_alpha", 0.75)),
+            varifocal_gamma=float(loss_cfg.get("varifocal_gamma", 2.0)),
             assignment_strategy=str(loss_cfg.get("assignment_strategy", "static")),
             dynamic_topk=int(loss_cfg.get("dynamic_topk", 2)),
             dynamic_center_radius=int(loss_cfg.get("dynamic_center_radius", 1)),
@@ -232,6 +259,21 @@ def main():
     optimizer = build_optimizer(model, train_cfg)
     scheduler = build_scheduler(optimizer, train_cfg)
 
+    resume_checkpoint = Path(args.resume_checkpoint).resolve() if args.resume_checkpoint else None
+    start_epoch = 1
+    global_step = 0
+    best_val_loss = float("inf")
+    best_epoch = 0
+    if resume_checkpoint is not None:
+        state_dict = torch.load(resume_checkpoint, map_location=device)
+        load_state_dict(model, state_dict)
+        start_epoch = int(args.resume_epoch) + 1
+        best_epoch = int(args.resume_best_epoch)
+        best_val_loss = float(args.resume_best_val_loss)
+        if scheduler is not None and int(args.resume_epoch) > 0:
+            for _ in range(int(args.resume_epoch)):
+                scheduler.step()
+
     param_stats = count_parameters(model)
     output_shape = describe_model_output(model, int(data_cfg["image_size"]), device)
 
@@ -243,9 +285,6 @@ def main():
     save_interval_epochs = int(logging_cfg["save_interval_epochs"])
     visualization_cfg = config["visualization"]
 
-    global_step = 0
-    best_val_loss = float("inf")
-    best_epoch = 0
     train_history: list[dict] = []
     val_history: list[dict] = []
 
@@ -260,9 +299,22 @@ def main():
     print("gpu count:", gpu_count)
     print("tensorboard dir:", run_info["tensorboard_dir"])
     print("output dir:", run_info["output_dir"])
+    if resume_checkpoint is not None:
+        print("resume checkpoint:", resume_checkpoint)
+        print("resume start epoch:", start_epoch)
+        print("resume best epoch:", best_epoch)
+        print("resume best val loss:", best_val_loss)
+
+    update_metadata(
+        run_info["metadata_path"],
+        resume_checkpoint=str(resume_checkpoint) if resume_checkpoint is not None else "",
+        resume_epoch=int(args.resume_epoch),
+        resume_best_epoch=best_epoch if resume_checkpoint is not None else 0,
+        resume_best_val_loss=None if best_val_loss == float("inf") else best_val_loss,
+    )
 
     try:
-        for epoch_index in range(1, epochs + 1):
+        for epoch_index in range(start_epoch, epochs + 1):
             train_metrics = train_one_epoch(
                 model=model,
                 criterion=criterion,
@@ -392,6 +444,8 @@ def main():
         f"git_commit = {metadata['git_commit']}",
         f"device = {device}",
         f"gpu_count = {gpu_count}",
+        f"resume_checkpoint = {resume_checkpoint if resume_checkpoint is not None else ''}",
+        f"resume_epoch = {args.resume_epoch if resume_checkpoint is not None else 0}",
         f"train_dataset_length = {len(train_dataset)}",
         f"val_dataset_length = {len(val_dataset)}",
         f"model_output_shape = {output_shape}",

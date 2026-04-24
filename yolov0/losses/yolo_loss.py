@@ -24,6 +24,9 @@ class YOLOLoss(nn.Module):
         soft_objectness_target="hard",
         soft_objectness_min=0.0,
         soft_classification_target="hard",
+        cls_loss_mode="bce",
+        varifocal_alpha=0.75,
+        varifocal_gamma=2.0,
         assignment_strategy="static",
         dynamic_topk=2,
         dynamic_center_radius=1,
@@ -43,6 +46,9 @@ class YOLOLoss(nn.Module):
         self.soft_objectness_target = soft_objectness_target
         self.soft_objectness_min = soft_objectness_min
         self.soft_classification_target = soft_classification_target
+        self.cls_loss_mode = cls_loss_mode
+        self.varifocal_alpha = varifocal_alpha
+        self.varifocal_gamma = varifocal_gamma
         self.assignment_strategy = assignment_strategy
         self.dynamic_topk = dynamic_topk
         self.dynamic_center_radius = dynamic_center_radius
@@ -312,7 +318,17 @@ class YOLOLoss(nn.Module):
         loss_obj = loss_obj_pos + self.lambda_noobj * loss_obj_neg
 
         cls_mask = object_mask.unsqueeze(-1)
-        loss_cls = (self.bce(pred_cls, soft_target_cls) * cls_mask).sum() / (num_pos * self.num_classes)
+        cls_bce = self.bce(pred_cls, soft_target_cls)
+        if self.cls_loss_mode == "varifocal":
+            pred_prob = pred_cls.sigmoid().detach()
+            focal_weight = torch.where(
+                soft_target_cls > 0,
+                soft_target_cls,
+                self.varifocal_alpha * pred_prob.pow(self.varifocal_gamma),
+            )
+            loss_cls = (cls_bce * focal_weight).sum() / (num_pos * self.num_classes)
+        else:
+            loss_cls = (cls_bce * cls_mask).sum() / (num_pos * self.num_classes)
 
         total_loss = (
             self.lambda_box * loss_box
