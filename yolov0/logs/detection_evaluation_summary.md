@@ -114,6 +114,7 @@ The following formal evaluation JSON files were produced:
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_qualitycls_decoupled_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_coco_eval.json`
 - `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_scoretune_coco_eval.json`
+- `/home/lidz/YOLO/yolov0/outputs/evaluations/deep_residual_three_box_dynamicassign_topk1_coco_eval.json`
 
 ### 4.1 Result Table
 
@@ -131,7 +132,9 @@ The following formal evaluation JSON files were produced:
 | `deep_residual` + three-box + quality-cls | 3 | 26.56M | 42.19G | 100.69 | 0.000097 | 0.000415 | 0.000007 | 0.000782 |
 | `deep_residual` + three-box + quality-cls + decoupled | 3 | 28.92M | 42.66G | 93.81 | 0.000206 | 0.000814 | 0.000021 | 0.002500 |
 | `deep_residual` + three-box + dynamic-assign | 3 | 28.92M | 42.66G | 98.41 | 0.000299 | 0.001150 | 0.000120 | 0.003097 |
+| `deep_residual` + three-box + dynamic-assign + topk1 | 3 | 28.92M | 42.66G | 102.39 | 0.000175 | 0.000854 | 0.000011 | 0.003093 |
 | `deep_residual` + three-box + dynamic-assign + score-tune | 3 | 28.92M | 42.66G | 90.26 | 0.000348 | 0.001336 | 0.000154 | 0.002482 |
+| `deep_residual` + three-box + dynamic-assign + topk1 | 3 | 28.92M | 42.66G | 106.60 | 0.000175 | 0.000854 | 0.000011 | 0.003093 |
 
 ## 5. Main Interpretation
 
@@ -250,6 +253,53 @@ Its main tradeoff is not stability, but prediction volume:
 So the next bottleneck is no longer whether the model can cover targets,
 but how to keep the improved recall while further improving ranking quality
 and suppressing surplus boxes.
+
+### 5.6 Round-6A improves AP50 by retuning the final ranking formula
+
+Round 6A does not retrain the detector. It keeps the Round 5C weights fixed
+and only changes the final score to:
+
+- `score = obj^2 * cls`
+
+The result is:
+
+- internal `precision` rises from `0.048140` to `0.084336`
+- internal `num_predictions` falls from `334960` to `174813`
+- COCO `AP50` rises from `0.001150` to `0.001336`
+
+The cost is:
+
+- internal `recall` falls from `0.306746` to `0.280456`
+- COCO `AR@100` falls from `0.003097` to `0.002482`
+
+So Round 6A is a successful inference-side ranking improvement, but not a
+new training baseline by itself.
+
+### 5.7 Round-6C over-tightens dynamic assignment
+
+Round 6C keeps the Round 5C detector design but reduces:
+
+- `dynamic_topk: 2 -> 1`
+
+The expectation was to reduce surplus positive slots and improve ranking.
+The actual result is:
+
+- internal `mAP@0.5` drops to `0.057019`
+- internal `precision` drops to `0.031924`
+- internal `recall` drops to `0.270526`
+- `num_predictions` rises to `445458`
+- COCO `AP50` falls to `0.000854`
+- COCO `AR@100` stays near `0.003093`
+
+This means Round 6C does **not** become the new mainline. It shows that
+over-tightening dynamic assignment damages the precision/recall balance
+without giving a cleaner prediction set.
+
+The practical takeaway is:
+
+- keep Round 5C as the strongest training-side three-box baseline
+- keep Round 6A as the strongest inference-side score-tuning result
+- do not carry Round 6C forward as the base for the next experiment
 
 ### 5.5 Stage C still underperforms the single-box residual baseline
 
