@@ -20,7 +20,7 @@ from engine.trainer import train_one_epoch, validate_one_epoch
 from losses.detection_loss import DetectionLoss
 from losses.yolo_loss import YOLOLoss
 from models.detector import YOLOv0Baseline
-from utils.config import load_config, parse_anchor_string, summarize_config
+from utils.config import load_config, parse_anchor_string, parse_int_list, parse_string_list, summarize_config
 from utils.experiment import init_run, update_metadata, write_result_summary
 from utils.modeling import count_parameters, describe_model_output
 from utils.visualization import save_visualization_set
@@ -196,6 +196,12 @@ def main():
     evaluation_cfg = config["evaluation"]
     anchors = parse_anchor_string(model_cfg.get("anchors"))
     num_boxes = int(model_cfg.get("num_boxes", 1))
+    grid_sizes = parse_int_list(data_cfg.get("grid_sizes"))
+    feature_levels = parse_string_list(model_cfg.get("feature_levels"))
+    if not grid_sizes:
+        grid_sizes = [int(data_cfg["grid_size"])]
+    if not feature_levels:
+        feature_levels = [f"scale_{index}" for index in range(len(grid_sizes))]
 
     if args.seed is not None:
         train_cfg["seed"] = args.seed
@@ -217,6 +223,8 @@ def main():
         manifest_path=data_cfg["train_manifest"],
         image_size=int(data_cfg["image_size"]),
         grid_size=int(data_cfg["grid_size"]),
+        grid_sizes=grid_sizes,
+        feature_levels=feature_levels,
         num_classes=int(data_cfg["num_classes"]),
         num_boxes=num_boxes,
         anchors=anchors,
@@ -231,6 +239,8 @@ def main():
         manifest_path=data_cfg["val_manifest"],
         image_size=int(data_cfg["image_size"]),
         grid_size=int(data_cfg["grid_size"]),
+        grid_sizes=grid_sizes,
+        feature_levels=feature_levels,
         num_classes=int(data_cfg["num_classes"]),
         num_boxes=num_boxes,
         anchors=anchors,
@@ -252,6 +262,7 @@ def main():
         use_residual=bool(model_cfg["use_residual"]),
         num_boxes=num_boxes,
         head_type=str(model_cfg.get("head_type", "shared")),
+        feature_levels=feature_levels,
     ).to(device)
     model, gpu_count = maybe_wrap_model(model, train_cfg, device)
 

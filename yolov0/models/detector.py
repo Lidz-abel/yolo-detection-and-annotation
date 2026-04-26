@@ -2,7 +2,7 @@
 
 import torch.nn as nn
 
-from models.backbone import BaselineBackbone, ResNet18LikeBackbone
+from models.backbone import BaselineBackbone, MultiScaleBaselineBackbone, ResNet18LikeBackbone
 from models.head import DecoupledDetectionHead, DetectionHead
 
 
@@ -18,8 +18,10 @@ class YOLOv0Baseline(nn.Module):
         use_residual=False,
         num_boxes=1,
         head_type="shared",
+        feature_levels=None,
     ):
         super().__init__()
+        self.feature_levels = feature_levels or ["p4", "p5"]
         self.backbone = self._build_backbone(model_name, width_mult, depth_mult, use_residual)
         self.head = self._build_head(
             head_type=head_type,
@@ -27,6 +29,7 @@ class YOLOv0Baseline(nn.Module):
             num_classes=num_classes,
             width_mult=width_mult,
             num_boxes=num_boxes,
+            feature_levels=self.feature_levels,
         )
 
     @staticmethod
@@ -43,11 +46,31 @@ class YOLOv0Baseline(nn.Module):
                 width_mult=width_mult,
                 depth_mult=depth_mult,
             )
+        if model_name == "deep_residual_multiscale":
+            return MultiScaleBaselineBackbone(
+                width_mult=width_mult,
+                depth_mult=depth_mult,
+                use_residual=use_residual,
+            )
         raise ValueError(f"Unsupported model_name: {model_name}")
 
     @staticmethod
-    def _build_head(head_type, in_channels, num_classes, width_mult, num_boxes):
+    def _build_head(head_type, in_channels, num_classes, width_mult, num_boxes, feature_levels):
         """Select the shared or decoupled detection head from config."""
+        if isinstance(in_channels, dict):
+            return nn.ModuleDict(
+                {
+                    level: YOLOv0Baseline._build_head(
+                        head_type=head_type,
+                        in_channels=in_channels[level],
+                        num_classes=num_classes,
+                        width_mult=width_mult,
+                        num_boxes=num_boxes,
+                        feature_levels=feature_levels,
+                    )
+                    for level in feature_levels
+                }
+            )
         if head_type == "shared":
             return DetectionHead(
                 in_channels=in_channels,
@@ -66,4 +89,6 @@ class YOLOv0Baseline(nn.Module):
 
     def forward(self, x):
         features = self.backbone(x)
+        if isinstance(features, dict):
+            return {level: self.head[level](features[level]) for level in self.feature_levels}
         return self.head(features)

@@ -26,23 +26,23 @@ def _nms_indices(boxes: torch.Tensor, scores: torch.Tensor, iou_threshold: float
     return boxes.new_tensor(keep, dtype=torch.long)
 
 
-def decode_predictions_for_image(
-    pred: torch.Tensor,
-    image_size: int,
-    num_classes: int,
-    num_boxes: int = 1,
-    anchors: list[tuple[float, float]] | None = None,
-    box_parameterization: str = "legacy",
-    score_threshold: float = 0.05,
-    top_k: int = 10,
-    nms_iou_threshold: float = 0.5,
-    score_alpha: float = 1.0,
-    score_beta: float = 1.0,
-) -> list[dict]:
-    """Decode one image prediction tensor into ranked box dictionaries."""
-    if pred.dim() != 3:
-        raise ValueError(f"Expected one image prediction tensor, got shape {tuple(pred.shape)}")
+def select_prediction_for_image(pred, image_index: int = 0):
+    """Extract one image prediction from a batch tensor or multi-scale dict."""
+    if isinstance(pred, dict):
+        return {name: value[image_index].detach().cpu() for name, value in pred.items()}
+    return pred[image_index].detach().cpu()
 
+
+def _flatten_prediction_outputs(
+    pred: torch.Tensor,
+    num_classes: int,
+    num_boxes: int,
+    anchors: list[tuple[float, float]] | None,
+    box_parameterization: str,
+    score_alpha: float,
+    score_beta: float,
+):
+    """Decode one scale and return flat boxes, scores, and class ids."""
     pred = pred.unsqueeze(0)
     if num_boxes > 1:
         pred = pred.view(*pred.shape[:3], num_boxes, num_classes + 5)
@@ -58,14 +58,58 @@ def decode_predictions_for_image(
     obj_scores = torch.sigmoid(pred[..., 4])[0]
     cls_scores = torch.sigmoid(pred[..., 5:])[0]
     best_cls_scores, class_ids = cls_scores.max(dim=-1)
-    # Round 6A uses a power-product score so objectness can dominate ranking
-    # without retraining the detector. The default exponents keep legacy
-    # behavior unchanged.
     scores = obj_scores.pow(score_alpha) * best_cls_scores.pow(score_beta)
+    return decoded_boxes.reshape(-1, 4), scores.reshape(-1), class_ids.reshape(-1)
 
-    flat_scores = scores.reshape(-1)
-    flat_boxes = decoded_boxes.reshape(-1, 4)
-    flat_class_ids = class_ids.reshape(-1)
+
+def decode_predictions_for_image(
+    pred: torch.Tensor,
+    image_size: int,
+    num_classes: int,
+    num_boxes: int = 1,
+    anchors: list[tuple[float, float]] | None = None,
+    box_parameterization: str = "legacy",
+    score_threshold: float = 0.05,
+    top_k: int = 10,
+    nms_iou_threshold: float = 0.5,
+    score_alpha: float = 1.0,
+    score_beta: float = 1.0,
+) -> list[dict]:
+    """Decode one image prediction tensor into ranked box dictionaries."""
+    if isinstance(pred, dict):
+        flat_boxes_parts = []
+        flat_scores_parts = []
+        flat_class_parts = []
+        for _, scale_pred in pred.items():
+            if scale_pred.dim() != 3:
+                raise ValueError(f"Expected one image prediction tensor, got shape {tuple(scale_pred.shape)}")
+            scale_boxes, scale_scores, scale_classes = _flatten_prediction_outputs(
+                pred=scale_pred,
+                num_classes=num_classes,
+                num_boxes=num_boxes,
+                anchors=anchors,
+                box_parameterization=box_parameterization,
+                score_alpha=score_alpha,
+                score_beta=score_beta,
+            )
+            flat_boxes_parts.append(scale_boxes)
+            flat_scores_parts.append(scale_scores)
+            flat_class_parts.append(scale_classes)
+        flat_boxes = torch.cat(flat_boxes_parts, dim=0)
+        flat_scores = torch.cat(flat_scores_parts, dim=0)
+        flat_class_ids = torch.cat(flat_class_parts, dim=0)
+    else:
+        if pred.dim() != 3:
+            raise ValueError(f"Expected one image prediction tensor, got shape {tuple(pred.shape)}")
+        flat_boxes, flat_scores, flat_class_ids = _flatten_prediction_outputs(
+            pred=pred,
+            num_classes=num_classes,
+            num_boxes=num_boxes,
+            anchors=anchors,
+            box_parameterization=box_parameterization,
+            score_alpha=score_alpha,
+            score_beta=score_beta,
+        )
 
     keep = flat_scores >= score_threshold
     if keep.sum() == 0:

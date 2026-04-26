@@ -1,0 +1,23 @@
+{
+  "run_id": "deep_residual_multiscale_singlebox_20260425_022842",
+  "run_name": "deep_residual_multiscale_singlebox",
+  "timestamp": "20260425_022842",
+  "project_root": "/home/lidz/YOLO/yolov0",
+  "config_path": "/home/lidz/YOLO/yolov0/configs/deep_residual_multiscale_singlebox.toml",
+  "config_snapshot": "logs/records/deep_residual_multiscale_singlebox_20260425_022842/config.toml",
+  "tensorboard_dir": "runs/deep_residual_multiscale_singlebox_20260425_022842",
+  "output_dir": "outputs/deep_residual_multiscale_singlebox_20260425_022842",
+  "record_dir": "logs/records/deep_residual_multiscale_singlebox_20260425_022842",
+  "git_commit": "74f63abdca607f0986c52a2cbe1dc09c0a806eef",
+  "hostname": "8x-4090-1",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "running",
+  "stage": "full_loss_training",
+  "device": "cuda",
+  "resume_checkpoint": "",
+  "resume_epoch": 0,
+  "resume_best_epoch": 0,
+  "resume_best_val_loss": null
+}

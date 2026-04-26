@@ -7,7 +7,7 @@ from collections import defaultdict
 import torch
 
 from utils.box_ops import box_iou_xyxy
-from utils.prediction import decode_predictions_for_image
+from utils.prediction import decode_predictions_for_image, select_prediction_for_image
 
 
 def _compute_ap(recall: torch.Tensor, precision: torch.Tensor) -> float:
@@ -49,7 +49,7 @@ def evaluate_detector(
     with torch.no_grad():
         for sample_index in range(num_samples):
             image_tensor, target = dataset[sample_index]
-            pred = model(image_tensor.unsqueeze(0).to(device))[0].detach().cpu()
+            pred = select_prediction_for_image(model(image_tensor.unsqueeze(0).to(device)), 0)
             predictions = decode_predictions_for_image(
                 pred=pred,
                 image_size=int(target["resized_size"][0].item()),

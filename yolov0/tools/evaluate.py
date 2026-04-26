@@ -14,7 +14,7 @@ sys.path.append(str(PROJECT_ROOT))
 
 from data.detection_dataset import DetectionDataset
 from models.detector import YOLOv0Baseline
-from utils.config import load_config, parse_anchor_string
+from utils.config import load_config, parse_anchor_string, parse_int_list, parse_string_list
 from utils.efficiency import benchmark_fps, estimate_flops
 from utils.evaluation import evaluate_detector
 from utils.modeling import count_parameters, describe_model_output
@@ -72,6 +72,12 @@ def main():
     train_cfg = config["train"]
     anchors = parse_anchor_string(model_cfg.get("anchors"))
     num_boxes = int(model_cfg.get("num_boxes", 1))
+    grid_sizes = parse_int_list(data_cfg.get("grid_sizes"))
+    feature_levels = parse_string_list(model_cfg.get("feature_levels"))
+    if not grid_sizes:
+        grid_sizes = [int(data_cfg["grid_size"])]
+    if not feature_levels:
+        feature_levels = [f"scale_{index}" for index in range(len(grid_sizes))]
     box_parameterization = str(model_cfg.get("box_parameterization", "legacy"))
     device = build_device(str(train_cfg["device"]))
 
@@ -80,6 +86,8 @@ def main():
         manifest_path=manifest_path,
         image_size=int(data_cfg["image_size"]),
         grid_size=int(data_cfg["grid_size"]),
+        grid_sizes=grid_sizes,
+        feature_levels=feature_levels,
         num_classes=int(data_cfg["num_classes"]),
         num_boxes=num_boxes,
         anchors=anchors,
@@ -99,6 +107,7 @@ def main():
         use_residual=bool(model_cfg["use_residual"]),
         num_boxes=num_boxes,
         head_type=str(model_cfg.get("head_type", "shared")),
+        feature_levels=feature_levels,
     ).to(device)
     if device.type == "cuda" and torch.cuda.device_count() > 1 and bool(train_cfg["use_data_parallel"]):
         model = torch.nn.DataParallel(model)

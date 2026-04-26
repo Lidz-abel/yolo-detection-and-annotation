@@ -1,0 +1,91 @@
+run_id = deep_residual_three_box_dynamicassign_topk1_20260423_175215
+timestamp = 20260423_175215
+status = interrupted
+stage = full_loss_training
+project_root = /home/lidz/YOLO/yolov0
+config_path = /home/lidz/YOLO/yolov0/configs/deep_residual_three_box_dynamicassign_topk1.toml
+config_snapshot = logs/records/deep_residual_three_box_dynamicassign_topk1_20260423_175215/config.toml
+tensorboard_dir = runs/deep_residual_three_box_dynamicassign_topk1_20260423_175215
+output_dir = outputs/deep_residual_three_box_dynamicassign_topk1_20260423_175215
+record_dir = logs/records/deep_residual_three_box_dynamicassign_topk1_20260423_175215
+git_commit = b10351814b1690d499eb8a3c28cd3f056d973e12
+device = cuda
+gpu_count = 4
+resume_checkpoint = /home/lidz/YOLO/yolov0/outputs/deep_residual_three_box_dynamicassign_topk1_20260421_184033/last.pth
+resume_epoch = 2
+train_dataset_length = 124004
+val_dataset_length = 10823
+model_output_shape = (1, 10, 10, 255)
+parameter_total = 28921951
+parameter_trainable = 28921951
+visualization_dir = outputs/deep_residual_three_box_dynamicassign_topk1_20260423_175215/visualizations
+
+config summary:
+run_name = deep_residual_three_box_dynamicassign_topk1
+train_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl
+val_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl
+packing_format = pt
+image_size = 320
+grid_size = 10
+num_classes = 80
+train_max_samples = 0
+val_max_samples = 0
+model_name = deep_residual
+width_mult = 1.0
+depth_mult = 2.0
+use_residual = True
+head_type = decoupled
+num_boxes = 3
+anchors = 0.052141,0.076305;0.199926,0.288289;0.609263,0.649287
+anchor_positive_iou = 0.25
+anchor_ignore_iou = 0.5
+anchor_match_metric = shape_ratio
+anchor_shape_ratio = 2.5
+anchor_ignore_shape_ratio = 4.0
+box_parameterization = yolov5
+box_type = giou
+cls_type = bce
+use_objectness = True
+iou_loss = giou
+soft_objectness_target = iou
+soft_objectness_min = 0.05
+soft_classification_target = iou
+assignment_strategy = dynamic_cost
+dynamic_topk = 1
+dynamic_center_radius = 1
+dynamic_box_cost = 3.0
+dynamic_cls_cost = 1.0
+dynamic_ignore_iou = 0.5
+lambda_obj = 1.0
+lambda_noobj = 0.5
+optimizer = adamw
+batch_size = 256
+epochs = 20
+lr = 0.001
+min_lr = 1e-05
+weight_decay = 0.0001
+scheduler = cosine
+num_workers = 64
+use_data_parallel = True
+max_steps_per_epoch = 0
+max_val_steps = 0
+val_interval_epochs = 1
+vis_interval_epochs = 5
+vis_max_samples = 4
+eval_score_threshold = 0.05
+eval_score_alpha = 1.0
+eval_score_beta = 1.0
+vis_score_threshold = 0.25
+vis_score_alpha = 1.0
+vis_score_beta = 1.0
+
+train history:
+
+val history:
+validation was not triggered in this run.
+
+artifacts:
+last_checkpoint = outputs/deep_residual_three_box_dynamicassign_topk1_20260423_175215/last.pth
+best_checkpoint = outputs/deep_residual_three_box_dynamicassign_topk1_20260423_175215/best.pth
+best_epoch = 2
+best_val_loss = 3.196624478628469

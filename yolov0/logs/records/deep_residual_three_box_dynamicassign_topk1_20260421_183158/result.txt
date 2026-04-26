@@ -1,0 +1,4 @@
+stage = full_loss_training
+status = failed
+run_id = deep_residual_three_box_dynamicassign_topk1_20260421_183158
+failure_reason = runtime_cuda_oom_busy_gpu

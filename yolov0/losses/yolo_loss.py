@@ -241,8 +241,8 @@ class YOLOLoss(nn.Module):
         anchor_idx = anchor_idx.expand(grid_h, grid_w, num_boxes).reshape(-1)
         return grid_y.long(), grid_x.long(), anchor_idx.long()
 
-    def forward(self, pred, targets):
-        """Return a dict of loss tensors and monitoring metrics for one batch."""
+    def _forward_single_scale(self, pred, targets):
+        """Return a dict of loss tensors and monitoring metrics for one scale."""
         if self.num_boxes > 1:
             pred = pred.view(*pred.shape[:3], self.num_boxes, self.num_classes + 5)
         pred_box = pred[..., 0:4]
@@ -356,3 +356,35 @@ class YOLOLoss(nn.Module):
             "ignored_count": ignored_count_mean,
             "dropped_gt_count": dropped_gt_count_mean,
         }
+
+    def forward(self, pred, targets):
+        """Return one loss dict for either single-scale or multi-scale predictions."""
+        if isinstance(pred, dict):
+            scale_results = []
+            for scale_name, scale_pred in pred.items():
+                scale_targets = dict(targets["multiscale_targets"][scale_name])
+                scale_targets["boxes"] = targets["boxes"]
+                scale_targets["labels"] = targets["labels"]
+                scale_targets["resized_size"] = targets["resized_size"]
+                scale_results.append(self._forward_single_scale(scale_pred, scale_targets))
+
+            total_loss = scale_results[0]["total_loss"]
+            for result in scale_results[1:]:
+                total_loss = total_loss + result["total_loss"]
+
+            mean_keys = {
+                "mean_giou",
+                "mean_obj_target",
+                "mean_cls_target",
+            }
+            aggregated = {"total_loss": total_loss}
+            for key in scale_results[0]:
+                if key == "total_loss":
+                    continue
+                if key in mean_keys:
+                    aggregated[key] = sum(result[key] for result in scale_results) / len(scale_results)
+                else:
+                    aggregated[key] = sum(result[key] for result in scale_results)
+            return aggregated
+
+        return self._forward_single_scale(pred, targets)

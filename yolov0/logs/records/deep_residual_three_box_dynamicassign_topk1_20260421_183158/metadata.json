@@ -1,0 +1,20 @@
+{
+  "run_id": "deep_residual_three_box_dynamicassign_topk1_20260421_183158",
+  "run_name": "deep_residual_three_box_dynamicassign_topk1",
+  "timestamp": "20260421_183158",
+  "project_root": "/home/lidz/YOLO/yolov0",
+  "config_path": "/home/lidz/YOLO/yolov0/configs/deep_residual_three_box_dynamicassign_topk1.toml",
+  "config_snapshot": "logs/records/deep_residual_three_box_dynamicassign_topk1_20260421_183158/config.toml",
+  "tensorboard_dir": "runs/deep_residual_three_box_dynamicassign_topk1_20260421_183158",
+  "output_dir": "outputs/deep_residual_three_box_dynamicassign_topk1_20260421_183158",
+  "record_dir": "logs/records/deep_residual_three_box_dynamicassign_topk1_20260421_183158",
+  "git_commit": "b10351814b1690d499eb8a3c28cd3f056d973e12",
+  "hostname": "8x-4090-1",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "failed",
+  "stage": "full_loss_training",
+  "device": "cuda",
+  "failure_reason": "runtime_cuda_oom_busy_gpu"
+}

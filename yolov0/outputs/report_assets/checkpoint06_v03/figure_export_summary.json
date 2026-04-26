@@ -1,0 +1,56 @@
+{
+  "5A": {
+    "label": "Round 5A",
+    "best_val_total": 2.621144,
+    "internal_map50": 0.019629239715025018,
+    "internal_precision": 0.05675786535082618,
+    "internal_recall": 0.17636204535078376,
+    "coco_ap50": 0.0004150257055556551,
+    "coco_ar100": 0.000782065188569641
+  },
+  "5B": {
+    "label": "Round 5B",
+    "best_val_total": 2.597307,
+    "internal_map50": 0.07786516278327879,
+    "internal_precision": 0.05321185327267128,
+    "internal_recall": 0.2596446507380916,
+    "coco_ap50": 0.0008139464626999227,
+    "coco_ar100": 0.0024996770322504476
+  },
+  "5C": {
+    "label": "Round 5C",
+    "best_val_total": 2.290735,
+    "internal_map50": 0.0861282357282913,
+    "internal_precision": 0.04814007642703606,
+    "internal_recall": 0.3067455486227363,
+    "coco_ap50": 0.0011497954139662162,
+    "coco_ar100": 0.0030966401447361526
+  },
+  "6A": {
+    "label": "Round 6A",
+    "best_val_total": null,
+    "internal_map50": 0.08581465610989687,
+    "internal_precision": 0.08433583314742038,
+    "internal_recall": 0.28045579059503883,
+    "coco_ap50": 0.0013355748783814064,
+    "coco_ar100": 0.002482497729317931
+  },
+  "6B": {
+    "label": "Round 6B",
+    "best_val_total": 2.27896,
+    "internal_map50": 0.07936144517943597,
+    "internal_precision": 0.045217727624334535,
+    "internal_recall": 0.3024653781768376,
+    "coco_ap50": 0.0008135603272563855,
+    "coco_ar100": 0.0026246373875767285
+  },
+  "6C": {
+    "label": "Round 6C",
+    "best_val_total": 2.407872,
+    "internal_map50": 0.05701863356347231,
+    "internal_precision": 0.031924446300212364,
+    "internal_recall": 0.270525795160554,
+    "coco_ap50": 0.000853991879561219,
+    "coco_ar100": 0.0030932467143003554
+  }
+}

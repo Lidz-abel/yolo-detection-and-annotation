@@ -1,0 +1,4 @@
+stage = full_loss_training
+status = interrupted
+run_id = deep_residual_three_box_dynamicassign_topk1_20260421_184033
+interruption_reason = manual_stop_before_completion

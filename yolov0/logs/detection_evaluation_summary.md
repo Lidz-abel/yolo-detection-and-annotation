@@ -665,3 +665,36 @@ We now have:
 
 This is enough to support the next round of architecture and loss
 discussion on a stronger empirical basis.
+
+### 5.9 Stage D Round 1 introduces the first multiscale detector
+
+The new multiscale Stage-D branch keeps the strong `deep_residual` backbone family,
+but replaces the single `10x10` output with two scales:
+
+- `P4: 20x20`
+- `P5: 10x10`
+
+This first round keeps the design intentionally minimal:
+
+- one box slot per scale
+- decoupled heads
+- the current full YOLO-style loss family
+- no heavy neck or extra augmentation
+
+The formal run is:
+
+- `deep_residual_multiscale_singlebox_20260425_052858`
+
+Key results:
+
+- internal `mAP@0.5 = 0.102956`
+- internal `precision = 0.068654`
+- internal `recall = 0.324171`
+- COCO `AP50 = 0.001206`
+- COCO `AR@100 = 0.002232`
+
+This run is the first Stage-D reference point and should be compared against:
+
+- `Round 5C` as the strongest training-side single-scale baseline
+- `Round 6A` as the strongest ranking-side single-scale reference
+

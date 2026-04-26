@@ -42,6 +42,7 @@ def summarize_config(config: dict) -> list[str]:
         f"packing_format = {data_cfg['packing_format']}",
         f"image_size = {data_cfg['image_size']}",
         f"grid_size = {data_cfg['grid_size']}",
+        f"grid_sizes = {data_cfg.get('grid_sizes', 'n/a')}",
         f"num_classes = {data_cfg['num_classes']}",
         f"train_max_samples = {data_cfg['train_max_samples']}",
         f"val_max_samples = {data_cfg['val_max_samples']}",
@@ -51,6 +52,8 @@ def summarize_config(config: dict) -> list[str]:
         f"use_residual = {model_cfg['use_residual']}",
         f"head_type = {model_cfg.get('head_type', 'shared')}",
         f"num_boxes = {model_cfg.get('num_boxes', 1)}",
+        f"multiscale = {model_cfg.get('multiscale', False)}",
+        f"feature_levels = {model_cfg.get('feature_levels', 'n/a')}",
         f"anchors = {model_cfg.get('anchors', 'n/a')}",
         f"anchor_positive_iou = {model_cfg.get('anchor_positive_iou', 'n/a')}",
         f"anchor_ignore_iou = {model_cfg.get('anchor_ignore_iou', 'n/a')}",
@@ -115,3 +118,23 @@ def parse_anchor_string(raw: str | None) -> list[tuple[float, float]]:
         width, height = item.split(",", 1)
         anchors.append((float(width.strip()), float(height.strip())))
     return anchors
+
+
+def parse_int_list(raw: str | None) -> list[int]:
+    """Parse a compact comma-separated integer list."""
+    if raw is None:
+        return []
+    text = str(raw).strip()
+    if not text:
+        return []
+    return [int(item.strip()) for item in text.split(",") if item.strip()]
+
+
+def parse_string_list(raw: str | None) -> list[str]:
+    """Parse a compact comma-separated string list."""
+    if raw is None:
+        return []
+    text = str(raw).strip()
+    if not text:
+        return []
+    return [item.strip() for item in text.split(",") if item.strip()]
