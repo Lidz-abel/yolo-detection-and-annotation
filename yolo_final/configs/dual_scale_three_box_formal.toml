@@ -16,6 +16,7 @@ width_mult = 1.0
 depth_mult = 2.0
 use_residual = true
 head_type = "decoupled"
+neck_type = "fpn_pan_lite"
 feature_levels = "p4,p5"
 num_boxes = 3
 anchors_p4 = "0.040,0.055;0.075,0.110;0.130,0.180"

@@ -5,6 +5,7 @@
 本目录不再以教学式逐步试探为主，而是以**工程化双尺度三框方案**为主线推进：
 
 - 双尺度输出
+- 轻量 neck 特征融合
 - 每尺度三框
 - 解耦检测头
 - 完整 YOLO-style loss
@@ -75,6 +76,7 @@ yolo_final/
   - 单尺度三框链路
   - 最小双尺度单框链路
   - 双尺度三框正式实现接线
+  - 轻量双尺度 neck
   - 每尺度独立 anchor 解析与使用
   - 双尺度三框 prediction / eval / COCO eval / visualization 路径
 

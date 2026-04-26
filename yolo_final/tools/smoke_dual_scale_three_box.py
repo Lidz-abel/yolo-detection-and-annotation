@@ -76,6 +76,7 @@ def main():
         use_residual=bool(model_cfg["use_residual"]),
         num_boxes=num_boxes,
         head_type=str(model_cfg.get("head_type", "shared")),
+        neck_type=str(model_cfg.get("neck_type", "none")),
         feature_levels=feature_levels,
     )
     criterion = YOLOLoss(

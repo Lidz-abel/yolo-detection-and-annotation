@@ -4,6 +4,7 @@ import torch.nn as nn
 
 from models.backbone import BaselineBackbone, MultiScaleBaselineBackbone, ResNet18LikeBackbone
 from models.head import DecoupledDetectionHead, DetectionHead
+from models.neck import DualScaleFPNPANLite
 
 
 class YOLOv0Baseline(nn.Module):
@@ -18,14 +19,21 @@ class YOLOv0Baseline(nn.Module):
         use_residual=False,
         num_boxes=1,
         head_type="shared",
+        neck_type="none",
         feature_levels=None,
     ):
         super().__init__()
         self.feature_levels = feature_levels or ["p4", "p5"]
         self.backbone = self._build_backbone(model_name, width_mult, depth_mult, use_residual)
+        self.neck = self._build_neck(
+            neck_type=neck_type,
+            backbone_out_channels=self.backbone.out_channels,
+            width_mult=width_mult,
+        )
+        head_in_channels = self.neck.out_channels if self.neck is not None else self.backbone.out_channels
         self.head = self._build_head(
             head_type=head_type,
-            in_channels=self.backbone.out_channels,
+            in_channels=head_in_channels,
             num_classes=num_classes,
             width_mult=width_mult,
             num_boxes=num_boxes,
@@ -53,6 +61,18 @@ class YOLOv0Baseline(nn.Module):
                 use_residual=use_residual,
             )
         raise ValueError(f"Unsupported model_name: {model_name}")
+
+    @staticmethod
+    def _build_neck(neck_type, backbone_out_channels, width_mult):
+        """Optionally insert a lightweight multi-scale fusion neck."""
+        if neck_type in {"none", "", None}:
+            return None
+        if isinstance(backbone_out_channels, dict) and neck_type == "fpn_pan_lite":
+            return DualScaleFPNPANLite(
+                in_channels=backbone_out_channels,
+                width_mult=width_mult,
+            )
+        raise ValueError(f"Unsupported neck_type: {neck_type}")
 
     @staticmethod
     def _build_head(head_type, in_channels, num_classes, width_mult, num_boxes, feature_levels):
@@ -89,6 +109,8 @@ class YOLOv0Baseline(nn.Module):
 
     def forward(self, x):
         features = self.backbone(x)
+        if self.neck is not None:
+            features = self.neck(features)
         if isinstance(features, dict):
             return {level: self.head[level](features[level]) for level in self.feature_levels}
         return self.head(features)

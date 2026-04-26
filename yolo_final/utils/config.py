@@ -58,6 +58,7 @@ def summarize_config(config: dict) -> list[str]:
         f"depth_mult = {model_cfg['depth_mult']}",
         f"use_residual = {model_cfg['use_residual']}",
         f"head_type = {model_cfg.get('head_type', 'shared')}",
+        f"neck_type = {model_cfg.get('neck_type', 'none')}",
         f"num_boxes = {model_cfg.get('num_boxes', 1)}",
         f"multiscale = {model_cfg.get('multiscale', False)}",
         f"feature_levels = {model_cfg.get('feature_levels', 'n/a')}",
