@@ -15,7 +15,13 @@ from torch.utils.tensorboard import SummaryWriter
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.append(str(PROJECT_ROOT))
 
-from data.detection_dataset import DetectionDataset, detection_collate_fn
+from data.detection_dataset import (
+    DetectionDataset,
+    count_manifest_samples,
+    detection_collate_fn,
+    resolve_packed_index_path,
+    validate_packed_index,
+)
 from engine.trainer import train_one_epoch, validate_one_epoch
 from losses.detection_loss import DetectionLoss
 from losses.yolo_loss import YOLOLoss
@@ -103,6 +109,54 @@ def build_loader(dataset, batch_size, shuffle, train_cfg):
         prefetch_factor=int(train_cfg["prefetch_factor"]) if num_workers > 0 else None,
         collate_fn=detection_collate_fn,
     )
+
+
+def build_dataset_storage_kwargs(data_cfg):
+    """Return storage options shared by train/val datasets."""
+    return {
+        "packing_format": str(data_cfg.get("packing_format", "raw")),
+        "packed_root": data_cfg.get("packed_root"),
+        "packed_chunk_size": data_cfg.get("packed_chunk_size"),
+        "packed_cache_size": int(data_cfg.get("packed_cache_size", 4)),
+        "require_packed": str(data_cfg.get("packing_format", "raw")).lower() == "pt",
+    }
+
+
+def validate_configured_storage(data_cfg):
+    """Fail before run creation when the requested packed dataset is missing."""
+    packing_format = str(data_cfg.get("packing_format", "raw")).lower()
+    if packing_format != "pt":
+        print("dataset storage: raw manifest images")
+        return {}
+
+    summaries = {}
+    split_items = (
+        ("train", "train_manifest", "train_max_samples"),
+        ("val", "val_manifest", "val_max_samples"),
+    )
+    for split_name, manifest_key, max_samples_key in split_items:
+        configured_max = int(data_cfg.get(max_samples_key, 0))
+        expected_min_samples = configured_max if configured_max > 0 else count_manifest_samples(data_cfg[manifest_key])
+        index_path = resolve_packed_index_path(
+            manifest_path=data_cfg[manifest_key],
+            packing_format=packing_format,
+            packed_root=data_cfg.get("packed_root"),
+            packed_chunk_size=data_cfg.get("packed_chunk_size"),
+        )
+        summary = validate_packed_index(
+            index_path,
+            expected_format="pt",
+            expected_min_samples=expected_min_samples,
+        )
+        summaries[split_name] = summary
+        print(
+            f"dataset storage {split_name}: pt | "
+            f"index = {summary['index_path']} | "
+            f"chunks = {summary['num_chunks']} | "
+            f"samples = {summary['total_samples']} | "
+            f"chunk_size = {summary['chunk_size']}"
+        )
+    return summaries
 
 
 def build_optimizer(model, train_cfg):
@@ -219,6 +273,8 @@ def main():
     stage_name = "full_loss_training" if bool(loss_cfg["use_objectness"]) else "baseline_training"
     set_seed(int(train_cfg["seed"]))
     device = build_device(str(train_cfg["device"]))
+    validate_configured_storage(data_cfg)
+    dataset_storage_kwargs = build_dataset_storage_kwargs(data_cfg)
     run_info = init_run(PROJECT_ROOT, config_path, config)
     writer = SummaryWriter(log_dir=str(run_info["tensorboard_dir"]))
 
@@ -245,6 +301,7 @@ def main():
         anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
         anchor_ignore_shape_ratio=model_cfg.get("anchor_ignore_shape_ratio"),
         max_samples=int(data_cfg["train_max_samples"]),
+        **dataset_storage_kwargs,
     )
     val_dataset = DetectionDataset(
         manifest_path=data_cfg["val_manifest"],
@@ -262,6 +319,7 @@ def main():
         anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
         anchor_ignore_shape_ratio=model_cfg.get("anchor_ignore_shape_ratio"),
         max_samples=int(data_cfg["val_max_samples"]),
+        **dataset_storage_kwargs,
     )
     train_loader = build_loader(train_dataset, int(train_cfg["batch_size"]), bool(train_cfg["shuffle"]), train_cfg)
     val_loader = build_loader(val_dataset, int(train_cfg["batch_size"]), False, train_cfg)

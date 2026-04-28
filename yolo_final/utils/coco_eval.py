@@ -129,13 +129,20 @@ def evaluate_coco_subset(
             )
 
             image_id = int(target["sample_id"].split("_")[-1])
+            original_height, original_width = target["original_size"].tolist()
+            scale_x = float(original_width) / float(image_size)
+            scale_y = float(original_height) / float(image_size)
             for prediction in predictions:
                 x1, y1, x2, y2 = prediction["box_xyxy"]
+                x1 = max(0.0, min(float(x1) * scale_x, float(original_width)))
+                x2 = max(0.0, min(float(x2) * scale_x, float(original_width)))
+                y1 = max(0.0, min(float(y1) * scale_y, float(original_height)))
+                y2 = max(0.0, min(float(y2) * scale_y, float(original_height)))
                 results.append(
                     {
                         "image_id": image_id,
                         "category_id": contiguous_to_original[int(prediction["class_id"])],
-                        "bbox": [float(x1), float(y1), float(x2 - x1), float(y2 - y1)],
+                        "bbox": [float(x1), float(y1), float(max(x2 - x1, 0.0)), float(max(y2 - y1, 0.0))],
                         "score": float(prediction["score"]),
                     }
                 )

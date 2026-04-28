@@ -1,0 +1,44 @@
+{
+  "run_id": "dual_scale_three_box_formal_20260427_171851",
+  "run_name": "dual_scale_three_box_formal",
+  "timestamp": "20260427_171851",
+  "project_root": "/home/lidz/YOLO/yolo_final",
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_formal.toml",
+  "config_snapshot": "logs/records/dual_scale_three_box_formal_20260427_171851/config.toml",
+  "tensorboard_dir": "runs/dual_scale_three_box_formal_20260427_171851",
+  "output_dir": "outputs/dual_scale_three_box_formal_20260427_171851",
+  "record_dir": "logs/records/dual_scale_three_box_formal_20260427_171851",
+  "git_commit": "b48f50e6d7669c117d88798cb9e86b32ecd0fe43",
+  "hostname": "8x-4090-2",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "completed",
+  "stage": "full_loss_training",
+  "device": "cuda",
+  "resume_checkpoint": "",
+  "resume_epoch": 0,
+  "resume_best_epoch": 0,
+  "resume_best_val_loss": null,
+  "last_epoch": 20,
+  "best_epoch": 19,
+  "best_val_loss": 4.364578423780554,
+  "global_step": 19380,
+  "model_output_shape": {
+    "p4": [
+      1,
+      20,
+      20,
+      255
+    ],
+    "p5": [
+      1,
+      10,
+      10,
+      255
+    ]
+  },
+  "parameter_total": 36531294,
+  "parameter_trainable": 36531294,
+  "visualization_dir": "outputs/dual_scale_three_box_formal_20260427_171851/visualizations"
+}

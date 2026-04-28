@@ -1,0 +1,260 @@
+{
+  "checkpoint_path": "/home/lidz/YOLO/yolo_final/outputs/dual_scale_three_box_formal_20260427_171851/best.pth",
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only.toml",
+  "manifest_path": "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl",
+  "max_samples": 1000,
+  "packed_index": "/home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_val/chunk_1024/index.json",
+  "prediction_stats": {
+    "prediction_count": 100000,
+    "predictions_per_image": {
+      "max": 100,
+      "mean": 100.0,
+      "min": 100
+    },
+    "samples": 1000,
+    "score_quantiles": {
+      "0.0": 4.6245986595749855e-08,
+      "0.25": 0.01792193576693535,
+      "0.5": 0.05845613405108452,
+      "0.75": 0.1317230463027954,
+      "0.9": 0.26447731256484985,
+      "0.95": 0.3945865035057068,
+      "0.99": 0.7026380300521851
+    },
+    "top_predicted_classes": [
+      {
+        "class_id": 0,
+        "count": 23937
+      },
+      {
+        "class_id": 56,
+        "count": 5417
+      },
+      {
+        "class_id": 2,
+        "count": 3883
+      },
+      {
+        "class_id": 60,
+        "count": 2869
+      },
+      {
+        "class_id": 73,
+        "count": 2866
+      },
+      {
+        "class_id": 50,
+        "count": 2453
+      },
+      {
+        "class_id": 13,
+        "count": 2007
+      },
+      {
+        "class_id": 14,
+        "count": 1903
+      },
+      {
+        "class_id": 39,
+        "count": 1768
+      },
+      {
+        "class_id": 9,
+        "count": 1690
+      },
+      {
+        "class_id": 8,
+        "count": 1684
+      },
+      {
+        "class_id": 41,
+        "count": 1674
+      },
+      {
+        "class_id": 58,
+        "count": 1637
+      },
+      {
+        "class_id": 51,
+        "count": 1593
+      },
+      {
+        "class_id": 45,
+        "count": 1568
+      }
+    ]
+  },
+  "storage_mode": "pt",
+  "sweeps": {
+    "nms_iou_threshold": [
+      {
+        "coco_ap": 0.12725513064733276,
+        "coco_ap50": 0.22080643321069504,
+        "coco_ap75": 0.1273613836443515,
+        "coco_ar1": 0.16841759033524073,
+        "coco_ar10": 0.25089881796373575,
+        "coco_ar100": 0.25755256413825384,
+        "num_predictions": 47157.0,
+        "num_samples": 1000.0,
+        "value": 0.4
+      },
+      {
+        "coco_ap": 0.12793168616603068,
+        "coco_ap50": 0.22026301045152352,
+        "coco_ap75": 0.1282151031895482,
+        "coco_ar1": 0.16837262630646374,
+        "coco_ar10": 0.25646249708504604,
+        "coco_ar100": 0.26557316808081394,
+        "num_predictions": 54402.0,
+        "num_samples": 1000.0,
+        "value": 0.5
+      },
+      {
+        "coco_ap": 0.126558700563849,
+        "coco_ap50": 0.2130280802959914,
+        "coco_ap75": 0.12827528035638144,
+        "coco_ar1": 0.16750410997844123,
+        "coco_ar10": 0.26049352519098784,
+        "coco_ar100": 0.27345553139665246,
+        "num_predictions": 62902.0,
+        "num_samples": 1000.0,
+        "value": 0.6
+      },
+      {
+        "coco_ap": 0.12186984013043785,
+        "coco_ap50": 0.19823166727532646,
+        "coco_ap75": 0.13042107831682886,
+        "coco_ar1": 0.16627095362627528,
+        "coco_ar10": 0.2638272693607246,
+        "coco_ar100": 0.2807642797209641,
+        "num_predictions": 72434.0,
+        "num_samples": 1000.0,
+        "value": 0.7
+      }
+    ],
+    "score_threshold": [
+      {
+        "coco_ap": 0.12825231449702773,
+        "coco_ap50": 0.22125825322429285,
+        "coco_ap75": 0.12835058069727318,
+        "coco_ar1": 0.16970568935174954,
+        "coco_ar10": 0.26283685430131565,
+        "coco_ar100": 0.2732013994095186,
+        "num_predictions": 82027.0,
+        "num_samples": 1000.0,
+        "value": 0.01
+      },
+      {
+        "coco_ap": 0.12816293501126727,
+        "coco_ap50": 0.22090303236574363,
+        "coco_ap75": 0.12832764385101203,
+        "coco_ar1": 0.16934662267633768,
+        "coco_ar10": 0.26089054154490865,
+        "coco_ar100": 0.27075706796342663,
+        "num_predictions": 66298.0,
+        "num_samples": 1000.0,
+        "value": 0.03
+      },
+      {
+        "coco_ap": 0.12793168616603068,
+        "coco_ap50": 0.22026301045152352,
+        "coco_ap75": 0.1282151031895482,
+        "coco_ar1": 0.16837262630646374,
+        "coco_ar10": 0.25646249708504604,
+        "coco_ar100": 0.26557316808081394,
+        "num_predictions": 54402.0,
+        "num_samples": 1000.0,
+        "value": 0.05
+      },
+      {
+        "coco_ap": 0.12676984178877007,
+        "coco_ap50": 0.21717050533309804,
+        "coco_ap75": 0.1275856676612534,
+        "coco_ar1": 0.16317105598030174,
+        "coco_ar10": 0.24172039642059745,
+        "coco_ar100": 0.24891460840236804,
+        "num_predictions": 33152.0,
+        "num_samples": 1000.0,
+        "value": 0.1
+      },
+      {
+        "coco_ap": 0.12219220153255365,
+        "coco_ap50": 0.20672783065030748,
+        "coco_ap75": 0.12459486355547136,
+        "coco_ar1": 0.14926030414299055,
+        "coco_ar10": 0.20970379684544851,
+        "coco_ar100": 0.21327785947654718,
+        "num_predictions": 15020.0,
+        "num_samples": 1000.0,
+        "value": 0.2
+      },
+      {
+        "coco_ap": 0.11498352619085349,
+        "coco_ap50": 0.19163252071387932,
+        "coco_ap75": 0.11878505357874794,
+        "coco_ar1": 0.1335077896488938,
+        "coco_ar10": 0.17768924946246703,
+        "coco_ar100": 0.17907145012005493,
+        "num_predictions": 8193.0,
+        "num_samples": 1000.0,
+        "value": 0.3
+      }
+    ],
+    "top_k": [
+      {
+        "coco_ap": 0.12329897262221183,
+        "coco_ap50": 0.2092160286055025,
+        "coco_ap75": 0.12522699429724227,
+        "coco_ar1": 0.15623687728224567,
+        "coco_ar10": 0.21835031821099027,
+        "coco_ar100": 0.21981565908966935,
+        "num_predictions": 18935.0,
+        "num_samples": 1000.0,
+        "value": 20
+      },
+      {
+        "coco_ap": 0.1268959543595886,
+        "coco_ap50": 0.21769704737930382,
+        "coco_ap75": 0.1276586187821065,
+        "coco_ar1": 0.16611616923925346,
+        "coco_ar10": 0.24572460903565943,
+        "coco_ar100": 0.2513734073992884,
+        "num_predictions": 38561.0,
+        "num_samples": 1000.0,
+        "value": 50
+      },
+      {
+        "coco_ap": 0.12793168616603068,
+        "coco_ap50": 0.22026301045152352,
+        "coco_ap75": 0.1282151031895482,
+        "coco_ar1": 0.16837262630646374,
+        "coco_ar10": 0.25646249708504604,
+        "coco_ar100": 0.26557316808081394,
+        "num_predictions": 54402.0,
+        "num_samples": 1000.0,
+        "value": 100
+      },
+      {
+        "coco_ap": 0.12812460511171156,
+        "coco_ap50": 0.2207625486479113,
+        "coco_ap75": 0.12834816382847483,
+        "coco_ar1": 0.16851627454576704,
+        "coco_ar10": 0.25851135235070755,
+        "coco_ar100": 0.2692397239001091,
+        "num_predictions": 61088.0,
+        "num_samples": 1000.0,
+        "value": 200
+      }
+    ]
+  },
+  "visualizations": [
+    "/home/lidz/YOLO/yolo_final/outputs/evaluations/dual_scale_three_box_formal_20260427_171851_coco_diagnostic_vis/coco2017_val_000000397133.png",
+    "/home/lidz/YOLO/yolo_final/outputs/evaluations/dual_scale_three_box_formal_20260427_171851_coco_diagnostic_vis/coco2017_val_000000037777.png",
+    "/home/lidz/YOLO/yolo_final/outputs/evaluations/dual_scale_three_box_formal_20260427_171851_coco_diagnostic_vis/coco2017_val_000000252219.png",
+    "/home/lidz/YOLO/yolo_final/outputs/evaluations/dual_scale_three_box_formal_20260427_171851_coco_diagnostic_vis/coco2017_val_000000087038.png",
+    "/home/lidz/YOLO/yolo_final/outputs/evaluations/dual_scale_three_box_formal_20260427_171851_coco_diagnostic_vis/coco2017_val_000000174482.png",
+    "/home/lidz/YOLO/yolo_final/outputs/evaluations/dual_scale_three_box_formal_20260427_171851_coco_diagnostic_vis/coco2017_val_000000403385.png",
+    "/home/lidz/YOLO/yolo_final/outputs/evaluations/dual_scale_three_box_formal_20260427_171851_coco_diagnostic_vis/coco2017_val_000000006818.png",
+    "/home/lidz/YOLO/yolo_final/outputs/evaluations/dual_scale_three_box_formal_20260427_171851_coco_diagnostic_vis/coco2017_val_000000480985.png"
+  ]
+}

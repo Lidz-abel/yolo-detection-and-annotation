@@ -62,6 +62,17 @@ def load_state_dict(model, state_dict):
         model.load_state_dict(state_dict)
 
 
+def build_dataset_storage_kwargs(data_cfg):
+    """Return storage options for the configured detection dataset."""
+    return {
+        "packing_format": str(data_cfg.get("packing_format", "raw")),
+        "packed_root": data_cfg.get("packed_root"),
+        "packed_chunk_size": data_cfg.get("packed_chunk_size"),
+        "packed_cache_size": int(data_cfg.get("packed_cache_size", 4)),
+        "require_packed": str(data_cfg.get("packing_format", "raw")).lower() == "pt",
+    }
+
+
 def main():
     """Evaluate one trained detector and write a compact structured report."""
     args = parse_args()
@@ -100,6 +111,7 @@ def main():
         anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
         anchor_ignore_shape_ratio=model_cfg.get("anchor_ignore_shape_ratio"),
         max_samples=args.max_samples,
+        **build_dataset_storage_kwargs(data_cfg),
     )
 
     model = YOLOv0Baseline(

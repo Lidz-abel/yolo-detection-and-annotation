@@ -4,6 +4,9 @@
 train_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl"
 val_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl"
 packing_format = "pt"
+packed_root = "/home/lidz/YOLO/DataSet/Unified/packed"
+packed_chunk_size = 1024
+packed_cache_size = 4
 image_size = 320
 grid_size = 10
 grid_sizes = "20,10"

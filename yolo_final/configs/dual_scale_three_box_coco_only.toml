@@ -1,8 +1,8 @@
-# Formal engineering config template for the dual-scale three-box detector.
+# COCO-only formal config for the dual-scale three-box detector.
 
 [data]
-train_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_train.jsonl"
-val_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/all_val.jsonl"
+train_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_train.jsonl"
+val_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl"
 packing_format = "pt"
 packed_root = "/home/lidz/YOLO/DataSet/Unified/packed"
 packed_chunk_size = 1024
@@ -66,7 +66,7 @@ max_steps_per_epoch = 0
 max_val_steps = 0
 
 [logging]
-run_name = "dual_scale_three_box_formal"
+run_name = "dual_scale_three_box_coco_only"
 runs_dir = "runs"
 output_dir = "outputs"
 records_dir = "logs/records"

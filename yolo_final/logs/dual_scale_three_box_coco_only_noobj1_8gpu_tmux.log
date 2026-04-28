@@ -1,0 +1,13 @@
+dataset storage train: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_train/chunk_1024/index.json | chunks = 116 | samples = 118287 | chunk_size = 1024
+dataset storage val: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_val/chunk_1024/index.json | chunks = 5 | samples = 5000 | chunk_size = 1024
+starting yolov0 training
+run id: dual_scale_three_box_coco_only_noobj1_20260428_143454
+device: cuda
+train dataset length: 118287
+val dataset length: 5000
+model output shape: {'p4': (1, 20, 20, 255), 'p5': (1, 10, 10, 255)}
+parameter total: 36531294
+parameter trainable: 36531294
+gpu count: 8
+tensorboard dir: runs/dual_scale_three_box_coco_only_noobj1_20260428_143454
+output dir: outputs/dual_scale_three_box_coco_only_noobj1_20260428_143454

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -16,9 +17,22 @@ from models.detector import YOLOv0Baseline
 from utils.config import load_config, parse_anchor_map, parse_anchor_string, parse_int_list, parse_string_list
 
 
+def parse_args():
+    """Parse the config path used by the smoke check."""
+    parser = argparse.ArgumentParser(description="Smoke-check one dual-scale three-box config.")
+    parser.add_argument(
+        "--config",
+        type=str,
+        default=str(PROJECT_ROOT / "configs" / "dual_scale_three_box_formal.toml"),
+        help="Config file to smoke-check.",
+    )
+    return parser.parse_args()
+
+
 def main():
     """Run one minimal forward and loss pass to verify the code path is wired."""
-    config_path = PROJECT_ROOT / "configs" / "dual_scale_three_box_formal.toml"
+    args = parse_args()
+    config_path = Path(args.config).resolve()
     config = load_config(config_path)
     data_cfg = config["data"]
     model_cfg = config["model"]
@@ -37,7 +51,7 @@ def main():
     num_boxes = int(model_cfg.get("num_boxes", 1))
 
     dataset = DetectionDataset(
-        manifest_path=data_cfg["train_manifest"],
+        manifest_path=data_cfg["val_manifest"],
         image_size=int(data_cfg["image_size"]),
         grid_size=default_grid_size,
         grid_sizes=grid_sizes,
@@ -52,6 +66,11 @@ def main():
         anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
         anchor_ignore_shape_ratio=model_cfg.get("anchor_ignore_shape_ratio"),
         max_samples=1,
+        packing_format=str(data_cfg.get("packing_format", "raw")),
+        packed_root=data_cfg.get("packed_root"),
+        packed_chunk_size=data_cfg.get("packed_chunk_size"),
+        packed_cache_size=int(data_cfg.get("packed_cache_size", 4)),
+        require_packed=str(data_cfg.get("packing_format", "raw")).lower() == "pt",
     )
 
     image_tensor, target = dataset[0]
@@ -109,6 +128,9 @@ def main():
     print("feature_levels:", feature_levels)
     print("grid_sizes:", grid_sizes)
     print("anchors_by_level:", anchors_by_level)
+    print("dataset storage:", dataset.storage_mode)
+    if dataset.packed_summary is not None:
+        print("packed index:", dataset.packed_summary["index_path"])
     for scale_name, scale_pred in pred.items():
         print(f"{scale_name} output shape:", tuple(scale_pred.shape))
     print("loss total:", float(loss_dict["total_loss"].item()))

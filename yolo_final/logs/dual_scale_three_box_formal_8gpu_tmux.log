@@ -1,0 +1,11 @@
+starting yolov0 training
+run id: dual_scale_three_box_formal_20260427_164202
+device: cuda
+train dataset length: 124004
+val dataset length: 10823
+model output shape: {'p4': (1, 20, 20, 255), 'p5': (1, 10, 10, 255)}
+parameter total: 36531294
+parameter trainable: 36531294
+gpu count: 8
+tensorboard dir: runs/dual_scale_three_box_formal_20260427_164202
+output dir: outputs/dual_scale_three_box_formal_20260427_164202
