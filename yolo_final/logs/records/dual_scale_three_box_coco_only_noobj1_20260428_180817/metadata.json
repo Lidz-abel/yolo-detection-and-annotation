@@ -1,0 +1,51 @@
+{
+  "run_id": "dual_scale_three_box_coco_only_noobj1_20260428_180817",
+  "run_name": "dual_scale_three_box_coco_only_noobj1",
+  "timestamp": "20260428_180817",
+  "project_root": "/home/lidz/YOLO/yolo_final",
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1.toml",
+  "config_snapshot": "logs/records/dual_scale_three_box_coco_only_noobj1_20260428_180817/config.toml",
+  "tensorboard_dir": "runs/dual_scale_three_box_coco_only_noobj1_20260428_180817",
+  "output_dir": "outputs/dual_scale_three_box_coco_only_noobj1_20260428_180817",
+  "record_dir": "logs/records/dual_scale_three_box_coco_only_noobj1_20260428_180817",
+  "git_commit": "d3fbd2b3ec156ae88e3255bd922ad2eae7fcce62",
+  "hostname": "8x-4090-2",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "completed",
+  "stage": "full_loss_training",
+  "device": "cuda",
+  "resume_checkpoint": "",
+  "resume_epoch": 0,
+  "resume_best_epoch": 0,
+  "resume_best_val_loss": null,
+  "last_epoch": 20,
+  "best_epoch": 20,
+  "best_val_loss": 5.262633669376373,
+  "global_step": 18500,
+  "model_output_shape": {
+    "p4": [
+      1,
+      20,
+      20,
+      255
+    ],
+    "p5": [
+      1,
+      10,
+      10,
+      255
+    ]
+  },
+  "parameter_total": 36531294,
+  "parameter_trainable": 36531294,
+  "visualization_dir": "outputs/dual_scale_three_box_coco_only_noobj1_20260428_180817/visualizations",
+  "coco_eval_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_20260428_180817_coco_eval.json",
+  "diagnostics_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_20260428_180817_diagnostics.json",
+  "diagnostic_visualization_dir": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_20260428_180817_diagnostic_vis",
+  "coco_ap": 0.12698451364565555,
+  "coco_ap50": 0.21836883049143208,
+  "coco_ap75": 0.12918442560458857,
+  "coco_ar100": 0.2605665729824304
+}

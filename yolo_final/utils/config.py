@@ -88,6 +88,10 @@ def summarize_config(config: dict) -> list[str]:
         f"dynamic_box_cost = {loss_cfg.get('dynamic_box_cost', 'n/a')}",
         f"dynamic_cls_cost = {loss_cfg.get('dynamic_cls_cost', 'n/a')}",
         f"dynamic_ignore_iou = {loss_cfg.get('dynamic_ignore_iou', 'n/a')}",
+        f"dynamic_anchor_shape_cost = {loss_cfg.get('dynamic_anchor_shape_cost', 'n/a')}",
+        f"scale_assignment = {loss_cfg.get('scale_assignment', 'all')}",
+        f"scale_area_threshold = {loss_cfg.get('scale_area_threshold', 'n/a')}",
+        f"scale_loss_weights = {loss_cfg.get('scale_loss_weights', 'n/a')}",
         f"lambda_obj = {loss_cfg.get('lambda_obj', 'n/a')}",
         f"lambda_noobj = {loss_cfg.get('lambda_noobj', 'n/a')}",
         f"optimizer = {train_cfg['optimizer']}",
@@ -159,3 +163,20 @@ def parse_anchor_map(model_cfg: dict, feature_levels: list[str]) -> dict[str, li
         if level_anchors:
             anchor_map[level] = level_anchors
     return anchor_map
+
+
+def parse_float_map(raw: str | None) -> dict[str, float]:
+    """Parse `name:value;name:value` into a float dictionary."""
+    if raw is None:
+        return {}
+    text = str(raw).strip()
+    if not text:
+        return {}
+    result = {}
+    for item in text.split(";"):
+        item = item.strip()
+        if not item:
+            continue
+        key, value = item.split(":", 1)
+        result[key.strip()] = float(value.strip())
+    return result

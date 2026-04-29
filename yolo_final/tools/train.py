@@ -30,6 +30,7 @@ from utils.config import (
     load_config,
     parse_anchor_map,
     parse_anchor_string,
+    parse_float_map,
     parse_int_list,
     parse_string_list,
     summarize_config,
@@ -212,6 +213,11 @@ def build_criterion(data_cfg, model_cfg, loss_cfg, feature_levels):
             dynamic_box_cost=float(loss_cfg.get("dynamic_box_cost", 3.0)),
             dynamic_cls_cost=float(loss_cfg.get("dynamic_cls_cost", 1.0)),
             dynamic_ignore_iou=float(loss_cfg.get("dynamic_ignore_iou", 0.5)),
+            dynamic_anchor_shape_cost=float(loss_cfg.get("dynamic_anchor_shape_cost", 0.0)),
+            scale_assignment=str(loss_cfg.get("scale_assignment", "all")),
+            scale_area_threshold=float(loss_cfg.get("scale_area_threshold", 0.2)),
+            scale_loss_weights=parse_float_map(loss_cfg.get("scale_loss_weights")),
+            feature_levels=feature_levels,
         )
     return DetectionLoss(
         num_classes=int(data_cfg["num_classes"]),
@@ -370,22 +376,22 @@ def main():
     train_history: list[dict] = []
     val_history: list[dict] = []
 
-    print("starting yolov0 training")
-    print("run id:", run_info["run_id"])
-    print("device:", device)
-    print("train dataset length:", len(train_dataset))
-    print("val dataset length:", len(val_dataset))
-    print("model output shape:", output_shape)
-    print("parameter total:", param_stats["total"])
-    print("parameter trainable:", param_stats["trainable"])
-    print("gpu count:", gpu_count)
-    print("tensorboard dir:", run_info["tensorboard_dir"])
-    print("output dir:", run_info["output_dir"])
+    print("starting yolov0 training", flush=True)
+    print("run id:", run_info["run_id"], flush=True)
+    print("device:", device, flush=True)
+    print("train dataset length:", len(train_dataset), flush=True)
+    print("val dataset length:", len(val_dataset), flush=True)
+    print("model output shape:", output_shape, flush=True)
+    print("parameter total:", param_stats["total"], flush=True)
+    print("parameter trainable:", param_stats["trainable"], flush=True)
+    print("gpu count:", gpu_count, flush=True)
+    print("tensorboard dir:", run_info["tensorboard_dir"], flush=True)
+    print("output dir:", run_info["output_dir"], flush=True)
     if resume_checkpoint is not None:
-        print("resume checkpoint:", resume_checkpoint)
-        print("resume start epoch:", start_epoch)
-        print("resume best epoch:", best_epoch)
-        print("resume best val loss:", best_val_loss)
+        print("resume checkpoint:", resume_checkpoint, flush=True)
+        print("resume start epoch:", start_epoch, flush=True)
+        print("resume best epoch:", best_epoch, flush=True)
+        print("resume best val loss:", best_val_loss, flush=True)
 
     update_metadata(
         run_info["metadata_path"],
@@ -419,7 +425,8 @@ def main():
                 f"obj = {train_metrics['obj_loss']:.4f} | "
                 f"cls = {train_metrics['cls_loss']:.4f} | "
                 f"batches = {train_metrics['batch_count']} | "
-                f"time = {train_metrics['duration_seconds']:.1f}s"
+                f"time = {train_metrics['duration_seconds']:.1f}s",
+                flush=True,
             )
 
             did_validate = False
@@ -444,7 +451,8 @@ def main():
                     f"obj = {val_metrics['obj_loss']:.4f} | "
                     f"cls = {val_metrics['cls_loss']:.4f} | "
                     f"batches = {val_metrics['batch_count']} | "
-                    f"time = {val_metrics['duration_seconds']:.1f}s"
+                    f"time = {val_metrics['duration_seconds']:.1f}s",
+                    flush=True,
                 )
 
                 if val_metrics["total_loss"] < best_val_loss:
@@ -471,7 +479,7 @@ def main():
         status = "completed"
     except KeyboardInterrupt:
         status = "interrupted"
-        print("training interrupted by user")
+        print("training interrupted by user", flush=True)
     finally:
         writer.close()
 

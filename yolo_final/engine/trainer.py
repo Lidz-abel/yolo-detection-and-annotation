@@ -104,7 +104,8 @@ def train_one_epoch(
                 f"box = {loss_dict['loss_box'].item():.4f} | "
                 f"obj = {loss_dict['loss_obj'].item():.4f} | "
                 f"cls = {loss_dict['loss_cls'].item():.4f} | "
-                f"lr = {optimizer.param_groups[0]['lr']:.6f}"
+                f"lr = {optimizer.param_groups[0]['lr']:.6f}",
+                flush=True,
             )
 
     duration = time.perf_counter() - start_time

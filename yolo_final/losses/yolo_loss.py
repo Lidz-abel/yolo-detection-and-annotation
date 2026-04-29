@@ -34,6 +34,11 @@ class YOLOLoss(nn.Module):
         dynamic_box_cost=3.0,
         dynamic_cls_cost=1.0,
         dynamic_ignore_iou=0.5,
+        dynamic_anchor_shape_cost=0.0,
+        scale_assignment="all",
+        scale_area_threshold=0.2,
+        scale_loss_weights=None,
+        feature_levels=None,
     ):
         super().__init__()
         self.num_classes = num_classes
@@ -48,7 +53,9 @@ class YOLOLoss(nn.Module):
         self.soft_objectness_target = soft_objectness_target
         self.soft_objectness_min = soft_objectness_min
         self.soft_classification_target = soft_classification_target
-        self.cls_loss_mode = cls_loss_mode
+        self.cls_loss_mode = str(cls_loss_mode).lower()
+        if self.cls_loss_mode not in {"bce", "quality_bce", "varifocal"}:
+            raise ValueError(f"Unsupported cls_loss_mode: {cls_loss_mode}")
         self.varifocal_alpha = varifocal_alpha
         self.varifocal_gamma = varifocal_gamma
         self.assignment_strategy = assignment_strategy
@@ -57,9 +64,14 @@ class YOLOLoss(nn.Module):
         self.dynamic_box_cost = dynamic_box_cost
         self.dynamic_cls_cost = dynamic_cls_cost
         self.dynamic_ignore_iou = dynamic_ignore_iou
+        self.dynamic_anchor_shape_cost = dynamic_anchor_shape_cost
+        self.scale_assignment = str(scale_assignment).lower()
+        self.scale_area_threshold = float(scale_area_threshold)
+        self.scale_loss_weights = scale_loss_weights or {}
+        self.feature_levels = list(feature_levels or self.anchors_by_level.keys())
         self.bce = nn.BCEWithLogitsLoss(reduction="none")
 
-    def _build_dynamic_targets(self, pred_cls, decoded_pred_boxes, targets):
+    def _build_dynamic_targets(self, pred_cls, decoded_pred_boxes, targets, scale_name=None, scale_anchors=None):
         """Assign positives dynamically from current predictions and GT boxes."""
         batch_size, grid_h, grid_w, num_boxes, _ = decoded_pred_boxes.shape
         device = decoded_pred_boxes.device
@@ -97,6 +109,18 @@ class YOLOLoss(nn.Module):
 
                 image_h = float(resized_sizes[batch_index, 0].item())
                 image_w = float(resized_sizes[batch_index, 1].item())
+                scale_keep = self._scale_assignment_mask(
+                    boxes=gt_boxes_abs,
+                    image_w=image_w,
+                    image_h=image_h,
+                    scale_name=scale_name,
+                    device=device,
+                )
+                if scale_keep is not None:
+                    gt_boxes_abs = gt_boxes_abs[scale_keep]
+                    gt_labels = gt_labels[scale_keep]
+                    if gt_boxes_abs.numel() == 0:
+                        continue
                 gt_boxes = gt_boxes_abs.clone()
                 gt_boxes[:, [0, 2]] /= max(image_w, 1.0)
                 gt_boxes[:, [1, 3]] /= max(image_h, 1.0)
@@ -142,6 +166,15 @@ class YOLOLoss(nn.Module):
                         gt_onehot.unsqueeze(0).expand(candidate_indices.numel(), num_classes),
                     ).mean(dim=-1)
                     total_cost = self.dynamic_box_cost * (1.0 - iou_scores) + self.dynamic_cls_cost * cls_cost
+                    if self.dynamic_anchor_shape_cost > 0.0 and scale_anchors:
+                        total_cost = total_cost + self.dynamic_anchor_shape_cost * self._anchor_shape_cost(
+                            gt_w=gt_w[gt_index],
+                            gt_h=gt_h[gt_index],
+                            candidate_anchor_indices=slot_anchor[candidate_indices],
+                            scale_anchors=scale_anchors,
+                            dtype=dtype,
+                            device=device,
+                        )
                     sorted_cost, order = torch.sort(total_cost, descending=False)
                     ordered_candidates = candidate_indices[order]
                     gt_candidate_lists.append(
@@ -229,6 +262,34 @@ class YOLOLoss(nn.Module):
             "dropped_gt_count": dropped_gt_count,
         }
 
+    def _scale_assignment_mask(self, boxes, image_w, image_h, scale_name, device):
+        """Optionally route each GT to one scale according to normalized object size."""
+        if self.scale_assignment in {"", "all", "none"} or scale_name is None:
+            return None
+        if self.scale_assignment != "area":
+            raise ValueError(f"Unsupported scale_assignment: {self.scale_assignment}")
+        if len(self.feature_levels) != 2:
+            raise ValueError("scale_assignment='area' currently expects exactly two feature levels")
+
+        widths = (boxes[:, 2] - boxes[:, 0]).clamp(min=0.0) / max(float(image_w), 1.0)
+        heights = (boxes[:, 3] - boxes[:, 1]).clamp(min=0.0) / max(float(image_h), 1.0)
+        object_scale = torch.sqrt((widths * heights).clamp(min=0.0))
+        threshold = torch.tensor(self.scale_area_threshold, device=device, dtype=object_scale.dtype)
+        if scale_name == self.feature_levels[0]:
+            return object_scale <= threshold
+        if scale_name == self.feature_levels[1]:
+            return object_scale > threshold
+        return torch.ones(boxes.shape[0], device=device, dtype=torch.bool)
+
+    @staticmethod
+    def _anchor_shape_cost(gt_w, gt_h, candidate_anchor_indices, scale_anchors, dtype, device):
+        """Compute a lightweight width/height prior cost for dynamic assignment."""
+        anchor_tensor = torch.tensor(scale_anchors, dtype=dtype, device=device).clamp(min=1e-6)
+        candidate_anchor_wh = anchor_tensor[candidate_anchor_indices]
+        gt_wh = torch.stack([gt_w, gt_h]).view(1, 2).expand(candidate_anchor_wh.shape[0], 2).clamp(min=1e-6)
+        ratios = torch.maximum(gt_wh / candidate_anchor_wh, candidate_anchor_wh / gt_wh)
+        return torch.log(ratios).abs().mean(dim=-1)
+
     @staticmethod
     def _make_slot_indices(grid_h, grid_w, num_boxes, device, dtype):
         """Create flattened `(grid_y, grid_x, anchor_idx)` lookup tensors."""
@@ -272,6 +333,8 @@ class YOLOLoss(nn.Module):
                 pred_cls=pred_cls,
                 decoded_pred_boxes=decoded_pred_boxes,
                 targets=targets,
+                scale_name=scale_name,
+                scale_anchors=scale_anchors,
             )
             target_box = dynamic_targets["target_box"]
             target_obj = dynamic_targets["target_obj"]
@@ -336,8 +399,10 @@ class YOLOLoss(nn.Module):
                 self.varifocal_alpha * pred_prob.pow(self.varifocal_gamma),
             )
             loss_cls = (cls_bce * focal_weight).sum() / (num_pos * self.num_classes)
-        else:
+        elif self.cls_loss_mode in {"bce", "quality_bce"}:
             loss_cls = (cls_bce * cls_mask).sum() / (num_pos * self.num_classes)
+        else:
+            raise ValueError(f"Unsupported cls_loss_mode: {self.cls_loss_mode}")
 
         total_loss = (
             self.lambda_box * loss_box
@@ -345,7 +410,7 @@ class YOLOLoss(nn.Module):
             + self.lambda_cls * loss_cls
         )
 
-        positive_cells_per_image = object_mask.sum(dim=(1, 2)).mean()
+        positive_cells_per_image = object_mask.reshape(object_mask.shape[0], -1).sum(dim=1).mean()
         collision_count_mean = collision_count.float().mean()
         ignored_count_mean = ignored_count.float().mean()
         dropped_gt_count_mean = dropped_gt_count.float().mean()
@@ -375,25 +440,39 @@ class YOLOLoss(nn.Module):
                 scale_targets["boxes"] = targets["boxes"]
                 scale_targets["labels"] = targets["labels"]
                 scale_targets["resized_size"] = targets["resized_size"]
-                scale_results.append(self._forward_single_scale(scale_pred, scale_targets, scale_name=scale_name))
+                scale_results.append(
+                    (
+                        scale_name,
+                        self.scale_loss_weights.get(scale_name, 1.0),
+                        self._forward_single_scale(scale_pred, scale_targets, scale_name=scale_name),
+                    )
+                )
 
-            total_loss = scale_results[0]["total_loss"]
-            for result in scale_results[1:]:
-                total_loss = total_loss + result["total_loss"]
+            total_loss = sum(weight * result["total_loss"] for _, weight, result in scale_results)
 
             mean_keys = {
                 "mean_giou",
                 "mean_obj_target",
                 "mean_cls_target",
             }
+            loss_keys = {
+                "loss_box",
+                "loss_obj",
+                "loss_cls",
+                "loss_obj_pos",
+                "loss_obj_neg",
+            }
             aggregated = {"total_loss": total_loss}
-            for key in scale_results[0]:
+            weight_sum = sum(weight for _, weight, _ in scale_results)
+            for key in scale_results[0][2]:
                 if key == "total_loss":
                     continue
                 if key in mean_keys:
-                    aggregated[key] = sum(result[key] for result in scale_results) / len(scale_results)
+                    aggregated[key] = sum(weight * result[key] for _, weight, result in scale_results) / weight_sum
+                elif key in loss_keys:
+                    aggregated[key] = sum(weight * result[key] for _, weight, result in scale_results)
                 else:
-                    aggregated[key] = sum(result[key] for result in scale_results)
+                    aggregated[key] = sum(result[key] for _, _, result in scale_results)
             return aggregated
 
         return self._forward_single_scale(pred, targets)

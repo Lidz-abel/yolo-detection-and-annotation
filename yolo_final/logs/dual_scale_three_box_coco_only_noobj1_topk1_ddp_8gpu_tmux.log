@@ -1,0 +1,38 @@
+W0429 14:01:58.900000 3989260 site-packages/torch/distributed/run.py:851] 
+W0429 14:01:58.900000 3989260 site-packages/torch/distributed/run.py:851] *****************************************
+W0429 14:01:58.900000 3989260 site-packages/torch/distributed/run.py:851] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0429 14:01:58.900000 3989260 site-packages/torch/distributed/run.py:851] *****************************************
+DDP mode: ignoring train.use_data_parallel from config.
+dataset storage train: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_train/chunk_1024/index.json | chunks = 116 | samples = 118287 | chunk_size = 1024
+dataset storage val: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_val/chunk_1024/index.json | chunks = 5 | samples = 5000 | chunk_size = 1024
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+DDP configured global batch size: 128
+DDP per-rank batch size: 16
+DDP effective global batch size: 128
+DDP configured workers: 64
+DDP per-rank workers: 8
+starting yolov0 DDP training
+run id: dual_scale_three_box_coco_only_noobj1_topk1_ddp_20260429_140203
+device: cuda:0
+backend: nccl
+world size: 8
+train dataset length: 118287
+val dataset length: 5000
+model output shape: {'p4': (1, 20, 20, 255), 'p5': (1, 10, 10, 255)}
+parameter total: 36531294
+parameter trainable: 36531294
+tensorboard dir: runs/dual_scale_three_box_coco_only_noobj1_topk1_ddp_20260429_140203
+output dir: outputs/dual_scale_three_box_coco_only_noobj1_topk1_ddp_20260429_140203
+epoch 001 | step 0001 | total = 11.3975 | box = 1.3886 | obj = 3.0357 | cls = 1.4191 | lr = 0.001000
+epoch 001 | step 0020 | total = 8.3107 | box = 1.1854 | obj = 2.1615 | cls = 0.2221 | lr = 0.001000
+epoch 001 | step 0040 | total = 7.8135 | box = 1.1410 | obj = 2.0214 | cls = 0.0870 | lr = 0.001000
+epoch 001 | step 0060 | total = 8.0098 | box = 1.1885 | obj = 1.9954 | cls = 0.0721 | lr = 0.001000
+epoch 001 | step 0080 | total = 8.2343 | box = 1.2607 | obj = 1.8678 | cls = 0.0631 | lr = 0.001000
+epoch 001 | step 0100 | total = 7.7562 | box = 1.1524 | obj = 1.9325 | cls = 0.0615 | lr = 0.001000
+epoch 001 | step 0120 | total = 8.4250 | box = 1.2838 | obj = 1.9434 | cls = 0.0628 | lr = 0.001000
+epoch 001 | step 0140 | total = 7.4173 | box = 1.0581 | obj = 2.0661 | cls = 0.0609 | lr = 0.001000
+epoch 001 | step 0160 | total = 7.6114 | box = 1.0848 | obj = 2.1188 | cls = 0.0685 | lr = 0.001000
+epoch 001 | step 0180 | total = 7.4653 | box = 1.0588 | obj = 2.1041 | cls = 0.0671 | lr = 0.001000
+epoch 001 | step 0200 | total = 7.1964 | box = 1.0166 | obj = 2.0508 | cls = 0.0625 | lr = 0.001000
+epoch 001 | step 0220 | total = 7.1423 | box = 0.9978 | obj = 2.0892 | cls = 0.0640 | lr = 0.001000

@@ -1,0 +1,110 @@
+run_id = dual_scale_three_box_coco_only_noobj1_20260428_143454
+timestamp = 20260428_143454
+status = interrupted
+stage = full_loss_training
+project_root = /home/lidz/YOLO/yolo_final
+config_path = /home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1.toml
+config_snapshot = logs/records/dual_scale_three_box_coco_only_noobj1_20260428_143454/config.toml
+tensorboard_dir = runs/dual_scale_three_box_coco_only_noobj1_20260428_143454
+output_dir = outputs/dual_scale_three_box_coco_only_noobj1_20260428_143454
+record_dir = logs/records/dual_scale_three_box_coco_only_noobj1_20260428_143454
+git_commit = b48f50e6d7669c117d88798cb9e86b32ecd0fe43
+device = cuda
+gpu_count = 8
+resume_checkpoint = 
+resume_epoch = 0
+train_dataset_length = 118287
+val_dataset_length = 5000
+model_output_shape = {'p4': (1, 20, 20, 255), 'p5': (1, 10, 10, 255)}
+parameter_total = 36531294
+parameter_trainable = 36531294
+visualization_dir = outputs/dual_scale_three_box_coco_only_noobj1_20260428_143454/visualizations
+
+config summary:
+run_name = dual_scale_three_box_coco_only_noobj1
+train_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/coco2017_train.jsonl
+val_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl
+packing_format = pt
+packed_root = /home/lidz/YOLO/DataSet/Unified/packed
+packed_chunk_size = 1024
+packed_cache_size = 4
+image_size = 320
+grid_size = n/a
+grid_sizes = 20,10
+num_classes = 80
+train_max_samples = 0
+val_max_samples = 0
+model_name = deep_residual_dual_scale_three_box
+width_mult = 1.0
+depth_mult = 2.0
+use_residual = True
+head_type = decoupled
+neck_type = fpn_pan_lite
+num_boxes = 3
+multiscale = False
+feature_levels = p4,p5
+anchors = n/a
+anchor_positive_iou = n/a
+anchor_ignore_iou = n/a
+anchor_match_metric = iou
+anchor_shape_ratio = n/a
+anchor_ignore_shape_ratio = n/a
+box_parameterization = yolov5
+box_type = giou
+cls_type = bce
+use_objectness = True
+iou_loss = giou
+soft_objectness_target = iou
+soft_objectness_min = 0.05
+soft_classification_target = iou
+cls_loss_mode = quality_bce
+varifocal_alpha = n/a
+varifocal_gamma = n/a
+assignment_strategy = dynamic_cost
+dynamic_topk = 2
+dynamic_center_radius = 1
+dynamic_box_cost = 3.0
+dynamic_cls_cost = 1.0
+dynamic_ignore_iou = 0.5
+lambda_obj = 1.0
+lambda_noobj = 1.0
+optimizer = adamw
+batch_size = 128
+epochs = 20
+lr = 0.001
+min_lr = 1e-05
+weight_decay = 0.0001
+scheduler = cosine
+num_workers = 64
+use_data_parallel = True
+max_steps_per_epoch = 0
+max_val_steps = 0
+val_interval_epochs = 1
+vis_interval_epochs = 5
+vis_max_samples = 4
+eval_score_threshold = 0.05
+eval_score_alpha = 2.0
+eval_score_beta = 1.0
+vis_score_threshold = 0.25
+vis_score_alpha = 2.0
+vis_score_beta = 1.0
+anchors_p4 = 0.040,0.055;0.075,0.110;0.130,0.180
+anchors_p5 = 0.180,0.240;0.320,0.420;0.520,0.620
+
+train history:
+epoch = 001 | total = 7.493817 | box = 1.103755 | obj = 1.904489 | cls = 0.070554 | giou = 0.448123 | obj_target = 0.477477 | pos_cells = 8.413218 | collisions = 2.015809 | ignored = 47.052184 | dropped_gt = 0.519638 | batches = 925 | time = 2789.049s
+epoch = 002 | total = 6.724238 | box = 0.965983 | obj = 1.841381 | cls = 0.052944 | giou = 0.517009 | obj_target = 0.541756 | pos_cells = 8.718108 | collisions = 2.018100 | ignored = 66.433653 | dropped_gt = 0.334650 | batches = 925 | time = 2995.167s
+epoch = 003 | total = 6.399270 | box = 0.909760 | obj = 1.799641 | cls = 0.050830 | giou = 0.545120 | obj_target = 0.568267 | pos_cells = 8.815627 | collisions = 2.016445 | ignored = 74.993871 | dropped_gt = 0.285336 | batches = 925 | time = 3119.709s
+epoch = 004 | total = 6.189823 | box = 0.873930 | obj = 1.770774 | cls = 0.049398 | giou = 0.563035 | obj_target = 0.585181 | pos_cells = 8.865649 | collisions = 2.016064 | ignored = 79.284716 | dropped_gt = 0.260926 | batches = 925 | time = 3126.620s
+
+val history:
+epoch = 001 | total = 7.018454 | box = 1.018461 | obj = 1.871922 | cls = 0.054225 | giou = 0.490769 | obj_target = 0.516986 | pos_cells = 8.657552 | collisions = 1.991211 | ignored = 60.475391 | dropped_gt = 0.392969 | batches = 40 | time = 125.782s
+epoch = 002 | total = 6.536268 | box = 0.933473 | obj = 1.816684 | cls = 0.052219 | giou = 0.533264 | obj_target = 0.556897 | pos_cells = 8.797526 | collisions = 1.991211 | ignored = 73.746680 | dropped_gt = 0.325000 | batches = 40 | time = 123.771s
+epoch = 003 | total = 6.570970 | box = 0.926702 | obj = 1.884885 | cls = 0.052576 | giou = 0.536649 | obj_target = 0.560221 | pos_cells = 8.701367 | collisions = 1.991211 | ignored = 84.219336 | dropped_gt = 0.383008 | batches = 40 | time = 128.499s
+epoch = 004 | total = 6.306462 | box = 0.889139 | obj = 1.808819 | cls = 0.051946 | giou = 0.555430 | obj_target = 0.575743 | pos_cells = 8.748112 | collisions = 1.991211 | ignored = 87.772266 | dropped_gt = 0.365820 | batches = 40 | time = 131.855s
+
+artifacts:
+last_checkpoint = outputs/dual_scale_three_box_coco_only_noobj1_20260428_143454/last.pth
+best_checkpoint = outputs/dual_scale_three_box_coco_only_noobj1_20260428_143454/best.pth
+best_epoch = 4
+best_val_loss = 6.306462335586548
