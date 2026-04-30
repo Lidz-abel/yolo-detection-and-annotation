@@ -102,6 +102,10 @@ def setup_distributed():
         dist.init_process_group(backend=backend, init_method="env://")
 
     if has_cuda:
+        if local_rank >= torch.cuda.device_count():
+            raise RuntimeError(
+                f"LOCAL_RANK={local_rank} but only {torch.cuda.device_count()} CUDA devices are visible."
+            )
         torch.cuda.set_device(local_rank)
         device = torch.device("cuda", local_rank)
     else:
@@ -213,6 +217,12 @@ def get_state_dict(model):
     return model.state_dict()
 
 
+def save_checkpoint_ddp(model, checkpoint_path: Path) -> None:
+    """Save a DDP checkpoint after ensuring the rank0 output directory exists."""
+    checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(get_state_dict(model), checkpoint_path)
+
+
 def load_state_dict_ddp(model, state_dict):
     if isinstance(model, DistributedDataParallel):
         model.module.load_state_dict(state_dict)
@@ -227,7 +237,8 @@ def format_history_line(item: dict) -> str:
         "obj_target = {mean_obj_target:.6f} | "
         "pos_cells = {positive_cells_per_image:.6f} | collisions = {collision_count:.6f} | "
         "ignored = {ignored_count:.6f} | dropped_gt = {dropped_gt_count:.6f} | "
-        "batches = {batch_count} | time = {duration_seconds:.3f}s"
+        "optimizer_steps = {optimizer_steps} | global_batches = {global_batch_count} | "
+        "samples = {sample_count} | time = {duration_seconds:.3f}s"
     ).format(**item)
 
 
@@ -249,7 +260,7 @@ def main():
         visualization_cfg = config["visualization"]
 
         stage_name = "full_loss_training_ddp" if bool(loss_cfg["use_objectness"]) else "baseline_training_ddp"
-        set_seed(int(train_cfg["seed"]) + rank)
+        set_seed(int(train_cfg["seed"]))
 
         anchors = parse_anchor_string(model_cfg.get("anchors"))
         num_boxes = int(model_cfg.get("num_boxes", 1))
@@ -450,7 +461,9 @@ def main():
                         f"box = {train_metrics['box_loss']:.4f} | "
                         f"obj = {train_metrics['obj_loss']:.4f} | "
                         f"cls = {train_metrics['cls_loss']:.4f} | "
-                        f"batches = {train_metrics['batch_count']} | "
+                        f"steps = {train_metrics['optimizer_steps']} | "
+                        f"global_batches = {train_metrics['global_batch_count']} | "
+                        f"samples = {train_metrics['sample_count']} | "
                         f"time = {train_metrics['duration_seconds']:.1f}s",
                         flush=True,
                     )
@@ -479,7 +492,9 @@ def main():
                             f"box = {val_metrics['box_loss']:.4f} | "
                             f"obj = {val_metrics['obj_loss']:.4f} | "
                             f"cls = {val_metrics['cls_loss']:.4f} | "
-                            f"batches = {val_metrics['batch_count']} | "
+                            f"steps = {val_metrics['optimizer_steps']} | "
+                            f"global_batches = {val_metrics['global_batch_count']} | "
+                            f"samples = {val_metrics['sample_count']} | "
                             f"time = {val_metrics['duration_seconds']:.1f}s",
                             flush=True,
                         )
@@ -488,11 +503,11 @@ def main():
                     if val_metrics is not None and val_metrics["total_loss"] < best_val_loss:
                         best_val_loss = val_metrics["total_loss"]
                         best_epoch = epoch_index
-                        torch.save(get_state_dict(model), run_info["output_dir"] / "best.pth")
+                        save_checkpoint_ddp(model, run_info["output_dir"] / "best.pth")
 
-                    torch.save(get_state_dict(model), run_info["output_dir"] / "last.pth")
+                    save_checkpoint_ddp(model, run_info["output_dir"] / "last.pth")
                     if epoch_index % save_interval_epochs == 0 or epoch_index == epochs:
-                        torch.save(get_state_dict(model), run_info["output_dir"] / f"epoch_{epoch_index:03d}.pth")
+                        save_checkpoint_ddp(model, run_info["output_dir"] / f"epoch_{epoch_index:03d}.pth")
 
                     if did_validate:
                         update_metadata(

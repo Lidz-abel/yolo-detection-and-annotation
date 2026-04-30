@@ -36,3 +36,431 @@ epoch 001 | step 0160 | total = 7.6114 | box = 1.0848 | obj = 2.1188 | cls = 0.0
 epoch 001 | step 0180 | total = 7.4653 | box = 1.0588 | obj = 2.1041 | cls = 0.0671 | lr = 0.001000
 epoch 001 | step 0200 | total = 7.1964 | box = 1.0166 | obj = 2.0508 | cls = 0.0625 | lr = 0.001000
 epoch 001 | step 0220 | total = 7.1423 | box = 0.9978 | obj = 2.0892 | cls = 0.0640 | lr = 0.001000
+epoch 001 | step 0240 | total = 7.6356 | box = 1.1354 | obj = 1.8979 | cls = 0.0606 | lr = 0.001000
+epoch 001 | step 0260 | total = 7.4515 | box = 1.0840 | obj = 1.9747 | cls = 0.0568 | lr = 0.001000
+epoch 001 | step 0280 | total = 7.8641 | box = 1.1798 | obj = 1.9139 | cls = 0.0513 | lr = 0.001000
+epoch 001 | step 0300 | total = 7.8029 | box = 1.1634 | obj = 1.9260 | cls = 0.0597 | lr = 0.001000
+epoch 001 | step 0320 | total = 7.3062 | box = 1.0519 | obj = 1.9880 | cls = 0.0589 | lr = 0.001000
+epoch 001 | step 0340 | total = 7.1714 | box = 0.9945 | obj = 2.1377 | cls = 0.0614 | lr = 0.001000
+epoch 001 | step 0360 | total = 7.4034 | box = 1.0870 | obj = 1.9142 | cls = 0.0542 | lr = 0.001000
+epoch 001 | step 0380 | total = 6.7639 | box = 0.9414 | obj = 1.9843 | cls = 0.0729 | lr = 0.001000
+epoch 001 | step 0400 | total = 6.8733 | box = 0.9518 | obj = 2.0481 | cls = 0.0662 | lr = 0.001000
+epoch 001 | step 0420 | total = 7.5964 | box = 1.1198 | obj = 1.9403 | cls = 0.0570 | lr = 0.001000
+epoch 001 | step 0440 | total = 7.2578 | box = 1.0586 | obj = 1.9032 | cls = 0.0615 | lr = 0.001000
+epoch 001 | step 0460 | total = 7.9919 | box = 1.2285 | obj = 1.8010 | cls = 0.0485 | lr = 0.001000
+epoch 001 | step 0480 | total = 7.7847 | box = 1.1854 | obj = 1.8077 | cls = 0.0500 | lr = 0.001000
+epoch 001 | step 0500 | total = 7.4878 | box = 1.1089 | obj = 1.8899 | cls = 0.0536 | lr = 0.001000
+epoch 001 | step 0520 | total = 7.2134 | box = 1.0311 | obj = 1.9961 | cls = 0.0617 | lr = 0.001000
+epoch 001 | step 0540 | total = 7.2546 | box = 1.0167 | obj = 2.1063 | cls = 0.0648 | lr = 0.001000
+epoch 001 | step 0560 | total = 6.8482 | box = 0.9568 | obj = 2.0078 | cls = 0.0566 | lr = 0.001000
+epoch 001 | step 0580 | total = 7.7507 | box = 1.1694 | obj = 1.8530 | cls = 0.0505 | lr = 0.001000
+epoch 001 | step 0600 | total = 7.7358 | box = 1.1573 | obj = 1.8998 | cls = 0.0496 | lr = 0.001000
+epoch 001 | step 0620 | total = 7.2639 | box = 1.0275 | obj = 2.0724 | cls = 0.0542 | lr = 0.001000
+epoch 001 | step 0640 | total = 6.8000 | box = 0.9454 | obj = 2.0180 | cls = 0.0551 | lr = 0.001000
+epoch 001 | step 0660 | total = 7.1372 | box = 1.0247 | obj = 1.9556 | cls = 0.0582 | lr = 0.001000
+epoch 001 | step 0680 | total = 6.7554 | box = 0.9307 | obj = 2.0404 | cls = 0.0615 | lr = 0.001000
+epoch 001 | step 0700 | total = 6.8001 | box = 0.9397 | obj = 2.0428 | cls = 0.0589 | lr = 0.001000
+epoch 001 | step 0720 | total = 7.2367 | box = 1.0371 | obj = 1.9944 | cls = 0.0567 | lr = 0.001000
+epoch 001 | step 0740 | total = 7.0376 | box = 1.0128 | obj = 1.9187 | cls = 0.0551 | lr = 0.001000
+epoch 001 | step 0760 | total = 6.8486 | box = 0.9619 | obj = 1.9704 | cls = 0.0689 | lr = 0.001000
+epoch 001 | step 0780 | total = 6.9368 | box = 0.9504 | obj = 2.1229 | cls = 0.0618 | lr = 0.001000
+epoch 001 | step 0800 | total = 5.9265 | box = 0.7689 | obj = 2.0094 | cls = 0.0724 | lr = 0.001000
+epoch 001 | step 0820 | total = 6.6469 | box = 0.9032 | obj = 2.0666 | cls = 0.0640 | lr = 0.001000
+epoch 001 | step 0840 | total = 6.2952 | box = 0.8175 | obj = 2.1312 | cls = 0.0768 | lr = 0.001000
+epoch 001 | step 0860 | total = 6.4065 | box = 0.8866 | obj = 1.9192 | cls = 0.0542 | lr = 0.001000
+epoch 001 | step 0880 | total = 6.6303 | box = 0.8827 | obj = 2.1530 | cls = 0.0639 | lr = 0.001000
+epoch 001 | step 0900 | total = 6.9708 | box = 1.0022 | obj = 1.9133 | cls = 0.0464 | lr = 0.001000
+epoch 001 | step 0920 | total = 7.4040 | box = 1.0808 | obj = 1.9479 | cls = 0.0520 | lr = 0.001000
+[epoch 001 train] total = 7.3964 | box = 1.0693 | obj = 1.9762 | cls = 0.0737 | batches = 7400 | time = 802.2s
+[epoch 001 val] total = 7.0199 | box = 0.9996 | obj = 1.9651 | cls = 0.0570 | batches = 320 | time = 15.2s
+[rank6]:[E429 14:25:42.132667976 ProcessGroupNCCL.cpp:689] [Rank 6] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600017 milliseconds before timing out.
+[rank7]:[E429 14:25:42.141113420 ProcessGroupNCCL.cpp:689] [Rank 7] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600026 milliseconds before timing out.
+[rank6]:[E429 14:25:42.154734531 ProcessGroupNCCL.cpp:2303] [PG ID 0 PG GUID 0(default_pg) Rank 6]  failure detected by watchdog at work sequence id: 7411 PG status: last enqueued work: 7411, last completed work: 7410
+[rank7]:[E429 14:25:42.154737819 ProcessGroupNCCL.cpp:2303] [PG ID 0 PG GUID 0(default_pg) Rank 7]  failure detected by watchdog at work sequence id: 7411 PG status: last enqueued work: 7411, last completed work: 7410
+[rank7]:[E429 14:25:42.155556514 ProcessGroupNCCL.cpp:733] Stack trace of the failed collective: 
+#0 barrier from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:5030
+#1 wrapper from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83
+#2 barrier from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:124
+#3 main from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:506
+#4 <module> from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:617
+
+[rank6]:[E429 14:25:42.155577229 ProcessGroupNCCL.cpp:733] Stack trace of the failed collective: 
+#0 barrier from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:5030
+#1 wrapper from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83
+#2 barrier from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:124
+#3 main from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:506
+#4 <module> from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:617
+
+[rank7]:[E429 14:25:42.155698890 ProcessGroupNCCL.cpp:2636] [PG ID 0 PG GUID 0(default_pg) Rank 7] First PG on this rank to signal dumping.
+[rank6]:[E429 14:25:42.155711865 ProcessGroupNCCL.cpp:2636] [PG ID 0 PG GUID 0(default_pg) Rank 6] First PG on this rank to signal dumping.
+[rank4]:[E429 14:25:42.157044910 ProcessGroupNCCL.cpp:689] [Rank 4] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600041 milliseconds before timing out.
+[rank4]:[E429 14:25:42.157496935 ProcessGroupNCCL.cpp:2303] [PG ID 0 PG GUID 0(default_pg) Rank 4]  failure detected by watchdog at work sequence id: 7411 PG status: last enqueued work: 7411, last completed work: 7410
+[rank4]:[E429 14:25:42.158241188 ProcessGroupNCCL.cpp:733] Stack trace of the failed collective: 
+#0 barrier from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:5030
+#1 wrapper from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83
+#2 barrier from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:124
+#3 main from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:506
+#4 <module> from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:617
+
+[rank4]:[E429 14:25:42.158443394 ProcessGroupNCCL.cpp:2636] [PG ID 0 PG GUID 0(default_pg) Rank 4] First PG on this rank to signal dumping.
+[rank3]:[E429 14:25:42.173726508 ProcessGroupNCCL.cpp:689] [Rank 3] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600058 milliseconds before timing out.
+[rank3]:[E429 14:25:42.174253046 ProcessGroupNCCL.cpp:2303] [PG ID 0 PG GUID 0(default_pg) Rank 3]  failure detected by watchdog at work sequence id: 7411 PG status: last enqueued work: 7411, last completed work: 7410
+[rank3]:[E429 14:25:42.175280533 ProcessGroupNCCL.cpp:733] Stack trace of the failed collective: 
+#0 barrier from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:5030
+#1 wrapper from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83
+#2 barrier from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:124
+#3 main from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:506
+#4 <module> from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:617
+
+[rank3]:[E429 14:25:42.175468802 ProcessGroupNCCL.cpp:2636] [PG ID 0 PG GUID 0(default_pg) Rank 3] First PG on this rank to signal dumping.
+[rank2]:[E429 14:25:42.181981427 ProcessGroupNCCL.cpp:689] [Rank 2] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600066 milliseconds before timing out.
+[rank2]:[E429 14:25:42.182458189 ProcessGroupNCCL.cpp:2303] [PG ID 0 PG GUID 0(default_pg) Rank 2]  failure detected by watchdog at work sequence id: 7411 PG status: last enqueued work: 7411, last completed work: 7410
+[rank2]:[E429 14:25:42.183239179 ProcessGroupNCCL.cpp:733] Stack trace of the failed collective: 
+#0 barrier from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:5030
+#1 wrapper from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83
+#2 barrier from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:124
+#3 main from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:506
+#4 <module> from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:617
+
+[rank2]:[E429 14:25:42.183420209 ProcessGroupNCCL.cpp:2636] [PG ID 0 PG GUID 0(default_pg) Rank 2] First PG on this rank to signal dumping.
+[rank1]:[E429 14:25:42.189202054 ProcessGroupNCCL.cpp:1849] [PG ID 0 PG GUID 0(default_pg) Rank 1] Observed flight recorder dump signal from another rank via TCPStore.
+[rank1]:[E429 14:25:42.189416939 ProcessGroupNCCL.cpp:1914] [PG ID 0 PG GUID 0(default_pg) Rank 1] Received a dump signal due to a collective timeout from  rank 2 and we will try our best to dump the debug info. Last enqueued NCCL work: 7411, last completed NCCL work: 7410.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank1]:[E429 14:25:42.189767334 ProcessGroupNCCL.cpp:1628] [PG ID 0 PG GUID 0(default_pg) Rank 1] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1, only active collectives: 0
+[rank1]:[E429 14:25:42.198063008 ProcessGroupNCCL.cpp:689] [Rank 1] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600083 milliseconds before timing out.
+[rank1]:[E429 14:25:42.198380897 ProcessGroupNCCL.cpp:2303] [PG ID 0 PG GUID 0(default_pg) Rank 1]  failure detected by watchdog at work sequence id: 7411 PG status: last enqueued work: 7411, last completed work: 7410
+[rank1]:[E429 14:25:42.198813972 ProcessGroupNCCL.cpp:733] Stack trace of the failed collective: 
+#0 barrier from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:5030
+#1 wrapper from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83
+#2 barrier from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:124
+#3 main from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:506
+#4 <module> from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:617
+
+[rank5]:[E429 14:25:42.214594956 ProcessGroupNCCL.cpp:689] [Rank 5] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600099 milliseconds before timing out.
+[rank5]:[E429 14:25:42.214972847 ProcessGroupNCCL.cpp:2303] [PG ID 0 PG GUID 0(default_pg) Rank 5]  failure detected by watchdog at work sequence id: 7411 PG status: last enqueued work: 7411, last completed work: 7410
+[rank5]:[E429 14:25:42.215606937 ProcessGroupNCCL.cpp:733] Stack trace of the failed collective: 
+#0 barrier from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:5030
+#1 wrapper from /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83
+#2 barrier from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:124
+#3 main from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:506
+#4 <module> from /home/lidz/YOLO/yolo_final/tools/train_ddp.py:617
+
+[rank5]:[E429 14:25:42.215752675 ProcessGroupNCCL.cpp:2636] [PG ID 0 PG GUID 0(default_pg) Rank 5] First PG on this rank to signal dumping.
+[rank2]:[E429 14:25:42.920250589 ProcessGroupNCCL.cpp:1914] [PG ID 0 PG GUID 0(default_pg) Rank 2] Received a dump signal due to a collective timeout from this local rank and we will try our best to dump the debug info. Last enqueued NCCL work: 7411, last completed NCCL work: 7410.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank6]:[E429 14:25:42.920333709 ProcessGroupNCCL.cpp:1914] [PG ID 0 PG GUID 0(default_pg) Rank 6] Received a dump signal due to a collective timeout from this local rank and we will try our best to dump the debug info. Last enqueued NCCL work: 7411, last completed NCCL work: 7410.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank2]:[E429 14:25:42.920532609 ProcessGroupNCCL.cpp:1628] [PG ID 0 PG GUID 0(default_pg) Rank 2] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1, only active collectives: 0
+[rank6]:[E429 14:25:42.920624685 ProcessGroupNCCL.cpp:1628] [PG ID 0 PG GUID 0(default_pg) Rank 6] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1, only active collectives: 0
+[rank3]:[E429 14:25:42.952142687 ProcessGroupNCCL.cpp:1914] [PG ID 0 PG GUID 0(default_pg) Rank 3] Received a dump signal due to a collective timeout from this local rank and we will try our best to dump the debug info. Last enqueued NCCL work: 7411, last completed NCCL work: 7410.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank3]:[E429 14:25:42.952383247 ProcessGroupNCCL.cpp:1628] [PG ID 0 PG GUID 0(default_pg) Rank 3] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1, only active collectives: 0
+[rank7]:[E429 14:25:42.071296336 ProcessGroupNCCL.cpp:1914] [PG ID 0 PG GUID 0(default_pg) Rank 7] Received a dump signal due to a collective timeout from this local rank and we will try our best to dump the debug info. Last enqueued NCCL work: 7411, last completed NCCL work: 7410.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank7]:[E429 14:25:42.071542908 ProcessGroupNCCL.cpp:1628] [PG ID 0 PG GUID 0(default_pg) Rank 7] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1, only active collectives: 0
+[rank5]:[E429 14:25:43.145099384 ProcessGroupNCCL.cpp:1914] [PG ID 0 PG GUID 0(default_pg) Rank 5] Received a dump signal due to a collective timeout from this local rank and we will try our best to dump the debug info. Last enqueued NCCL work: 7411, last completed NCCL work: 7410.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank5]:[E429 14:25:43.145307756 ProcessGroupNCCL.cpp:1628] [PG ID 0 PG GUID 0(default_pg) Rank 5] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1, only active collectives: 0
+[rank4]:[E429 14:25:43.149299588 ProcessGroupNCCL.cpp:1914] [PG ID 0 PG GUID 0(default_pg) Rank 4] Received a dump signal due to a collective timeout from this local rank and we will try our best to dump the debug info. Last enqueued NCCL work: 7411, last completed NCCL work: 7410.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank4]:[E429 14:25:43.149569471 ProcessGroupNCCL.cpp:1628] [PG ID 0 PG GUID 0(default_pg) Rank 4] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1, only active collectives: 0
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/lidz/YOLO/yolo_final/tools/train_ddp.py", line 617, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/lidz/YOLO/yolo_final/tools/train_ddp.py", line 491, in main
+[rank0]:     torch.save(get_state_dict(model), run_info["output_dir"] / "best.pth")
+[rank0]:   File "/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/serialization.py", line 1003, in save
+[rank0]:     with _open_zipfile_writer(f) as opened_zipfile:
+[rank0]:   File "/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/serialization.py", line 865, in _open_zipfile_writer
+[rank0]:     return container(name_or_buffer)  # type: ignore[arg-type]
+[rank0]:   File "/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/serialization.py", line 829, in __init__
+[rank0]:     torch._C.PyTorchFileWriter(
+[rank0]: RuntimeError: Parent directory outputs/dual_scale_three_box_coco_only_noobj1_topk1_ddp_20260429_140203 does not exist.
+[rank2]:[E429 14:26:42.539110732 ProcessGroupNCCL.cpp:750] [Rank 2] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank2]:[E429 14:26:42.539140812 ProcessGroupNCCL.cpp:764] [Rank 2] To avoid data inconsistency, we are taking the entire process down.
+[rank3]:[E429 14:26:42.542194375 ProcessGroupNCCL.cpp:750] [Rank 3] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank3]:[E429 14:26:42.542220267 ProcessGroupNCCL.cpp:764] [Rank 3] To avoid data inconsistency, we are taking the entire process down.
+[rank6]:[E429 14:26:42.544331438 ProcessGroupNCCL.cpp:750] [Rank 6] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank6]:[E429 14:26:42.544351687 ProcessGroupNCCL.cpp:764] [Rank 6] To avoid data inconsistency, we are taking the entire process down.
+[rank4]:[E429 14:26:42.545999611 ProcessGroupNCCL.cpp:750] [Rank 4] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank4]:[E429 14:26:42.546021809 ProcessGroupNCCL.cpp:764] [Rank 4] To avoid data inconsistency, we are taking the entire process down.
+[rank7]:[E429 14:26:42.547101726 ProcessGroupNCCL.cpp:750] [Rank 7] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank7]:[E429 14:26:42.547119907 ProcessGroupNCCL.cpp:764] [Rank 7] To avoid data inconsistency, we are taking the entire process down.
+[rank4]:[E429 14:26:42.554299001 ProcessGroupNCCL.cpp:2119] [PG ID 0 PG GUID 0(default_pg) Rank 4] Process group watchdog thread terminated with exception: [Rank 4] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600041 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x700ba057305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x700aebb02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x700aebb07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x700aebb093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x700b704ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x700ba209caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x700ba2129c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank7]:[E429 14:26:42.554306365 ProcessGroupNCCL.cpp:2119] [PG ID 0 PG GUID 0(default_pg) Rank 7] Process group watchdog thread terminated with exception: [Rank 7] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600026 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x73f3b8d7305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x73f304702ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x73f304707fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x73f3047093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x73f3890ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x73f3baa9caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x73f3bab29c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+terminate called after throwing an instance of 'terminate called after throwing an instance of 'c10::DistBackendErrorc10::DistBackendError'
+'
+[rank2]:[E429 14:26:42.554518130 ProcessGroupNCCL.cpp:2119] [PG ID 0 PG GUID 0(default_pg) Rank 2] Process group watchdog thread terminated with exception: [Rank 2] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600066 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7c0e2937305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x7c0d74d02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x7c0d74d07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x7c0d74d093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x7c0df96ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x7c0e2b29caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x7c0e2b329c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+terminate called after throwing an instance of 'c10::DistBackendError'
+  what():  [PG ID 0 PG GUID 0(default_pg) Rank 7] Process group watchdog thread terminated with exception: [Rank 7] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600026 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x73f3b8d7305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x73f304702ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x73f304707fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x73f3047093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x73f3890ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x73f3baa9caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x73f3bab29c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+Exception raised from run at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:2125 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x73f3b8d7305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x68ef03 (0x73f303e8ef03 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: <unknown function> + 0xecdb4 (0x73f3890ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #3: <unknown function> + 0x9caa4 (0x73f3baa9caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #4: <unknown function> + 0x129c6c (0x73f3bab29c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+  what():  [PG ID 0 PG GUID 0(default_pg) Rank 4] Process group watchdog thread terminated with exception: [Rank 4] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600041 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x700ba057305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x700aebb02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x700aebb07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x700aebb093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x700b704ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x700ba209caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x700ba2129c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+Exception raised from run at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:2125 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x700ba057305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x68ef03 (0x700aeb28ef03 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: <unknown function> + 0xecdb4 (0x700b704ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #3: <unknown function> + 0x9caa4 (0x700ba209caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #4: <unknown function> + 0x129c6c (0x700ba2129c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank6]:[E429 14:26:42.554991438 ProcessGroupNCCL.cpp:2119] [PG ID 0 PG GUID 0(default_pg) Rank 6] Process group watchdog thread terminated with exception: [Rank 6] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600017 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7e8bac77305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x7e8af7d02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x7e8af7d07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x7e8af7d093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x7e8b7c6ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x7e8bae29caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x7e8bae329c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+  what():  [PG ID 0 PG GUID 0(default_pg) Rank 2] Process group watchdog thread terminated with exception: [Rank 2] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600066 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7c0e2937305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x7c0d74d02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x7c0d74d07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x7c0d74d093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x7c0df96ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x7c0e2b29caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x7c0e2b329c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+Exception raised from run at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:2125 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7c0e2937305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x68ef03 (0x7c0d7448ef03 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: <unknown function> + 0xecdb4 (0x7c0df96ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #3: <unknown function> + 0x9caa4 (0x7c0e2b29caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #4: <unknown function> + 0x129c6c (0x7c0e2b329c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+terminate called after throwing an instance of 'c10::DistBackendError'
+[rank3]:[E429 14:26:42.555719914 ProcessGroupNCCL.cpp:2119] [PG ID 0 PG GUID 0(default_pg) Rank 3] Process group watchdog thread terminated with exception: [Rank 3] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600058 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x76c814b7305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x76c760502ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x76c760507fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x76c7605093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x76c7e4eecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x76c816a9caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x76c816b29c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+terminate called after throwing an instance of 'c10::DistBackendError'
+  what():  [PG ID 0 PG GUID 0(default_pg) Rank 6] Process group watchdog thread terminated with exception: [Rank 6] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600017 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7e8bac77305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x7e8af7d02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x7e8af7d07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x7e8af7d093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x7e8b7c6ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x7e8bae29caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x7e8bae329c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+Exception raised from run at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:2125 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7e8bac77305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x68ef03 (0x7e8af748ef03 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: <unknown function> + 0xecdb4 (0x7e8b7c6ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #3: <unknown function> + 0x9caa4 (0x7e8bae29caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #4: <unknown function> + 0x129c6c (0x7e8bae329c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+  what():  [PG ID 0 PG GUID 0(default_pg) Rank 3] Process group watchdog thread terminated with exception: [Rank 3] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600058 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x76c814b7305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x76c760502ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x76c760507fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x76c7605093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x76c7e4eecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x76c816a9caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x76c816b29c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+Exception raised from run at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:2125 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x76c814b7305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x68ef03 (0x76c75fc8ef03 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: <unknown function> + 0xecdb4 (0x76c7e4eecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #3: <unknown function> + 0x9caa4 (0x76c816a9caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #4: <unknown function> + 0x129c6c (0x76c816b29c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank1]:[E429 14:26:42.711465799 ProcessGroupNCCL.cpp:750] [Rank 1] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank1]:[E429 14:26:42.711507813 ProcessGroupNCCL.cpp:764] [Rank 1] To avoid data inconsistency, we are taking the entire process down.
+[rank1]:[E429 14:26:42.712640261 ProcessGroupNCCL.cpp:2119] [PG ID 0 PG GUID 0(default_pg) Rank 1] Process group watchdog thread terminated with exception: [Rank 1] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600083 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7e505d57305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x7e4fa8f02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x7e4fa8f07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x7e4fa8f093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x7e502d8ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x7e505f49caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x7e505f529c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+terminate called after throwing an instance of 'c10::DistBackendError'
+  what():  [PG ID 0 PG GUID 0(default_pg) Rank 1] Process group watchdog thread terminated with exception: [Rank 1] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600083 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7e505d57305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x7e4fa8f02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x7e4fa8f07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x7e4fa8f093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x7e502d8ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x7e505f49caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x7e505f529c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+Exception raised from run at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:2125 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7e505d57305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x68ef03 (0x7e4fa868ef03 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: <unknown function> + 0xecdb4 (0x7e502d8ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #3: <unknown function> + 0x9caa4 (0x7e505f49caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #4: <unknown function> + 0x129c6c (0x7e505f529c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank5]:[E429 14:26:42.725483511 ProcessGroupNCCL.cpp:750] [Rank 5] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank5]:[E429 14:26:42.725521752 ProcessGroupNCCL.cpp:764] [Rank 5] To avoid data inconsistency, we are taking the entire process down.
+[rank5]:[E429 14:26:42.726516084 ProcessGroupNCCL.cpp:2119] [PG ID 0 PG GUID 0(default_pg) Rank 5] Process group watchdog thread terminated with exception: [Rank 5] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600099 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x747aae97305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x7479f9f02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x7479f9f07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x7479f9f093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x747a7e8ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x747ab049caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x747ab0529c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+terminate called after throwing an instance of 'c10::DistBackendError'
+  what():  [PG ID 0 PG GUID 0(default_pg) Rank 5] Process group watchdog thread terminated with exception: [Rank 5] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=7411, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600099 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x747aae97305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x2a7 (0x7479f9f02ba7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x17b1 (0x7479f9f07fc1 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x157 (0x7479f9f093b7 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x747a7e8ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x747ab049caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x747ab0529c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+Exception raised from run at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:2125 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x747aae97305d in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x68ef03 (0x7479f968ef03 in /home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: <unknown function> + 0xecdb4 (0x747a7e8ecdb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #3: <unknown function> + 0x9caa4 (0x747ab049caa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #4: <unknown function> + 0x129c6c (0x747ab0529c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+W0429 14:26:43.665000 3989260 site-packages/torch/distributed/elastic/multiprocessing/api.py:1012] Sending process 3989359 closing signal SIGTERM
+W0429 14:26:43.672000 3989260 site-packages/torch/distributed/elastic/multiprocessing/api.py:1012] Sending process 3989360 closing signal SIGTERM
+W0429 14:26:43.672000 3989260 site-packages/torch/distributed/elastic/multiprocessing/api.py:1012] Sending process 3989361 closing signal SIGTERM
+W0429 14:26:43.672000 3989260 site-packages/torch/distributed/elastic/multiprocessing/api.py:1012] Sending process 3989363 closing signal SIGTERM
+W0429 14:26:43.672000 3989260 site-packages/torch/distributed/elastic/multiprocessing/api.py:1012] Sending process 3989364 closing signal SIGTERM
+W0429 14:26:43.672000 3989260 site-packages/torch/distributed/elastic/multiprocessing/api.py:1012] Sending process 3989365 closing signal SIGTERM
+W0429 14:26:43.672000 3989260 site-packages/torch/distributed/elastic/multiprocessing/api.py:1012] Sending process 3989366 closing signal SIGTERM
+E0429 14:26:50.224000 3989260 site-packages/torch/distributed/elastic/multiprocessing/api.py:986] failed (exitcode: -6) local_rank: 3 (pid: 3989362) of binary: /home/lidz/miniconda3/envs/yolov1/bin/python
+Traceback (most recent call last):
+  File "/home/lidz/miniconda3/envs/yolov1/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+  File "/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 362, in wrapper
+    return f(*args, **kwargs)
+  File "/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/run.py", line 990, in main
+    run(args)
+  File "/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/run.py", line 981, in run
+    elastic_launch(
+  File "/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 170, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 317, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+=========================================================
+tools/train_ddp.py FAILED
+---------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-04-29_14:26:50
+  host      : ip6-localhost
+  rank      : 0 (local_rank: 0)
+  exitcode  : -15 (pid: 3989359)
+  error_file: <N/A>
+  traceback : Signal 15 (SIGTERM) received by PID 3989359
+[2]:
+  time      : 2026-04-29_14:26:50
+  host      : ip6-localhost
+  rank      : 1 (local_rank: 1)
+  exitcode  : -6 (pid: 3989360)
+  error_file: <N/A>
+  traceback : Signal 6 (SIGABRT) received by PID 3989360
+[3]:
+  time      : 2026-04-29_14:26:50
+  host      : ip6-localhost
+  rank      : 2 (local_rank: 2)
+  exitcode  : -6 (pid: 3989361)
+  error_file: <N/A>
+  traceback : Signal 6 (SIGABRT) received by PID 3989361
+[4]:
+  time      : 2026-04-29_14:26:50
+  host      : ip6-localhost
+  rank      : 4 (local_rank: 4)
+  exitcode  : -6 (pid: 3989363)
+  error_file: <N/A>
+  traceback : Signal 6 (SIGABRT) received by PID 3989363
+[5]:
+  time      : 2026-04-29_14:26:50
+  host      : ip6-localhost
+  rank      : 5 (local_rank: 5)
+  exitcode  : -6 (pid: 3989364)
+  error_file: <N/A>
+  traceback : Signal 6 (SIGABRT) received by PID 3989364
+[6]:
+  time      : 2026-04-29_14:26:50
+  host      : ip6-localhost
+  rank      : 6 (local_rank: 6)
+  exitcode  : -6 (pid: 3989365)
+  error_file: <N/A>
+  traceback : Signal 6 (SIGABRT) received by PID 3989365
+[7]:
+  time      : 2026-04-29_14:26:50
+  host      : ip6-localhost
+  rank      : 7 (local_rank: 7)
+  exitcode  : -6 (pid: 3989366)
+  error_file: <N/A>
+  traceback : Signal 6 (SIGABRT) received by PID 3989366
+---------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-04-29_14:26:43
+  host      : ip6-localhost
+  rank      : 3 (local_rank: 3)
+  exitcode  : -6 (pid: 3989362)
+  error_file: <N/A>
+  traceback : Signal 6 (SIGABRT) received by PID 3989362
+=========================================================

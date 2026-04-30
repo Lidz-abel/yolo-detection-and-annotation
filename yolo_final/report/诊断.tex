@@ -672,16 +672,177 @@ Top-k & AP & AP50 & AR100 & Predictions \\
   \item Diagnostic visualizations：\texttt{outputs/evaluations/dual\_scale\_three\_box\_coco\_only\_noobj1\_20260428\_180817\_diagnostic\_vis/}
 \end{itemize}
 
+\section{COCO-only + \texttt{lambda\_noobj=1.0} + \texttt{dynamic\_topk=1} DDP 完成结果}
+
+\subsection{实验目的}
+
+本轮实验用于验证：将动态匹配从 \texttt{dynamic\_topk=2} 收紧到 \texttt{dynamic\_topk=1} 后，是否能够减少双尺度三框训练中的正样本压力、重复候选和误检密度。
+
+同时，本轮也是修复多卡训练路径后的第一轮正式 8GPU DDP 完整训练，用来确认 \texttt{tools/train\_ddp.py} 和 \texttt{engine/distributed\_trainer.py} 能作为后续正式实验基础。
+
+\subsection{训练状态}
+
+本轮 DDP 训练已经完成：
+
+\begin{itemize}[leftmargin=2em]
+  \item Run ID：\texttt{dual\_scale\_three\_box\_coco\_only\_noobj1\_topk1\_ddp\_20260429\_144209}
+  \item 配置：\texttt{configs/dual\_scale\_three\_box\_coco\_only\_noobj1\_topk1.toml}
+  \item 数据：COCO-only \texttt{.pt}
+  \item 启动方式：\texttt{torchrun} + DDP
+  \item world size：8
+  \item 每卡 batch size：16
+  \item 全局 batch size：128
+  \item best epoch：20
+  \item best val loss：5.148357025909424
+\end{itemize}
+
+最终 epoch 指标如下：
+
+\begin{center}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Split & Total & Box & Obj & Cls & GIoU & Obj Target & Pos Cells & Dropped GT \\
+\midrule
+train e20 & 4.765897 & 0.627729 & 1.584755 & 0.042496 & 0.686135 & 0.700054 & 13.993169 & 0.547832 \\
+val e20 & 5.148357 & 0.693390 & 1.637210 & 0.044196 & 0.653305 & 0.671206 & 14.097600 & 0.614800 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+本轮 train loop 总耗时 16008.707 秒，validation loop 总耗时 329.373 秒，合计约 4.538 小时。相比上一轮 DataParallel 约 19.11 小时，DDP 训练路径显著加快，说明此前“8GPU 没有正确高效训练”的诊断是成立的。
+
+\subsection{正式 COCO 指标}
+
+使用 \texttt{best.pth} 在完整 COCO val2017 5000 张图上进行 pycocotools 评估：
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+AP@[.50:.95] & 0.108180 \\
+AP50 & 0.195980 \\
+AP75 & 0.105638 \\
+AR1 & 0.151326 \\
+AR10 & 0.229976 \\
+AR100 & 0.239071 \\
+Predictions & 244795 \\
+Predictions/Image & 48.96 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+与上一轮 COCO-only + \texttt{lambda\_noobj=1.0} + \texttt{dynamic\_topk=2} 对照：
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Metric & topk=2 & topk=1 DDP & Delta \\
+\midrule
+Best val loss & 5.262634 & 5.148357 & -0.114277 \\
+AP & 0.126985 & 0.108180 & -0.018805 \\
+AP50 & 0.218369 & 0.195980 & -0.022389 \\
+AP75 & 0.129184 & 0.105638 & -0.023546 \\
+AR100 & 0.260567 & 0.239071 & -0.021496 \\
+Val pos cells & 27.332 & 14.098 & -13.234 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+结论是：\texttt{dynamic\_topk=1} 的确减少了正样本数量，并使 val loss 更低；但正式 COCO AP、AP50、AP75、AR100 全部下降。这说明更严格的 assignment 并没有改善检测质量，上一轮 \texttt{topk=2} 对召回和排序有实际帮助。因此 \texttt{dynamic\_topk=1} 不应作为下一轮质量改进的默认方向。
+
+\subsection{诊断扫描}
+
+在 500 张 COCO val 子集上做了诊断扫描。默认推理设置仍为：
+
+\begin{verbatim}
+score_threshold = 0.05
+score_alpha = 2.0
+score_beta = 1.0
+top_k = 100
+nms_iou_threshold = 0.5
+\end{verbatim}
+
+raw diagnostic prediction 统计：
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Statistic & Value \\
+\midrule
+Prediction count & 50000 \\
+Predictions/Image mean & 100.0 \\
+Predictions/Image min & 100 \\
+Predictions/Image max & 100 \\
+Score q50 & 0.048543 \\
+Score q75 & 0.117297 \\
+Score q90 & 0.244761 \\
+Score q95 & 0.371668 \\
+Score q99 & 0.687747 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+top-k 扫描：
+
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+Top-k & AP & AP50 & AR100 & Predictions \\
+\midrule
+20 & 0.135333 & 0.224608 & 0.225878 & 9229 \\
+50 & 0.138710 & 0.233835 & 0.252944 & 18153 \\
+100 & 0.139413 & 0.235948 & 0.263971 & 24605 \\
+200 & 0.139516 & 0.236225 & 0.266481 & 27220 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+score threshold 扫描：
+
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+Threshold & AP & AP50 & AR100 & Predictions \\
+\midrule
+0.01 & 0.139998 & 0.237598 & 0.275860 & 39642 \\
+0.03 & 0.139759 & 0.236844 & 0.270529 & 30905 \\
+0.05 & 0.139413 & 0.235948 & 0.263971 & 24605 \\
+0.10 & 0.137979 & 0.232019 & 0.245194 & 14698 \\
+0.20 & 0.132834 & 0.219203 & 0.211559 & 6616 \\
+0.30 & 0.124544 & 0.201703 & 0.173921 & 3656 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+诊断结论：
+
+\begin{itemize}[leftmargin=2em]
+  \item \texttt{dynamic\_topk=1} 并没有解决 raw 候选打满 \texttt{top\_k=100} 的问题；
+  \item 推理 \texttt{top\_k} 从 100 增加到 200，AP 几乎不变，说明当前不是简单截断不足；
+  \item 提高 score threshold 会减少预测数量，但 AP 和 AR 同时下降；
+  \item 下一步应回到 \texttt{dynamic\_topk=2}，优先尝试 anchor shape prior、objectness/ranking 校准或尺度分配，而不是继续收紧 top-k。
+\end{itemize}
+
+\subsection{本轮产物}
+
+\begin{itemize}[leftmargin=2em]
+  \item Summary：\texttt{logs/dual\_scale\_three\_box\_coco\_only\_noobj1\_topk1\_ddp\_20260429\_144209\_summary.md}
+  \item COCO eval：\texttt{outputs/evaluations/dual\_scale\_three\_box\_coco\_only\_noobj1\_topk1\_ddp\_20260429\_144209\_coco\_eval.json}
+  \item Diagnostics：\texttt{outputs/evaluations/dual\_scale\_three\_box\_coco\_only\_noobj1\_topk1\_ddp\_20260429\_144209\_diagnostics.json}
+  \item Diagnostic visualizations：\texttt{outputs/evaluations/dual\_scale\_three\_box\_coco\_only\_noobj1\_topk1\_ddp\_20260429\_144209\_diagnostic\_vis/}
+\end{itemize}
+
 \section{后续实验建议}
 
 \subsection{最小对照顺序}
 
 \begin{enumerate}[leftmargin=2em]
-  \item 完成当前 COCO-only + \texttt{lambda\_noobj=1.0}；
-  \item 若需要继续大规模训练，应优先切换到 \texttt{tools/train\_ddp.py}，避免继续使用低效的 DataParallel；
-  \item 使用修复后的代码重跑必要的 smoke 和小样本诊断；
-  \item 对比 \texttt{dynamic\_topk=1}；
-  \item 再考虑 \texttt{dynamic\_anchor\_shape\_cost=0.25/0.5}；
+  \item 保留 DDP 作为后续正式训练路径；
+  \item 不把 \texttt{dynamic\_topk=1} 作为默认质量改进方案；
+  \item 回到 \texttt{dynamic\_topk=2}；
+  \item 优先尝试 \texttt{dynamic\_anchor\_shape\_cost=0.25/0.5}；
+  \item 再考虑 objectness/ranking 校准，例如重新扫描 \texttt{score\_alpha} 或调整 objectness target；
   \item 最后再考虑按面积分配尺度或 scale loss weights。
 \end{enumerate}
 

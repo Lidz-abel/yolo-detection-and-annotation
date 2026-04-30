@@ -65,6 +65,9 @@ def _empty_metrics(duration: float, global_step: int | None = None) -> dict:
     metrics.update(
         {
             "batch_count": 0,
+            "optimizer_steps": 0,
+            "global_batch_count": 0,
+            "sample_count": 0,
             "duration_seconds": duration,
         }
     )
@@ -73,24 +76,38 @@ def _empty_metrics(duration: float, global_step: int | None = None) -> dict:
     return metrics
 
 
-def _aggregate_epoch_metrics(metric_sums: dict[str, float], batch_count: int, duration: float, device) -> dict:
+def _aggregate_epoch_metrics(
+    metric_sums: dict[str, float],
+    local_batch_count: int,
+    sample_count: int,
+    duration: float,
+    device,
+) -> dict:
     values = [metric_sums[key] for key in METRIC_KEYS]
-    values.append(float(batch_count))
+    values.extend([float(sample_count), float(local_batch_count)])
     stat_tensor = torch.tensor(values, dtype=torch.float64, device=device)
     _all_reduce_sum(stat_tensor)
+
+    step_tensor = torch.tensor([float(local_batch_count)], dtype=torch.float64, device=device)
+    _all_reduce_max(step_tensor)
 
     duration_tensor = torch.tensor([duration], dtype=torch.float64, device=device)
     _all_reduce_max(duration_tensor)
 
-    total_batches = int(stat_tensor[-1].item())
-    if total_batches == 0:
+    global_sample_count = int(stat_tensor[-2].item())
+    global_batch_count = int(stat_tensor[-1].item())
+    optimizer_steps = int(step_tensor.item())
+    if global_sample_count == 0:
         return _empty_metrics(float(duration_tensor.item()))
 
     metrics = {
-        key: float(stat_tensor[index].item() / total_batches)
+        key: float(stat_tensor[index].item() / global_sample_count)
         for index, key in enumerate(METRIC_KEYS)
     }
-    metrics["batch_count"] = total_batches
+    metrics["batch_count"] = optimizer_steps
+    metrics["optimizer_steps"] = optimizer_steps
+    metrics["global_batch_count"] = global_batch_count
+    metrics["sample_count"] = global_sample_count
     metrics["duration_seconds"] = float(duration_tensor.item())
     return metrics
 
@@ -98,19 +115,23 @@ def _aggregate_epoch_metrics(metric_sums: dict[str, float], batch_count: int, du
 def _write_step_scalars(writer, loss_dict, optimizer, global_step: int) -> None:
     if writer is None:
         return
-    writer.add_scalar("loss/total_step", loss_dict["total_loss"].item(), global_step)
-    writer.add_scalar("loss/box_step", loss_dict["loss_box"].item(), global_step)
-    writer.add_scalar("loss/objectness_step", loss_dict["loss_obj"].item(), global_step)
-    writer.add_scalar("loss/classification_step", loss_dict["loss_cls"].item(), global_step)
-    writer.add_scalar("loss/objectness_positive_step", loss_dict["loss_obj_pos"].item(), global_step)
-    writer.add_scalar("loss/objectness_negative_step", loss_dict["loss_obj_neg"].item(), global_step)
-    writer.add_scalar("metrics/mean_giou_step", loss_dict["mean_giou"].item(), global_step)
-    writer.add_scalar("metrics/mean_obj_target_step", loss_dict["mean_obj_target"].item(), global_step)
-    writer.add_scalar("metrics/mean_cls_target_step", loss_dict["mean_cls_target"].item(), global_step)
-    writer.add_scalar("metrics/positive_cells_per_image_step", loss_dict["positive_cells_per_image"].item(), global_step)
-    writer.add_scalar("metrics/collision_count_step", loss_dict["collision_count"].item(), global_step)
-    writer.add_scalar("metrics/ignored_count_step", loss_dict["ignored_count"].item(), global_step)
-    writer.add_scalar("metrics/dropped_gt_count_step", loss_dict["dropped_gt_count"].item(), global_step)
+    writer.add_scalar("rank0_loss/total_step", loss_dict["total_loss"].item(), global_step)
+    writer.add_scalar("rank0_loss/box_step", loss_dict["loss_box"].item(), global_step)
+    writer.add_scalar("rank0_loss/objectness_step", loss_dict["loss_obj"].item(), global_step)
+    writer.add_scalar("rank0_loss/classification_step", loss_dict["loss_cls"].item(), global_step)
+    writer.add_scalar("rank0_loss/objectness_positive_step", loss_dict["loss_obj_pos"].item(), global_step)
+    writer.add_scalar("rank0_loss/objectness_negative_step", loss_dict["loss_obj_neg"].item(), global_step)
+    writer.add_scalar("rank0_metrics/mean_giou_step", loss_dict["mean_giou"].item(), global_step)
+    writer.add_scalar("rank0_metrics/mean_obj_target_step", loss_dict["mean_obj_target"].item(), global_step)
+    writer.add_scalar("rank0_metrics/mean_cls_target_step", loss_dict["mean_cls_target"].item(), global_step)
+    writer.add_scalar(
+        "rank0_metrics/positive_cells_per_image_step",
+        loss_dict["positive_cells_per_image"].item(),
+        global_step,
+    )
+    writer.add_scalar("rank0_metrics/collision_count_step", loss_dict["collision_count"].item(), global_step)
+    writer.add_scalar("rank0_metrics/ignored_count_step", loss_dict["ignored_count"].item(), global_step)
+    writer.add_scalar("rank0_metrics/dropped_gt_count_step", loss_dict["dropped_gt_count"].item(), global_step)
     writer.add_scalar("train/lr_step", optimizer.param_groups[0]["lr"], global_step)
 
 
@@ -170,6 +191,7 @@ def train_one_epoch_ddp(
 
     metric_sums = {key: 0.0 for key in METRIC_KEYS}
     batch_count = 0
+    sample_count = 0
     start_time = time.perf_counter()
 
     for batch_index, (images, targets) in enumerate(loader, start=1):
@@ -185,10 +207,12 @@ def train_one_epoch_ddp(
         total_loss.backward()
         optimizer.step()
 
+        batch_samples = int(images.shape[0])
         global_step += 1
         batch_count += 1
+        sample_count += batch_samples
         for loss_key, metric_key in LOSS_TO_METRIC.items():
-            metric_sums[metric_key] += float(loss_dict[loss_key].item())
+            metric_sums[metric_key] += float(loss_dict[loss_key].item()) * batch_samples
 
         if rank == 0:
             _write_step_scalars(writer, loss_dict, optimizer, global_step)
@@ -204,7 +228,7 @@ def train_one_epoch_ddp(
                 )
 
     duration = time.perf_counter() - start_time
-    metrics = _aggregate_epoch_metrics(metric_sums, batch_count, duration, device)
+    metrics = _aggregate_epoch_metrics(metric_sums, batch_count, sample_count, duration, device)
     metrics["global_step"] = global_step
     if rank == 0:
         _write_epoch_scalars(writer, "loss", metrics, epoch_index, optimizer=optimizer)
@@ -226,6 +250,7 @@ def validate_one_epoch_ddp(
 
     metric_sums = {key: 0.0 for key in METRIC_KEYS}
     batch_count = 0
+    sample_count = 0
     start_time = time.perf_counter()
 
     with torch.no_grad():
@@ -237,12 +262,14 @@ def validate_one_epoch_ddp(
             pred = model(images)
             loss_dict = criterion(pred, targets)
 
+            batch_samples = int(images.shape[0])
             batch_count += 1
+            sample_count += batch_samples
             for loss_key, metric_key in LOSS_TO_METRIC.items():
-                metric_sums[metric_key] += float(loss_dict[loss_key].item())
+                metric_sums[metric_key] += float(loss_dict[loss_key].item()) * batch_samples
 
     duration = time.perf_counter() - start_time
-    metrics = _aggregate_epoch_metrics(metric_sums, batch_count, duration, device)
+    metrics = _aggregate_epoch_metrics(metric_sums, batch_count, sample_count, duration, device)
     if rank == 0:
         _write_epoch_scalars(writer, "val", metrics, epoch_index)
     return metrics
