@@ -1,0 +1,51 @@
+{
+  "run_id": "dual_scale_three_box_coco_only_noobj1_416_ddp_20260430_124818",
+  "run_name": "dual_scale_three_box_coco_only_noobj1_416_ddp",
+  "timestamp": "20260430_124818",
+  "project_root": "/home/lidz/YOLO/yolo_final",
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1_416.toml",
+  "config_snapshot": "logs/records/dual_scale_three_box_coco_only_noobj1_416_ddp_20260430_124818/config.toml",
+  "tensorboard_dir": "runs/dual_scale_three_box_coco_only_noobj1_416_ddp_20260430_124818",
+  "output_dir": "outputs/dual_scale_three_box_coco_only_noobj1_416_ddp_20260430_124818",
+  "record_dir": "logs/records/dual_scale_three_box_coco_only_noobj1_416_ddp_20260430_124818",
+  "git_commit": "02ada9791c22d92c4310e75115c82ebce2fa80e3",
+  "hostname": "8x-4090-2",
+  "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
+  "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
+  "username": "lidz",
+  "status": "completed",
+  "stage": "full_loss_training_ddp",
+  "backend": "nccl",
+  "world_size": 8,
+  "local_rank_count": 8,
+  "device": "cuda:0",
+  "launcher": "torchrun",
+  "resume_checkpoint": "",
+  "resume_epoch": 0,
+  "resume_best_epoch": 0,
+  "resume_best_val_loss": null,
+  "per_rank_batch_size": 16,
+  "effective_global_batch_size": 128,
+  "per_rank_num_workers": 8,
+  "last_epoch": 30,
+  "best_epoch": 23,
+  "best_val_loss": 4.779924417114258,
+  "global_step": 27750,
+  "model_output_shape": {
+    "p4": [
+      1,
+      26,
+      26,
+      255
+    ],
+    "p5": [
+      1,
+      13,
+      13,
+      255
+    ]
+  },
+  "parameter_total": 36531294,
+  "parameter_trainable": 36531294,
+  "visualization_dir": "outputs/dual_scale_three_box_coco_only_noobj1_416_ddp_20260430_124818/visualizations"
+}
