@@ -37,6 +37,7 @@ class YOLOLoss(nn.Module):
         dynamic_anchor_shape_cost=0.0,
         scale_assignment="all",
         scale_area_threshold=0.2,
+        scale_area_thresholds=None,
         scale_loss_weights=None,
         feature_levels=None,
     ):
@@ -67,6 +68,9 @@ class YOLOLoss(nn.Module):
         self.dynamic_anchor_shape_cost = dynamic_anchor_shape_cost
         self.scale_assignment = str(scale_assignment).lower()
         self.scale_area_threshold = float(scale_area_threshold)
+        self.scale_area_thresholds = list(scale_area_thresholds or [])
+        if not self.scale_area_thresholds and scale_area_threshold is not None:
+            self.scale_area_thresholds = [self.scale_area_threshold]
         self.scale_loss_weights = scale_loss_weights or {}
         self.feature_levels = list(feature_levels or self.anchors_by_level.keys())
         self.bce = nn.BCEWithLogitsLoss(reduction="none")
@@ -268,18 +272,30 @@ class YOLOLoss(nn.Module):
             return None
         if self.scale_assignment != "area":
             raise ValueError(f"Unsupported scale_assignment: {self.scale_assignment}")
-        if len(self.feature_levels) != 2:
-            raise ValueError("scale_assignment='area' currently expects exactly two feature levels")
+        if scale_name not in self.feature_levels:
+            return torch.ones(boxes.shape[0], device=device, dtype=torch.bool)
+        if len(self.feature_levels) < 2:
+            return torch.ones(boxes.shape[0], device=device, dtype=torch.bool)
+        if len(self.scale_area_thresholds) != len(self.feature_levels) - 1:
+            raise ValueError(
+                "scale_assignment='area' expects len(scale_area_thresholds) == len(feature_levels) - 1; "
+                f"got {len(self.scale_area_thresholds)} thresholds for {len(self.feature_levels)} levels"
+            )
 
         widths = (boxes[:, 2] - boxes[:, 0]).clamp(min=0.0) / max(float(image_w), 1.0)
         heights = (boxes[:, 3] - boxes[:, 1]).clamp(min=0.0) / max(float(image_h), 1.0)
         object_scale = torch.sqrt((widths * heights).clamp(min=0.0))
-        threshold = torch.tensor(self.scale_area_threshold, device=device, dtype=object_scale.dtype)
-        if scale_name == self.feature_levels[0]:
-            return object_scale <= threshold
-        if scale_name == self.feature_levels[1]:
-            return object_scale > threshold
-        return torch.ones(boxes.shape[0], device=device, dtype=torch.bool)
+        thresholds = torch.tensor(
+            self.scale_area_thresholds,
+            device=device,
+            dtype=object_scale.dtype,
+        )
+        level_index = self.feature_levels.index(scale_name)
+        if level_index == 0:
+            return object_scale <= thresholds[0]
+        if level_index == len(self.feature_levels) - 1:
+            return object_scale > thresholds[-1]
+        return (object_scale > thresholds[level_index - 1]) & (object_scale <= thresholds[level_index])
 
     @staticmethod
     def _anchor_shape_cost(gt_w, gt_h, candidate_anchor_indices, scale_anchors, dtype, device):

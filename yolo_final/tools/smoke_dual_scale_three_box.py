@@ -14,7 +14,15 @@ sys.path.append(str(PROJECT_ROOT))
 from data.detection_dataset import DetectionDataset
 from losses.yolo_loss import YOLOLoss
 from models.detector import YOLOv0Baseline
-from utils.config import load_config, parse_anchor_map, parse_anchor_string, parse_float_map, parse_int_list, parse_string_list
+from utils.config import (
+    load_config,
+    parse_anchor_map,
+    parse_anchor_string,
+    parse_float_list,
+    parse_float_map,
+    parse_int_list,
+    parse_string_list,
+)
 
 
 def parse_args():
@@ -121,6 +129,7 @@ def main():
         dynamic_anchor_shape_cost=float(loss_cfg.get("dynamic_anchor_shape_cost", 0.0)),
         scale_assignment=str(loss_cfg.get("scale_assignment", "all")),
         scale_area_threshold=float(loss_cfg.get("scale_area_threshold", 0.2)),
+        scale_area_thresholds=parse_float_list(loss_cfg.get("scale_area_thresholds")),
         scale_loss_weights=parse_float_map(loss_cfg.get("scale_loss_weights")),
         feature_levels=feature_levels,
     )

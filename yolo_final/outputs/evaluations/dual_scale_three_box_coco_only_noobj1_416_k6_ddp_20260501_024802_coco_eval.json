@@ -1,0 +1,75 @@
+{
+  "anchors": {
+    "p4": [
+      [
+        0.036285,
+        0.055877
+      ],
+      [
+        0.11145,
+        0.147769
+      ],
+      [
+        0.16445,
+        0.38901
+      ]
+    ],
+    "p5": [
+      [
+        0.405962,
+        0.22498
+      ],
+      [
+        0.372495,
+        0.618863
+      ],
+      [
+        0.804661,
+        0.727088
+      ]
+    ]
+  },
+  "batch_size": 1.0,
+  "box_parameterization": "yolov5",
+  "checkpoint_path": "/home/lidz/YOLO/yolo_final/outputs/dual_scale_three_box_coco_only_noobj1_416_k6_ddp_20260501_024802/best.pth",
+  "coco_ap": 0.1467783088760655,
+  "coco_ap50": 0.24477830866270653,
+  "coco_ap75": 0.1530227334830766,
+  "coco_ar1": 0.19003983159632598,
+  "coco_ar10": 0.2910198403799747,
+  "coco_ar100": 0.30344499408106973,
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1_416_k6.toml",
+  "conv2d_flops": 78381475328.0,
+  "device": "cuda",
+  "duration_seconds": 0.3512940309010446,
+  "images_per_second": 284.6618251483152,
+  "linear_flops": 0.0,
+  "manifest_path": "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl",
+  "measure_iters": 100.0,
+  "milliseconds_per_batch": 3.512940309010446,
+  "model_name": "deep_residual_dual_scale_three_box",
+  "num_boxes": 3,
+  "num_predictions": 259620.0,
+  "num_samples": 5000.0,
+  "output_shape": {
+    "p4": [
+      1,
+      26,
+      26,
+      255
+    ],
+    "p5": [
+      1,
+      13,
+      13,
+      255
+    ]
+  },
+  "params_total": 36531294,
+  "params_trainable": 36531294,
+  "score_alpha": 2.0,
+  "score_beta": 1.0,
+  "total_flops": 78381475328.0,
+  "total_gflops": 78.381475328,
+  "warmup_iters": 20.0
+}

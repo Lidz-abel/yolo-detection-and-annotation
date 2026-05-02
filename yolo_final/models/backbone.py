@@ -94,10 +94,11 @@ class ResNet18LikeBackbone(nn.Module):
 
 
 class MultiScaleBaselineBackbone(nn.Module):
-    """Expose `20x20` and `10x10` features for the first Stage-D detector."""
+    """Expose configured multi-scale features for the Stage-D detector."""
 
-    def __init__(self, width_mult=1.0, depth_mult=1.0, use_residual=True):
+    def __init__(self, width_mult=1.0, depth_mult=1.0, use_residual=True, feature_levels=None):
         super().__init__()
+        self.include_p3 = "p3" in (feature_levels or [])
         stage_channels = [
             make_divisible(32 * width_mult),
             make_divisible(64 * width_mult),
@@ -119,13 +120,19 @@ class MultiScaleBaselineBackbone(nn.Module):
         self.pool5 = nn.MaxPool2d(kernel_size=2, stride=2)
         self.stage6 = _make_baseline_stage(stage_channels[4], stage_channels[5], _repeat_count(depth_mult, 2), use_residual=use_residual)
         self.out_channels = {"p4": stage_channels[3], "p5": stage_channels[5]}
+        if self.include_p3:
+            self.out_channels = {"p3": stage_channels[3], **self.out_channels}
 
     def forward(self, x):
         x = self.pool1(self.stage1(x))
         x = self.pool2(self.stage2(x))
         x = self.pool3(self.stage3(x))
         x = self.stage4(x)
+        p3 = x
         p4 = self.pool4(x)
         x = self.pool5(self.stage5(p4))
         p5 = self.stage6(x)
-        return {"p4": p4, "p5": p5}
+        features = {"p4": p4, "p5": p5}
+        if self.include_p3:
+            features = {"p3": p3, **features}
+        return features

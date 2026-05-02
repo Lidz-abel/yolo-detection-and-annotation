@@ -17,6 +17,13 @@ def parse_args():
     parser.add_argument("--num-anchors", type=int, default=3, help="Number of anchors to fit.")
     parser.add_argument("--image-size", type=int, default=320, help="Reference image size for pixel reporting.")
     parser.add_argument("--seed", type=int, default=42, help="Random seed for centroid initialization.")
+    parser.add_argument(
+        "--recall-thresholds",
+        type=str,
+        default="0.25,0.5,0.75",
+        help="Comma-separated best-IoU thresholds used for anchor recall reporting.",
+    )
+    parser.add_argument("--output-json", type=str, default="", help="Optional path for a machine-readable summary.")
     return parser.parse_args()
 
 
@@ -99,15 +106,48 @@ def format_anchor_string(anchors: torch.Tensor) -> str:
     return ";".join(f"{w:.6f},{h:.6f}" for w, h in anchors.tolist())
 
 
+def parse_thresholds(raw: str) -> list[float]:
+    """Parse comma-separated thresholds for anchor recall reporting."""
+    thresholds = []
+    for item in raw.split(","):
+        item = item.strip()
+        if item:
+            thresholds.append(float(item))
+    return thresholds
+
+
+def summarize_fit(points: torch.Tensor, anchors: torch.Tensor, thresholds: list[float]) -> dict:
+    """Return best-IoU and assignment statistics for the fitted anchors."""
+    ious = wh_iou(points, anchors)
+    best_iou, assignments = ious.max(dim=1)
+    assignment_counts = torch.bincount(assignments, minlength=anchors.shape[0])
+    summary = {
+        "num_boxes": int(points.shape[0]),
+        "mean_best_iou": float(best_iou.mean().item()),
+        "median_best_iou": float(best_iou.median().item()),
+        "assignment_counts": [int(value) for value in assignment_counts.tolist()],
+        "assignment_ratios": [
+            float(value / max(points.shape[0], 1)) for value in assignment_counts.tolist()
+        ],
+        "recall": {},
+    }
+    for threshold in thresholds:
+        summary["recall"][str(threshold)] = float((best_iou >= threshold).float().mean().item())
+    return summary
+
+
 def main():
     """Fit anchors and print both normalized and pixel-space summaries."""
     args = parse_args()
     manifest_path = Path(args.manifest).resolve()
     points = load_wh_pairs(manifest_path)
     anchors = fit_anchors(points, args.num_anchors, args.seed)
+    thresholds = parse_thresholds(args.recall_thresholds)
+    fit_summary = summarize_fit(points, anchors, thresholds)
 
     print("manifest:", manifest_path)
     print("num_boxes:", args.num_anchors)
+    print("gt_boxes:", fit_summary["num_boxes"])
     print("normalized anchors:")
     for index, (w, h) in enumerate(anchors.tolist(), start=1):
         print(f"  {index}: w={w:.6f}, h={h:.6f}")
@@ -117,6 +157,30 @@ def main():
         print(f"  {index}: w={w * args.image_size:.2f}, h={h * args.image_size:.2f}")
 
     print("anchor_string:", format_anchor_string(anchors))
+    print(f"mean_best_iou: {fit_summary['mean_best_iou']:.6f}")
+    print(f"median_best_iou: {fit_summary['median_best_iou']:.6f}")
+    print("assignment_counts:", ",".join(str(value) for value in fit_summary["assignment_counts"]))
+    print(
+        "assignment_ratios:",
+        ",".join(f"{value:.6f}" for value in fit_summary["assignment_ratios"]),
+    )
+    for threshold, recall in fit_summary["recall"].items():
+        print(f"anchor_recall@{threshold}: {recall:.6f}")
+
+    if args.output_json:
+        output_path = Path(args.output_json).resolve()
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        result = {
+            "manifest": str(manifest_path),
+            "image_size": int(args.image_size),
+            "num_anchors": int(args.num_anchors),
+            "seed": int(args.seed),
+            "anchors_normalized": anchors.tolist(),
+            "anchors_pixels": (anchors * float(args.image_size)).tolist(),
+            "anchor_string": format_anchor_string(anchors),
+            **fit_summary,
+        }
+        output_path.write_text(json.dumps(result, indent=2, sort_keys=True), encoding="utf-8")
 
 
 if __name__ == "__main__":

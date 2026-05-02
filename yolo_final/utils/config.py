@@ -91,6 +91,7 @@ def summarize_config(config: dict) -> list[str]:
         f"dynamic_anchor_shape_cost = {loss_cfg.get('dynamic_anchor_shape_cost', 'n/a')}",
         f"scale_assignment = {loss_cfg.get('scale_assignment', 'all')}",
         f"scale_area_threshold = {loss_cfg.get('scale_area_threshold', 'n/a')}",
+        f"scale_area_thresholds = {loss_cfg.get('scale_area_thresholds', 'n/a')}",
         f"scale_loss_weights = {loss_cfg.get('scale_loss_weights', 'n/a')}",
         f"lambda_obj = {loss_cfg.get('lambda_obj', 'n/a')}",
         f"lambda_noobj = {loss_cfg.get('lambda_noobj', 'n/a')}",
@@ -153,6 +154,16 @@ def parse_string_list(raw: str | None) -> list[str]:
     if not text:
         return []
     return [item.strip() for item in text.split(",") if item.strip()]
+
+
+def parse_float_list(raw: str | None) -> list[float]:
+    """Parse a compact comma-separated float list."""
+    if raw is None:
+        return []
+    text = str(raw).strip()
+    if not text:
+        return []
+    return [float(item.strip()) for item in text.split(",") if item.strip()]
 
 
 def parse_anchor_map(model_cfg: dict, feature_levels: list[str]) -> dict[str, list[tuple[float, float]]]:

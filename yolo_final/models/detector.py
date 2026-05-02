@@ -24,7 +24,13 @@ class YOLOv0Baseline(nn.Module):
     ):
         super().__init__()
         self.feature_levels = feature_levels or ["p4", "p5"]
-        self.backbone = self._build_backbone(model_name, width_mult, depth_mult, use_residual)
+        self.backbone = self._build_backbone(
+            model_name,
+            width_mult,
+            depth_mult,
+            use_residual,
+            feature_levels=self.feature_levels,
+        )
         self.neck = self._build_neck(
             neck_type=neck_type,
             backbone_out_channels=self.backbone.out_channels,
@@ -41,7 +47,7 @@ class YOLOv0Baseline(nn.Module):
         )
 
     @staticmethod
-    def _build_backbone(model_name, width_mult, depth_mult, use_residual):
+    def _build_backbone(model_name, width_mult, depth_mult, use_residual, feature_levels=None):
         """Select the backbone variant while keeping the head interface stable."""
         if model_name in {"baseline_cnn", "deep_cnn", "residual_small", "deep_residual"}:
             return BaselineBackbone(
@@ -59,6 +65,7 @@ class YOLOv0Baseline(nn.Module):
                 width_mult=width_mult,
                 depth_mult=depth_mult,
                 use_residual=use_residual,
+                feature_levels=feature_levels,
             )
         raise ValueError(f"Unsupported model_name: {model_name}")
 
