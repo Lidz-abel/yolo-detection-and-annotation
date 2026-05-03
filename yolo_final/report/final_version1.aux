@@ -1,0 +1,67 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}实验目标与本报告覆盖范围}{3}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}工程组织、数据来源与统一训练协议}{3}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}工程目录}{3}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}数据集与输入预处理}{4}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}统一训练协议}{4}{subsection.2.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 当前正式实验的主训练协议}}{4}{table.caption.2}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:shared-protocol}{{1}{4}{当前正式实验的主训练协议}{table.caption.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}关键诊断与修复}{4}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}COCO 评估坐标空间错误}{4}{subsection.3.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces COCO 坐标修复前后的官方风格指标}}{5}{table.caption.3}\protected@file@percent }
+\newlabel{tab:coco-coord-fix}{{2}{5}{COCO 坐标修复前后的官方风格指标}{table.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}正样本统计维度错误}{5}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}\texttt  {quality\_bce} 语义显式化}{5}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}DDP 训练与日志语义}{5}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}第一阶段：COCO-only 与背景抑制}{5}{section.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces COCO-only 320 \texttt  {lambda\_noobj=1.0} 正式结果}}{5}{table.caption.4}\protected@file@percent }
+\newlabel{tab:coco-only-320}{{3}{5}{COCO-only 320 \texttt {lambda\_noobj=1.0} 正式结果}{table.caption.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}第二阶段：DDP 与 \texttt  {dynamic\_topk=1} 对照}{6}{section.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces \texttt  {dynamic\_topk=1} 对照实验}}{6}{table.caption.5}\protected@file@percent }
+\newlabel{tab:topk1}{{4}{6}{\texttt {dynamic\_topk=1} 对照实验}{table.caption.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}第三阶段：提升输入分辨率到 416}{6}{section.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 416 分辨率原 anchor baseline}}{6}{table.caption.6}\protected@file@percent }
+\newlabel{tab:416-baseline}{{5}{6}{416 分辨率原 anchor baseline}{table.caption.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces 320 到 416 的改进幅度}}{7}{table.caption.7}\protected@file@percent }
+\newlabel{tab:320-to-416}{{6}{7}{320 到 416 的改进幅度}{table.caption.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}第四阶段：COCO train GT box 重新聚类 K6 anchors}{7}{section.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces 416 K6 anchors 默认推理结果}}{7}{table.caption.8}\protected@file@percent }
+\newlabel{tab:k6-default}{{7}{7}{416 K6 anchors 默认推理结果}{table.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}K6 best checkpoint 非训练 sweep}{7}{subsection.7.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces K6 best checkpoint 完整 COCO 推理 sweep}}{7}{table.caption.9}\protected@file@percent }
+\newlabel{tab:k6-sweep}{{8}{7}{K6 best checkpoint 完整 COCO 推理 sweep}{table.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}第五阶段：增加 P3 与 K9 anchors}{8}{section.8}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces 416 P3/P4/P5 K9 all-scale 实验结果}}{8}{table.caption.10}\protected@file@percent }
+\newlabel{tab:p3-k9}{{9}{8}{416 P3/P4/P5 K9 all-scale 实验结果}{table.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}第六阶段：严格 scale-aware routing}{8}{section.9}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces P3/P4/P5 K9 scale-aware routing 结果}}{8}{table.caption.11}\protected@file@percent }
+\newlabel{tab:p3-area}{{10}{8}{P3/P4/P5 K9 scale-aware routing 结果}{table.caption.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}正式实验综合对比}{9}{section.10}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces 已完成正式实验的 COCO AP、AP50 与 AR100 对比。}}{9}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:coco-metrics}{{1}{9}{已完成正式实验的 COCO AP、AP50 与 AR100 对比。}{figure.caption.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 已完成训练实验的 best validation loss 对比。K6 tuned inference 是非训练 sweep，因此不纳入该图。}}{9}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:val-loss}{{2}{9}{已完成训练实验的 best validation loss 对比。K6 tuned inference 是非训练 sweep，因此不纳入该图。}{figure.caption.13}{}}
+\gdef \LT@i {\LT@entry 
+    {3}{137.95543pt}\LT@entry 
+    {3}{53.36673pt}\LT@entry 
+    {3}{53.36673pt}\LT@entry 
+    {3}{53.36673pt}\LT@entry 
+    {3}{53.36673pt}\LT@entry 
+    {3}{99.59999pt}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 实验路线中的 AP 与 AR100 变化。}}{10}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:route-ap-ar}{{3}{10}{实验路线中的 AP 与 AR100 变化。}{figure.caption.14}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces 已完成正式实验主指标汇总}}{10}{table.11}\protected@file@percent }
+\newlabel{tab:all-results}{{11}{10}{已完成正式实验主指标汇总}{table.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {11}当前最优判断}{10}{section.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {12}优良实验记录规范}{10}{section.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.1}正式实验准入}{10}{subsection.12.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.2}每次实验必须保存的内容}{11}{subsection.12.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.3}必须记录的指标}{11}{subsection.12.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {13}下一步方向}{11}{section.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {14}总结}{12}{section.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}关键记录路径}{12}{appendix.A}\protected@file@percent }
+\gdef \@abspage@last{12}

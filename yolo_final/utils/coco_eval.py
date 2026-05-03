@@ -174,7 +174,13 @@ def evaluate_coco_subset(
         "coco_ap": float(evaluator.stats[0]),
         "coco_ap50": float(evaluator.stats[1]),
         "coco_ap75": float(evaluator.stats[2]),
+        "coco_ap_small": float(evaluator.stats[3]),
+        "coco_ap_medium": float(evaluator.stats[4]),
+        "coco_ap_large": float(evaluator.stats[5]),
         "coco_ar1": float(evaluator.stats[6]),
         "coco_ar10": float(evaluator.stats[7]),
         "coco_ar100": float(evaluator.stats[8]),
+        "coco_ar_small": float(evaluator.stats[9]),
+        "coco_ar_medium": float(evaluator.stats[10]),
+        "coco_ar_large": float(evaluator.stats[11]),
     }

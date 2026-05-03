@@ -1,0 +1,26 @@
+\contentsline {section}{\numberline {1}实验目标与本报告覆盖范围}{3}{section.1}%
+\contentsline {section}{\numberline {2}工程组织、数据来源与统一训练协议}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}工程目录}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}数据集与输入预处理}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}统一训练协议}{4}{subsection.2.3}%
+\contentsline {section}{\numberline {3}关键诊断与修复}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}COCO 评估坐标空间错误}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}正样本统计维度错误}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}\texttt {quality\_bce} 语义显式化}{5}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}DDP 训练与日志语义}{5}{subsection.3.4}%
+\contentsline {section}{\numberline {4}第一阶段：COCO-only 与背景抑制}{5}{section.4}%
+\contentsline {section}{\numberline {5}第二阶段：DDP 与 \texttt {dynamic\_topk=1} 对照}{6}{section.5}%
+\contentsline {section}{\numberline {6}第三阶段：提升输入分辨率到 416}{6}{section.6}%
+\contentsline {section}{\numberline {7}第四阶段：COCO train GT box 重新聚类 K6 anchors}{7}{section.7}%
+\contentsline {subsection}{\numberline {7.1}K6 best checkpoint 非训练 sweep}{7}{subsection.7.1}%
+\contentsline {section}{\numberline {8}第五阶段：增加 P3 与 K9 anchors}{8}{section.8}%
+\contentsline {section}{\numberline {9}第六阶段：严格 scale-aware routing}{8}{section.9}%
+\contentsline {section}{\numberline {10}正式实验综合对比}{9}{section.10}%
+\contentsline {section}{\numberline {11}当前最优判断}{10}{section.11}%
+\contentsline {section}{\numberline {12}优良实验记录规范}{10}{section.12}%
+\contentsline {subsection}{\numberline {12.1}正式实验准入}{10}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}每次实验必须保存的内容}{11}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}必须记录的指标}{11}{subsection.12.3}%
+\contentsline {section}{\numberline {13}下一步方向}{11}{section.13}%
+\contentsline {section}{\numberline {14}总结}{12}{section.14}%
+\contentsline {section}{\numberline {A}关键记录路径}{12}{appendix.A}%
