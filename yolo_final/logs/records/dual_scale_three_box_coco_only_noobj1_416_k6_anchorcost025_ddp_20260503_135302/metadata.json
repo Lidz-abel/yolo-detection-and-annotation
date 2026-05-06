@@ -13,7 +13,7 @@
   "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
   "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
   "username": "lidz",
-  "status": "running",
+  "status": "completed",
   "stage": "full_loss_training_ddp",
   "backend": "nccl",
   "world_size": 8,
@@ -27,8 +27,43 @@
   "per_rank_batch_size": 16,
   "effective_global_batch_size": 128,
   "per_rank_num_workers": 8,
-  "last_epoch": 14,
-  "best_epoch": 13,
-  "best_val_loss": 4.916854957699775,
-  "global_step": 12950
+  "last_epoch": 30,
+  "best_epoch": 21,
+  "best_val_loss": 4.6878305108070375,
+  "global_step": 27750,
+  "model_output_shape": {
+    "p4": [
+      1,
+      26,
+      26,
+      255
+    ],
+    "p5": [
+      1,
+      13,
+      13,
+      255
+    ]
+  },
+  "parameter_total": 36531294,
+  "parameter_trainable": 36531294,
+  "visualization_dir": "outputs/dual_scale_three_box_coco_only_noobj1_416_k6_anchorcost025_ddp_20260503_135302/visualizations",
+  "coco_eval_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_416_k6_anchorcost025_ddp_20260503_135302_coco_eval_tuned.json",
+  "diagnostics_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_416_k6_anchorcost025_ddp_20260503_135302_diagnostics.json",
+  "diagnostic_visualization_dir": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_416_k6_anchorcost025_ddp_20260503_135302_diagnostic_vis",
+  "summary_path": "logs/dual_scale_three_box_coco_only_noobj1_416_k6_anchorcost025_ddp_20260503_135302_summary.md",
+  "coco_ap": 0.1468229409663201,
+  "coco_ap50": 0.2452268209905249,
+  "coco_ap75": 0.15099764724130393,
+  "coco_ap_small": 0.053938470913673084,
+  "coco_ap_medium": 0.16106993928773466,
+  "coco_ap_large": 0.21238029527502175,
+  "coco_ar100": 0.3240852312360392,
+  "num_predictions": 560037,
+  "predictions_per_image": 112.0074,
+  "eval_score_alpha": 2.0,
+  "eval_score_beta": 1.0,
+  "eval_score_threshold": 0.01,
+  "eval_top_k": 200,
+  "eval_nms_iou_threshold": 0.5
 }

@@ -42,6 +42,11 @@ def parse_args():
     )
     parser.add_argument("--max-samples", type=int, default=1000, help="Number of samples for diagnostic sweeps.")
     parser.add_argument("--vis-samples", type=int, default=8, help="Number of visualization samples.")
+    parser.add_argument("--vis-score-threshold", type=float, default=0.05, help="Score threshold for saved visualizations.")
+    parser.add_argument("--vis-top-k", type=int, default=20, help="Maximum predictions per saved visualization.")
+    parser.add_argument("--vis-nms-iou-threshold", type=float, default=0.5, help="NMS IoU threshold for saved visualizations.")
+    parser.add_argument("--vis-score-alpha", type=float, default=2.0, help="Objectness score exponent for visualizations.")
+    parser.add_argument("--vis-score-beta", type=float, default=1.0, help="Class score exponent for visualizations.")
     parser.add_argument("--output-json", type=str, required=True, help="Diagnostic JSON output path.")
     parser.add_argument("--vis-dir", type=str, required=True, help="Visualization output directory.")
     return parser.parse_args()
@@ -213,7 +218,20 @@ def run_metric_sweeps(model, dataset, device, config, metadata_path: Path, manif
     return sweeps
 
 
-def save_visualizations(model, dataset, device, config, anchors, output_dir: Path, max_samples: int):
+def save_visualizations(
+    model,
+    dataset,
+    device,
+    config,
+    anchors,
+    output_dir: Path,
+    max_samples: int,
+    score_threshold: float,
+    top_k: int,
+    nms_iou_threshold: float,
+    score_alpha: float,
+    score_beta: float,
+):
     """Write COCO GT-vs-pred images for qualitative inspection."""
     data_cfg = config["data"]
     model_cfg = config["model"]
@@ -231,11 +249,11 @@ def save_visualizations(model, dataset, device, config, anchors, output_dir: Pat
                 num_boxes=int(model_cfg.get("num_boxes", 1)),
                 anchors=anchors,
                 box_parameterization=str(model_cfg.get("box_parameterization", "legacy")),
-                score_threshold=0.05,
-                top_k=20,
-                nms_iou_threshold=0.5,
-                score_alpha=2.0,
-                score_beta=1.0,
+                score_threshold=score_threshold,
+                top_k=top_k,
+                nms_iou_threshold=nms_iou_threshold,
+                score_alpha=score_alpha,
+                score_beta=score_beta,
             )
             image = tensor_to_pil(image_tensor)
             image = draw_gt_and_predictions(image, target["boxes"], target["labels"], predictions)
@@ -287,6 +305,11 @@ def main():
         anchors=anchors,
         output_dir=Path(args.vis_dir).resolve(),
         max_samples=args.vis_samples,
+        score_threshold=float(args.vis_score_threshold),
+        top_k=int(args.vis_top_k),
+        nms_iou_threshold=float(args.vis_nms_iou_threshold),
+        score_alpha=float(args.vis_score_alpha),
+        score_beta=float(args.vis_score_beta),
     )
 
     result = {
@@ -298,6 +321,13 @@ def main():
         "packed_index": str(dataset.packed_index_path) if dataset.packed_index_path else "",
         "sweeps": sweeps,
         "prediction_stats": stats,
+        "visualization_config": {
+            "score_threshold": float(args.vis_score_threshold),
+            "top_k": int(args.vis_top_k),
+            "nms_iou_threshold": float(args.vis_nms_iou_threshold),
+            "score_alpha": float(args.vis_score_alpha),
+            "score_beta": float(args.vis_score_beta),
+        },
         "visualizations": visualizations,
     }
     output_path = Path(args.output_json).resolve()

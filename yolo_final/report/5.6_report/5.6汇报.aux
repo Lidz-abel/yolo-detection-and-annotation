@@ -1,0 +1,52 @@
+\relax 
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 当前主线模型配置}}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}\texttt  {yolo\_final} 网络架构}{2}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \texttt  {yolo\_final} 网络架构示意图}}{2}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces 整体网络的张量接口}}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Backbone 结构}{3}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Backbone 结构示意图}}{3}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Backbone stage 设计}}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Backbone 小模块示意图}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Backbone 小模块示意图}}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}ConvBNAct}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}ConvBN}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}ResidualBlock}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}BasicResidualBlock}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}检测器整体结构}{7}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \texttt  {yolo\_final} 检测器整体结构}}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Neck：轻量 FPN/PAN 融合}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Decoupled Head 的结构介绍}{8}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Decoupled Detection Head 结构示意图}}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Prediction Tensors 到 Detection Results}{9}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Prediction Tensors 到 Detection Results 的转换流程}}{9}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Score 计算}{10}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}最终检测结果格式}{10}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}最终使用的 Loss 结构}{11}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \texttt  {YOLOLoss} 结构示意图}}{11}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Loss 前置步骤：Dynamic Assignment}{11}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Box Regression Loss}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Objectness Loss}{12}{}\protected@file@percent }
+\gdef \LT@i {\LT@entry 
+    {3}{145.13962pt}\LT@entry 
+    {3}{151.76466pt}\LT@entry 
+    {3}{159.82498pt}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Classification Loss}{13}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Loss 监控指标}{13}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{Loss 相关监控指标}}{13}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}本部分小结}{13}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}第二部分：一次完整实验的流程与结果}{15}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}实验结果展示}{15}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces 本轮实验默认保存的 4 张验证集检测可视化}}{15}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces 本轮实验用于最终展示的 12 张扩展展示图}}{16}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}实验流程与配置文件}{16}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 本轮实验的关键配置}}{17}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}训练过程中保存的检测与监控指标}{17}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces 本轮实验模型复杂度与推理 profile。不同柱子的单位不同，图中用于集中展示 profile 量级。}}{17}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces 训练集与验证集 loss 下降曲线}}{18}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces TensorBoard step 级 rank0 loss 曲线。图中数据来自 \texttt  {rank0\_loss/*\_step}，为版面展示做了下采样。}}{18}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Loss 下降速度监控。负值表示该 epoch 的 loss 相比上一轮上升。}}{19}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces 定位与 assignment 健康度监控}}{19}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.4}正式 COCO 指标与实际意义}{19}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces COCO 指标含义与本轮结果}}{20}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces 本轮实验 COCO AP/AR 指标可视化}}{20}{}\protected@file@percent }
+\gdef \@abspage@last{20}
