@@ -1,0 +1,81 @@
+{
+  "anchors": {
+    "p4": [
+      [
+        0.036285,
+        0.055877
+      ],
+      [
+        0.11145,
+        0.147769
+      ],
+      [
+        0.16445,
+        0.38901
+      ]
+    ],
+    "p5": [
+      [
+        0.405962,
+        0.22498
+      ],
+      [
+        0.372495,
+        0.618863
+      ],
+      [
+        0.804661,
+        0.727088
+      ]
+    ]
+  },
+  "batch_size": 1.0,
+  "box_parameterization": "yolov5",
+  "checkpoint_path": "/home/lidz/YOLO/yolo_final/outputs/dual_scale_three_box_coco_only_noobj1_512_k6_ddp_20260506_152934/best.pth",
+  "coco_ap": 0.14286908207674662,
+  "coco_ap50": 0.23966424893278146,
+  "coco_ap75": 0.148527747623636,
+  "coco_ap_large": 0.19311919677765668,
+  "coco_ap_medium": 0.15647131716113688,
+  "coco_ap_small": 0.06389258386590041,
+  "coco_ar1": 0.18758416277772114,
+  "coco_ar10": 0.29346074035406833,
+  "coco_ar100": 0.30758461209372334,
+  "coco_ar_large": 0.4189682704307453,
+  "coco_ar_medium": 0.3282203939848464,
+  "coco_ar_small": 0.12004643872237235,
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1_512_k6.toml",
+  "conv2d_flops": 118731702272.0,
+  "device": "cuda",
+  "duration_seconds": 0.36727820709347725,
+  "images_per_second": 272.27316532436856,
+  "linear_flops": 0.0,
+  "manifest_path": "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl",
+  "measure_iters": 100.0,
+  "milliseconds_per_batch": 3.6727820709347725,
+  "model_name": "deep_residual_dual_scale_three_box",
+  "num_boxes": 3,
+  "num_predictions": 318449.0,
+  "num_samples": 5000.0,
+  "output_shape": {
+    "p4": [
+      1,
+      32,
+      32,
+      255
+    ],
+    "p5": [
+      1,
+      16,
+      16,
+      255
+    ]
+  },
+  "params_total": 36531294,
+  "params_trainable": 36531294,
+  "score_alpha": 2.0,
+  "score_beta": 1.0,
+  "total_flops": 118731702272.0,
+  "total_gflops": 118.731702272,
+  "warmup_iters": 20.0
+}

@@ -2,6 +2,7 @@
 
 import bisect
 import json
+import random
 from collections import OrderedDict
 from pathlib import Path
 
@@ -11,6 +12,8 @@ from PIL import Image
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torchvision.io import ImageReadMode, decode_image
+from torchvision.transforms import functional as TVF
+from torchvision.transforms.functional import InterpolationMode
 
 from data.target_encoder import encode_target
 
@@ -114,6 +117,143 @@ def resize_boxes_xyxy(boxes, orig_width, orig_height, new_size):
     resized_boxes[:, 1] *= scale_y
     resized_boxes[:, 3] *= scale_y
     return resized_boxes
+
+
+def sanitize_boxes_xyxy(boxes, labels, image_size, min_box_size=1.0):
+    """Clip boxes to the image and drop invalid boxes after augmentation."""
+    if boxes.numel() == 0:
+        return boxes.reshape(0, 4).float(), labels.reshape(0).long()
+
+    boxes = boxes.clone().float()
+    labels = labels.clone().long()
+    boxes[:, 0::2] = boxes[:, 0::2].clamp(0.0, float(image_size))
+    boxes[:, 1::2] = boxes[:, 1::2].clamp(0.0, float(image_size))
+    valid = (
+        (boxes[:, 2] - boxes[:, 0] >= float(min_box_size))
+        & (boxes[:, 3] - boxes[:, 1] >= float(min_box_size))
+    )
+    return boxes[valid], labels[valid]
+
+
+def _boxes_to_corners(boxes):
+    if boxes.numel() == 0:
+        return boxes.new_zeros((0, 4, 2))
+    x1, y1, x2, y2 = boxes.unbind(dim=1)
+    return torch.stack(
+        [
+            torch.stack([x1, y1], dim=1),
+            torch.stack([x2, y1], dim=1),
+            torch.stack([x2, y2], dim=1),
+            torch.stack([x1, y2], dim=1),
+        ],
+        dim=1,
+    )
+
+
+def _corners_to_boxes(corners):
+    if corners.numel() == 0:
+        return corners.new_zeros((0, 4))
+    mins = corners.min(dim=1).values
+    maxs = corners.max(dim=1).values
+    return torch.stack([mins[:, 0], mins[:, 1], maxs[:, 0], maxs[:, 1]], dim=1)
+
+
+def _random_factor(strength, center=1.0):
+    return random.uniform(max(0.0, center - float(strength)), center + float(strength))
+
+
+def apply_basic_detection_augmentation(image, boxes, labels, image_size, augmentation_cfg):
+    """Apply conservative train-only bbox-safe augmentation on resized tensors."""
+    if not augmentation_cfg or not bool(augmentation_cfg.get("enabled", False)):
+        return image, boxes, labels
+
+    image = image.clone()
+    boxes = boxes.clone().float()
+    labels = labels.clone().long()
+    image_size = int(image_size)
+
+    if random.random() < float(augmentation_cfg.get("horizontal_flip_p", 0.0)):
+        image = torch.flip(image, dims=[2])
+        if boxes.numel() > 0:
+            x1 = float(image_size) - boxes[:, 2]
+            x2 = float(image_size) - boxes[:, 0]
+            boxes = torch.stack([x1, boxes[:, 1], x2, boxes[:, 3]], dim=1)
+
+    if random.random() < float(augmentation_cfg.get("color_jitter_p", 0.0)):
+        brightness = float(augmentation_cfg.get("brightness", 0.2))
+        contrast = float(augmentation_cfg.get("contrast", 0.2))
+        saturation = float(augmentation_cfg.get("saturation", 0.2))
+
+        order = ["brightness", "contrast", "saturation"]
+        random.shuffle(order)
+        for op_name in order:
+            if op_name == "brightness" and brightness > 0:
+                image = image * _random_factor(brightness)
+            elif op_name == "contrast" and contrast > 0:
+                mean = image.mean(dim=(1, 2), keepdim=True)
+                image = (image - mean) * _random_factor(contrast) + mean
+            elif op_name == "saturation" and saturation > 0 and image.shape[0] == 3:
+                gray = (
+                    0.2989 * image[0:1]
+                    + 0.5870 * image[1:2]
+                    + 0.1140 * image[2:3]
+                )
+                image = (image - gray) * _random_factor(saturation) + gray
+        image = image.clamp(0.0, 1.0)
+
+    if random.random() < float(augmentation_cfg.get("affine_p", 0.0)):
+        degrees = float(augmentation_cfg.get("degrees", 5.0))
+        translate_ratio = float(augmentation_cfg.get("translate", 0.05))
+        scale_low = float(augmentation_cfg.get("scale_min", 0.95))
+        scale_high = float(augmentation_cfg.get("scale_max", 1.05))
+        shear_abs = float(augmentation_cfg.get("shear", 0.0))
+
+        angle = random.uniform(-degrees, degrees)
+        translate_x = random.uniform(-translate_ratio, translate_ratio) * image_size
+        translate_y = random.uniform(-translate_ratio, translate_ratio) * image_size
+        scale = random.uniform(scale_low, scale_high)
+        shear_x = random.uniform(-shear_abs, shear_abs)
+        shear_y = random.uniform(-shear_abs, shear_abs)
+
+        image = TVF.affine(
+            image,
+            angle=angle,
+            translate=[int(round(translate_x)), int(round(translate_y))],
+            scale=scale,
+            shear=[shear_x, shear_y],
+            interpolation=InterpolationMode.BILINEAR,
+            fill=0.0,
+        )
+
+        if boxes.numel() > 0:
+            center = torch.tensor([image_size * 0.5, image_size * 0.5], dtype=boxes.dtype, device=boxes.device)
+            corners = _boxes_to_corners(boxes).reshape(-1, 2)
+            corners = (corners - center) * scale
+            theta = torch.deg2rad(torch.tensor(angle, dtype=boxes.dtype, device=boxes.device))
+            rotation = torch.stack(
+                [
+                    torch.stack([torch.cos(theta), -torch.sin(theta)]),
+                    torch.stack([torch.sin(theta), torch.cos(theta)]),
+                ]
+            )
+            corners = corners @ rotation.T
+            if shear_abs > 0:
+                shear_x_t = torch.tan(torch.deg2rad(torch.tensor(shear_x, dtype=boxes.dtype, device=boxes.device)))
+                shear_y_t = torch.tan(torch.deg2rad(torch.tensor(shear_y, dtype=boxes.dtype, device=boxes.device)))
+                x = corners[:, 0].clone()
+                y = corners[:, 1].clone()
+                corners[:, 0] = x + shear_x_t * y
+                corners[:, 1] = y + shear_y_t * x
+            corners = corners + center + torch.tensor([translate_x, translate_y], dtype=boxes.dtype, device=boxes.device)
+            boxes = _corners_to_boxes(corners.reshape(-1, 4, 2))
+
+    boxes, labels = sanitize_boxes_xyxy(
+        boxes,
+        labels,
+        image_size=image_size,
+        min_box_size=float(augmentation_cfg.get("min_box_size", 1.0)),
+    )
+    return image.contiguous(), boxes.contiguous(), labels.contiguous()
 
 
 def _pack_encoded_targets(encoded):
@@ -242,6 +382,7 @@ class DetectionDataset(Dataset):
         packed_chunk_size=None,
         packed_cache_size=4,
         require_packed=False,
+        augmentation_cfg=None,
     ):
         super().__init__()
         self.manifest_path = Path(manifest_path)
@@ -265,6 +406,7 @@ class DetectionDataset(Dataset):
         self.packed_summary = None
         self.packed_store = None
         self.max_samples = int(max_samples) if max_samples is not None and int(max_samples) > 0 else None
+        self.augmentation_cfg = dict(augmentation_cfg or {})
 
         if self.packing_format == "pt":
             self.packed_index_path = resolve_packed_index_path(
@@ -324,6 +466,13 @@ class DetectionDataset(Dataset):
             orig_width=orig_width,
             orig_height=orig_height,
             new_size=self.image_size,
+        )
+        image, resized_boxes, labels = apply_basic_detection_augmentation(
+            image=image,
+            boxes=resized_boxes,
+            labels=labels,
+            image_size=self.image_size,
+            augmentation_cfg=self.augmentation_cfg,
         )
 
         if self.multiscale:

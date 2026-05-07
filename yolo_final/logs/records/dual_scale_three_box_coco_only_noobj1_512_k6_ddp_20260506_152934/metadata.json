@@ -13,7 +13,7 @@
   "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
   "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
   "username": "lidz",
-  "status": "running",
+  "status": "completed",
   "stage": "full_loss_training_ddp",
   "backend": "nccl",
   "world_size": 8,
@@ -27,8 +27,53 @@
   "per_rank_batch_size": 16,
   "effective_global_batch_size": 128,
   "per_rank_num_workers": 8,
-  "last_epoch": 9,
-  "best_epoch": 9,
-  "best_val_loss": 4.949999355983734,
-  "global_step": 8325
+  "last_epoch": 50,
+  "best_epoch": 22,
+  "best_val_loss": 4.425542439746857,
+  "global_step": 46250,
+  "model_output_shape": {
+    "p4": [
+      1,
+      32,
+      32,
+      255
+    ],
+    "p5": [
+      1,
+      16,
+      16,
+      255
+    ]
+  },
+  "parameter_total": 36531294,
+  "parameter_trainable": 36531294,
+  "visualization_dir": "outputs/dual_scale_three_box_coco_only_noobj1_512_k6_ddp_20260506_152934/visualizations",
+  "formal_coco_eval_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_512_k6_ddp_20260506_152934_coco_eval.json",
+  "diagnostics_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_512_k6_ddp_20260506_152934_display_vis12.json",
+  "diagnostic_visualization_dir": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_512_k6_ddp_20260506_152934_display_vis12",
+  "display_visualization_dir": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_512_k6_ddp_20260506_152934_display_vis12",
+  "display_visualization_config": {
+    "score_threshold": 0.05,
+    "top_k": 12,
+    "nms_iou_threshold": 0.5,
+    "score_alpha": 2.0,
+    "score_beta": 1.0
+  },
+  "coco_ap": 0.14286908207674662,
+  "coco_ap50": 0.23966424893278146,
+  "coco_ap75": 0.148527747623636,
+  "coco_ap_small": 0.06389258386590041,
+  "coco_ap_medium": 0.15647131716113688,
+  "coco_ap_large": 0.19311919677765668,
+  "coco_ar1": 0.18758416277772114,
+  "coco_ar10": 0.29346074035406833,
+  "coco_ar100": 0.30758461209372334,
+  "coco_ar_small": 0.12004643872237235,
+  "coco_ar_medium": 0.3282203939848464,
+  "coco_ar_large": 0.4189682704307453,
+  "coco_num_predictions": 318449.0,
+  "coco_predictions_per_image": 63.6898,
+  "train_seconds": 48654.303,
+  "val_seconds": 1462.764,
+  "train_val_hours": 13.921
 }

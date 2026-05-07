@@ -34,6 +34,7 @@ def summarize_config(config: dict) -> list[str]:
     loss_cfg = config["loss"]
     train_cfg = config["train"]
     logging_cfg = config["logging"]
+    augmentation_cfg = config.get("augmentation", {})
 
     grid_sizes = data_cfg.get("grid_sizes", "n/a")
     feature_levels = parse_string_list(model_cfg.get("feature_levels"))
@@ -115,6 +116,18 @@ def summarize_config(config: dict) -> list[str]:
         f"vis_score_threshold = {config['visualization'].get('score_threshold', 'n/a')}",
         f"vis_score_alpha = {config['visualization'].get('score_alpha', 1.0)}",
         f"vis_score_beta = {config['visualization'].get('score_beta', 1.0)}",
+        f"augmentation_enabled = {augmentation_cfg.get('enabled', False)}",
+        f"augmentation_horizontal_flip_p = {augmentation_cfg.get('horizontal_flip_p', 'n/a')}",
+        f"augmentation_color_jitter_p = {augmentation_cfg.get('color_jitter_p', 'n/a')}",
+        f"augmentation_affine_p = {augmentation_cfg.get('affine_p', 'n/a')}",
+        f"augmentation_brightness = {augmentation_cfg.get('brightness', 'n/a')}",
+        f"augmentation_contrast = {augmentation_cfg.get('contrast', 'n/a')}",
+        f"augmentation_saturation = {augmentation_cfg.get('saturation', 'n/a')}",
+        f"augmentation_degrees = {augmentation_cfg.get('degrees', 'n/a')}",
+        f"augmentation_translate = {augmentation_cfg.get('translate', 'n/a')}",
+        f"augmentation_scale_min = {augmentation_cfg.get('scale_min', 'n/a')}",
+        f"augmentation_scale_max = {augmentation_cfg.get('scale_max', 'n/a')}",
+        f"augmentation_shear = {augmentation_cfg.get('shear', 'n/a')}",
     ] + per_level_anchor_lines
 
 

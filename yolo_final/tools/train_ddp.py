@@ -191,6 +191,10 @@ def resolve_per_rank_settings(train_cfg: dict, world_size: int, args, rank: int)
 
 
 def build_distributed_loader(dataset, batch_size, shuffle, train_cfg, rank, world_size, num_workers):
+    def seed_worker(worker_id):
+        worker_seed = (torch.initial_seed() + rank * 100000 + worker_id) % 2**32
+        random.seed(worker_seed)
+
     sampler = DistributedSampler(
         dataset,
         num_replicas=world_size,
@@ -208,6 +212,7 @@ def build_distributed_loader(dataset, batch_size, shuffle, train_cfg, rank, worl
         persistent_workers=bool(train_cfg["persistent_workers"]) if num_workers > 0 else False,
         prefetch_factor=int(train_cfg["prefetch_factor"]) if num_workers > 0 else None,
         collate_fn=detection_collate_fn,
+        worker_init_fn=seed_worker if num_workers > 0 else None,
     ), sampler
 
 
@@ -258,6 +263,7 @@ def main():
         logging_cfg = config["logging"]
         evaluation_cfg = config["evaluation"]
         visualization_cfg = config["visualization"]
+        augmentation_cfg = config.get("augmentation", {})
 
         stage_name = "full_loss_training_ddp" if bool(loss_cfg["use_objectness"]) else "baseline_training_ddp"
         set_seed(int(train_cfg["seed"]))
@@ -308,6 +314,7 @@ def main():
             anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
             anchor_ignore_shape_ratio=model_cfg.get("anchor_ignore_shape_ratio"),
             max_samples=int(data_cfg["train_max_samples"]),
+            augmentation_cfg=augmentation_cfg if bool(augmentation_cfg.get("enabled", False)) else None,
             **dataset_storage_kwargs,
         )
         val_dataset = DetectionDataset(
@@ -414,6 +421,7 @@ def main():
             print("train dataset length:", len(train_dataset), flush=True)
             print("val dataset length:", len(val_dataset), flush=True)
             print("model output shape:", output_shape, flush=True)
+            print("train augmentation:", augmentation_cfg if bool(augmentation_cfg.get("enabled", False)) else "disabled", flush=True)
             print("parameter total:", param_stats["total"], flush=True)
             print("parameter trainable:", param_stats["trainable"], flush=True)
             print("tensorboard dir:", run_info["tensorboard_dir"], flush=True)
@@ -432,6 +440,7 @@ def main():
                 per_rank_batch_size=per_rank_batch_size,
                 effective_global_batch_size=per_rank_batch_size * world_size,
                 per_rank_num_workers=per_rank_workers,
+                train_augmentation=augmentation_cfg if bool(augmentation_cfg.get("enabled", False)) else {},
             )
 
         status = "completed"

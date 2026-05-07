@@ -101,6 +101,11 @@ def build_device(device_name: str):
 def build_loader(dataset, batch_size, shuffle, train_cfg):
     """Create one DataLoader with the configured worker and prefetch settings."""
     num_workers = int(train_cfg["num_workers"])
+
+    def seed_worker(worker_id):
+        worker_seed = (torch.initial_seed() + worker_id) % 2**32
+        random.seed(worker_seed)
+
     return DataLoader(
         dataset,
         batch_size=batch_size,
@@ -110,6 +115,7 @@ def build_loader(dataset, batch_size, shuffle, train_cfg):
         persistent_workers=bool(train_cfg["persistent_workers"]) if num_workers > 0 else False,
         prefetch_factor=int(train_cfg["prefetch_factor"]) if num_workers > 0 else None,
         collate_fn=detection_collate_fn,
+        worker_init_fn=seed_worker if num_workers > 0 else None,
     )
 
 
@@ -264,6 +270,7 @@ def main():
     train_cfg = config["train"]
     logging_cfg = config["logging"]
     evaluation_cfg = config["evaluation"]
+    augmentation_cfg = config.get("augmentation", {})
     anchors = parse_anchor_string(model_cfg.get("anchors"))
     num_boxes = int(model_cfg.get("num_boxes", 1))
     grid_sizes = parse_int_list(data_cfg.get("grid_sizes"))
@@ -309,6 +316,7 @@ def main():
         anchor_shape_ratio=float(model_cfg.get("anchor_shape_ratio", 4.0)),
         anchor_ignore_shape_ratio=model_cfg.get("anchor_ignore_shape_ratio"),
         max_samples=int(data_cfg["train_max_samples"]),
+        augmentation_cfg=augmentation_cfg if bool(augmentation_cfg.get("enabled", False)) else None,
         **dataset_storage_kwargs,
     )
     val_dataset = DetectionDataset(
