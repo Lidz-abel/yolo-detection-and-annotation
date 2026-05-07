@@ -1,0 +1,264 @@
+session=train_416_basic_aug
+config=configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug.toml
+log=logs/training_tmux/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014007.log
+stage=train_ddp_8gpu
+W0508 01:40:09.215000 1425694 site-packages/torch/distributed/run.py:851] 
+W0508 01:40:09.215000 1425694 site-packages/torch/distributed/run.py:851] *****************************************
+W0508 01:40:09.215000 1425694 site-packages/torch/distributed/run.py:851] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0508 01:40:09.215000 1425694 site-packages/torch/distributed/run.py:851] *****************************************
+DDP mode: ignoring train.use_data_parallel from config.
+dataset storage train: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_train/chunk_1024/index.json | chunks = 116 | samples = 118287 | chunk_size = 1024
+dataset storage val: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_val/chunk_1024/index.json | chunks = 5 | samples = 5000 | chunk_size = 1024
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+DDP configured global batch size: 128
+DDP per-rank batch size: 16
+DDP effective global batch size: 128
+DDP configured workers: 64
+DDP per-rank workers: 8
+starting yolov0 DDP training
+run id: dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013
+device: cuda:0
+backend: nccl
+world size: 8
+train dataset length: 118287
+val dataset length: 5000
+model output shape: {'p4': (1, 26, 26, 255), 'p5': (1, 13, 13, 255)}
+train augmentation: {'enabled': True, 'horizontal_flip_p': 0.5, 'color_jitter_p': 0.8, 'brightness': 0.15, 'contrast': 0.15, 'saturation': 0.15, 'affine_p': 0.3, 'degrees': 3.0, 'translate': 0.04, 'scale_min': 0.96, 'scale_max': 1.04, 'shear': 0.0, 'min_box_size': 1.0}
+parameter total: 36531294
+parameter trainable: 36531294
+tensorboard dir: runs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013
+output dir: outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013
+epoch 001 | step 0001 | total = 11.2455 | box = 1.3588 | obj = 3.0478 | cls = 1.4035 | lr = 0.001000
+epoch 001 | step 0020 | total = 8.1547 | box = 1.1502 | obj = 2.1715 | cls = 0.2324 | lr = 0.001000
+epoch 001 | step 0040 | total = 7.6463 | box = 1.1188 | obj = 1.9735 | cls = 0.0787 | lr = 0.001000
+epoch 001 | step 0060 | total = 7.7889 | box = 1.1435 | obj = 1.9945 | cls = 0.0771 | lr = 0.001000
+epoch 001 | step 0080 | total = 8.0477 | box = 1.2057 | obj = 1.9528 | cls = 0.0661 | lr = 0.001000
+epoch 001 | step 0100 | total = 7.7022 | box = 1.1469 | obj = 1.9065 | cls = 0.0610 | lr = 0.001000
+epoch 001 | step 0120 | total = 7.9059 | box = 1.1839 | obj = 1.9275 | cls = 0.0588 | lr = 0.001000
+epoch 001 | step 0140 | total = 7.1527 | box = 1.0123 | obj = 2.0288 | cls = 0.0623 | lr = 0.001000
+epoch 001 | step 0160 | total = 7.1613 | box = 1.0087 | obj = 2.0455 | cls = 0.0722 | lr = 0.001000
+epoch 001 | step 0180 | total = 7.2675 | box = 1.0232 | obj = 2.0828 | cls = 0.0688 | lr = 0.001000
+epoch 001 | step 0200 | total = 6.9788 | box = 0.9821 | obj = 2.0049 | cls = 0.0636 | lr = 0.001000
+epoch 001 | step 0220 | total = 6.7689 | box = 0.9277 | obj = 2.0634 | cls = 0.0672 | lr = 0.001000
+epoch 001 | step 0240 | total = 7.4763 | box = 1.1011 | obj = 1.9077 | cls = 0.0632 | lr = 0.001000
+epoch 001 | step 0260 | total = 7.1948 | box = 1.0399 | obj = 1.9351 | cls = 0.0601 | lr = 0.001000
+epoch 001 | step 0280 | total = 7.6579 | box = 1.1296 | obj = 1.9552 | cls = 0.0547 | lr = 0.001000
+epoch 001 | step 0300 | total = 7.8212 | box = 1.1821 | obj = 1.8520 | cls = 0.0589 | lr = 0.001000
+epoch 001 | step 0320 | total = 7.2073 | box = 1.0402 | obj = 1.9481 | cls = 0.0583 | lr = 0.001000
+epoch 001 | step 0340 | total = 7.0005 | box = 0.9808 | obj = 2.0340 | cls = 0.0626 | lr = 0.001000
+epoch 001 | step 0360 | total = 7.3361 | box = 1.0705 | obj = 1.9286 | cls = 0.0549 | lr = 0.001000
+epoch 001 | step 0380 | total = 6.6369 | box = 0.9052 | obj = 2.0363 | cls = 0.0747 | lr = 0.001000
+epoch 001 | step 0400 | total = 6.5916 | box = 0.8962 | obj = 2.0423 | cls = 0.0681 | lr = 0.001000
+epoch 001 | step 0420 | total = 7.6063 | box = 1.1211 | obj = 1.9443 | cls = 0.0566 | lr = 0.001000
+epoch 001 | step 0440 | total = 6.9491 | box = 1.0048 | obj = 1.8601 | cls = 0.0652 | lr = 0.001000
+epoch 001 | step 0460 | total = 7.8649 | box = 1.1989 | obj = 1.8196 | cls = 0.0506 | lr = 0.001000
+epoch 001 | step 0480 | total = 7.6404 | box = 1.1618 | obj = 1.7809 | cls = 0.0503 | lr = 0.001000
+epoch 001 | step 0500 | total = 7.2213 | box = 1.0603 | obj = 1.8659 | cls = 0.0541 | lr = 0.001000
+epoch 001 | step 0520 | total = 7.1628 | box = 1.0278 | obj = 1.9616 | cls = 0.0622 | lr = 0.001000
+epoch 001 | step 0540 | total = 6.9019 | box = 0.9645 | obj = 2.0146 | cls = 0.0646 | lr = 0.001000
+epoch 001 | step 0560 | total = 6.6350 | box = 0.9164 | obj = 1.9953 | cls = 0.0578 | lr = 0.001000
+epoch 001 | step 0580 | total = 7.6235 | box = 1.1496 | obj = 1.8234 | cls = 0.0520 | lr = 0.001000
+epoch 001 | step 0600 | total = 7.5749 | box = 1.1304 | obj = 1.8722 | cls = 0.0507 | lr = 0.001000
+epoch 001 | step 0620 | total = 6.9422 | box = 0.9688 | obj = 2.0411 | cls = 0.0573 | lr = 0.001000
+epoch 001 | step 0640 | total = 6.4347 | box = 0.8982 | obj = 1.8907 | cls = 0.0530 | lr = 0.001000
+epoch 001 | step 0660 | total = 6.8384 | box = 0.9738 | obj = 1.9112 | cls = 0.0582 | lr = 0.001000
+epoch 001 | step 0680 | total = 6.5742 | box = 0.9049 | obj = 1.9872 | cls = 0.0624 | lr = 0.001000
+epoch 001 | step 0700 | total = 6.6790 | box = 0.9324 | obj = 1.9585 | cls = 0.0585 | lr = 0.001000
+epoch 001 | step 0720 | total = 6.9054 | box = 0.9815 | obj = 1.9392 | cls = 0.0588 | lr = 0.001000
+epoch 001 | step 0740 | total = 6.6192 | box = 0.9389 | obj = 1.8661 | cls = 0.0585 | lr = 0.001000
+epoch 001 | step 0760 | total = 6.4344 | box = 0.8813 | obj = 1.9600 | cls = 0.0677 | lr = 0.001000
+epoch 001 | step 0780 | total = 6.4189 | box = 0.8640 | obj = 2.0339 | cls = 0.0649 | lr = 0.001000
+epoch 001 | step 0800 | total = 5.5691 | box = 0.7312 | obj = 1.8401 | cls = 0.0730 | lr = 0.001000
+epoch 001 | step 0820 | total = 6.2081 | box = 0.8293 | obj = 1.9951 | cls = 0.0666 | lr = 0.001000
+epoch 001 | step 0840 | total = 6.0057 | box = 0.7621 | obj = 2.1197 | cls = 0.0755 | lr = 0.001000
+epoch 001 | step 0860 | total = 6.2076 | box = 0.8733 | obj = 1.7873 | cls = 0.0537 | lr = 0.001000
+epoch 001 | step 0880 | total = 6.3193 | box = 0.8341 | obj = 2.0840 | cls = 0.0648 | lr = 0.001000
+epoch 001 | step 0900 | total = 6.5231 | box = 0.9203 | obj = 1.8729 | cls = 0.0489 | lr = 0.001000
+epoch 001 | step 0920 | total = 7.1016 | box = 1.0247 | obj = 1.9253 | cls = 0.0527 | lr = 0.001000
+[epoch 001 train] total = 7.1894 | box = 1.0348 | obj = 1.9401 | cls = 0.0753 | steps = 925 | global_batches = 7400 | samples = 118288 | time = 819.5s
+[epoch 001 val] total = 6.8639 | box = 0.9628 | obj = 1.9908 | cls = 0.0593 | steps = 40 | global_batches = 320 | samples = 5000 | time = 19.1s
+epoch 002 | step 0001 | total = 6.1859 | box = 0.8418 | obj = 1.9220 | cls = 0.0551 | lr = 0.000997
+epoch 002 | step 0020 | total = 6.2062 | box = 0.8600 | obj = 1.8524 | cls = 0.0538 | lr = 0.000997
+epoch 002 | step 0040 | total = 7.1051 | box = 1.0242 | obj = 1.9297 | cls = 0.0544 | lr = 0.000997
+epoch 002 | step 0060 | total = 6.9067 | box = 1.0160 | obj = 1.7779 | cls = 0.0488 | lr = 0.000997
+epoch 002 | step 0080 | total = 6.7253 | box = 0.9503 | obj = 1.9112 | cls = 0.0626 | lr = 0.000997
+epoch 002 | step 0100 | total = 6.0520 | box = 0.8385 | obj = 1.8072 | cls = 0.0524 | lr = 0.000997
+epoch 002 | step 0120 | total = 6.4073 | box = 0.8977 | obj = 1.8665 | cls = 0.0524 | lr = 0.000997
+epoch 002 | step 0140 | total = 6.6278 | box = 0.9560 | obj = 1.7898 | cls = 0.0578 | lr = 0.000997
+epoch 002 | step 0160 | total = 6.9790 | box = 1.0084 | obj = 1.8828 | cls = 0.0543 | lr = 0.000997
+epoch 002 | step 0180 | total = 5.8879 | box = 0.7891 | obj = 1.8756 | cls = 0.0667 | lr = 0.000997
+epoch 002 | step 0200 | total = 6.8326 | box = 0.9633 | obj = 1.9576 | cls = 0.0588 | lr = 0.000997
+epoch 002 | step 0220 | total = 6.3332 | box = 0.8819 | obj = 1.8733 | cls = 0.0505 | lr = 0.000997
+epoch 002 | step 0240 | total = 5.7059 | box = 0.7330 | obj = 1.9647 | cls = 0.0762 | lr = 0.000997
+epoch 002 | step 0260 | total = 6.7856 | box = 0.9773 | obj = 1.8402 | cls = 0.0589 | lr = 0.000997
+epoch 002 | step 0280 | total = 7.0540 | box = 1.0379 | obj = 1.8142 | cls = 0.0505 | lr = 0.000997
+epoch 002 | step 0300 | total = 6.8508 | box = 0.9901 | obj = 1.8411 | cls = 0.0593 | lr = 0.000997
+epoch 002 | step 0320 | total = 6.5334 | box = 0.9266 | obj = 1.8450 | cls = 0.0553 | lr = 0.000997
+epoch 002 | step 0340 | total = 6.5907 | box = 0.8767 | obj = 2.1411 | cls = 0.0660 | lr = 0.000997
+epoch 002 | step 0360 | total = 5.8736 | box = 0.8005 | obj = 1.8135 | cls = 0.0576 | lr = 0.000997
+epoch 002 | step 0380 | total = 6.6861 | box = 0.9820 | obj = 1.7216 | cls = 0.0545 | lr = 0.000997
+epoch 002 | step 0400 | total = 6.8239 | box = 0.9875 | obj = 1.8337 | cls = 0.0527 | lr = 0.000997
+epoch 002 | step 0420 | total = 5.8093 | box = 0.7799 | obj = 1.8461 | cls = 0.0637 | lr = 0.000997
+epoch 002 | step 0440 | total = 6.2441 | box = 0.8538 | obj = 1.9213 | cls = 0.0538 | lr = 0.000997
+epoch 002 | step 0460 | total = 6.6332 | box = 0.9494 | obj = 1.8275 | cls = 0.0589 | lr = 0.000997
+epoch 002 | step 0480 | total = 5.7196 | box = 0.7671 | obj = 1.8255 | cls = 0.0589 | lr = 0.000997
+epoch 002 | step 0500 | total = 5.6196 | box = 0.7416 | obj = 1.8470 | cls = 0.0645 | lr = 0.000997
+epoch 002 | step 0520 | total = 6.2238 | box = 0.8581 | obj = 1.8761 | cls = 0.0570 | lr = 0.000997
+epoch 002 | step 0540 | total = 6.8986 | box = 1.0262 | obj = 1.7215 | cls = 0.0462 | lr = 0.000997
+epoch 002 | step 0560 | total = 6.3764 | box = 0.8917 | obj = 1.8613 | cls = 0.0567 | lr = 0.000997
+epoch 002 | step 0580 | total = 5.8214 | box = 0.7675 | obj = 1.9286 | cls = 0.0553 | lr = 0.000997
+epoch 002 | step 0600 | total = 6.3097 | box = 0.8384 | obj = 2.0614 | cls = 0.0563 | lr = 0.000997
+epoch 002 | step 0620 | total = 5.6359 | box = 0.7695 | obj = 1.7340 | cls = 0.0546 | lr = 0.000997
+epoch 002 | step 0640 | total = 5.3020 | box = 0.6510 | obj = 1.9757 | cls = 0.0714 | lr = 0.000997
+epoch 002 | step 0660 | total = 5.8323 | box = 0.7907 | obj = 1.8259 | cls = 0.0528 | lr = 0.000997
+epoch 002 | step 0680 | total = 5.5341 | box = 0.7274 | obj = 1.8361 | cls = 0.0610 | lr = 0.000997
+epoch 002 | step 0700 | total = 6.8297 | box = 0.9848 | obj = 1.8559 | cls = 0.0497 | lr = 0.000997
+epoch 002 | step 0720 | total = 6.3049 | box = 0.8720 | obj = 1.8824 | cls = 0.0625 | lr = 0.000997
+epoch 002 | step 0740 | total = 6.9238 | box = 1.0192 | obj = 1.7822 | cls = 0.0454 | lr = 0.000997
+epoch 002 | step 0760 | total = 7.5094 | box = 1.1319 | obj = 1.8007 | cls = 0.0492 | lr = 0.000997
+epoch 002 | step 0780 | total = 6.2913 | box = 0.8851 | obj = 1.8083 | cls = 0.0574 | lr = 0.000997
+epoch 002 | step 0800 | total = 5.7864 | box = 0.7735 | obj = 1.8470 | cls = 0.0720 | lr = 0.000997
+epoch 002 | step 0820 | total = 6.4702 | box = 0.9056 | obj = 1.8886 | cls = 0.0537 | lr = 0.000997
+epoch 002 | step 0840 | total = 6.0490 | box = 0.8268 | obj = 1.8533 | cls = 0.0615 | lr = 0.000997
+epoch 002 | step 0860 | total = 6.5709 | box = 0.9586 | obj = 1.7314 | cls = 0.0465 | lr = 0.000997
+epoch 002 | step 0880 | total = 6.5402 | box = 0.9357 | obj = 1.8056 | cls = 0.0561 | lr = 0.000997
+epoch 002 | step 0900 | total = 6.3543 | box = 0.9200 | obj = 1.7082 | cls = 0.0462 | lr = 0.000997
+epoch 002 | step 0920 | total = 6.2768 | box = 0.8858 | obj = 1.7955 | cls = 0.0525 | lr = 0.000997
+[epoch 002 train] total = 6.3552 | box = 0.8886 | obj = 1.8557 | cls = 0.0564 | steps = 925 | global_batches = 7400 | samples = 118288 | time = 822.5s
+[epoch 002 val] total = 6.2072 | box = 0.8630 | obj = 1.8368 | cls = 0.0555 | steps = 40 | global_batches = 320 | samples = 5000 | time = 20.6s
+epoch 003 | step 0001 | total = 5.9130 | box = 0.8242 | obj = 1.7361 | cls = 0.0559 | lr = 0.000989
+epoch 003 | step 0020 | total = 6.3924 | box = 0.9154 | obj = 1.7662 | cls = 0.0491 | lr = 0.000989
+epoch 003 | step 0040 | total = 5.9015 | box = 0.8114 | obj = 1.7800 | cls = 0.0644 | lr = 0.000989
+epoch 003 | step 0060 | total = 6.7116 | box = 0.9680 | obj = 1.8242 | cls = 0.0476 | lr = 0.000989
+epoch 003 | step 0080 | total = 5.9462 | box = 0.7989 | obj = 1.8890 | cls = 0.0627 | lr = 0.000989
+epoch 003 | step 0100 | total = 5.9576 | box = 0.8302 | obj = 1.7574 | cls = 0.0490 | lr = 0.000989
+epoch 003 | step 0120 | total = 6.6749 | box = 0.9749 | obj = 1.7476 | cls = 0.0527 | lr = 0.000989
+epoch 003 | step 0140 | total = 6.2390 | box = 0.8936 | obj = 1.7263 | cls = 0.0448 | lr = 0.000989
+epoch 003 | step 0160 | total = 6.4176 | box = 0.9018 | obj = 1.8527 | cls = 0.0560 | lr = 0.000989
+epoch 003 | step 0180 | total = 6.9726 | box = 1.0345 | obj = 1.7536 | cls = 0.0466 | lr = 0.000989
+epoch 003 | step 0200 | total = 5.5214 | box = 0.7064 | obj = 1.9234 | cls = 0.0659 | lr = 0.000989
+epoch 003 | step 0220 | total = 6.4263 | box = 0.9549 | obj = 1.6060 | cls = 0.0456 | lr = 0.000989
+epoch 003 | step 0240 | total = 5.6946 | box = 0.7766 | obj = 1.7623 | cls = 0.0492 | lr = 0.000989
+epoch 003 | step 0260 | total = 6.0937 | box = 0.8363 | obj = 1.8514 | cls = 0.0607 | lr = 0.000989
+epoch 003 | step 0280 | total = 5.4743 | box = 0.7076 | obj = 1.8745 | cls = 0.0619 | lr = 0.000989
+epoch 003 | step 0300 | total = 6.0989 | box = 0.8249 | obj = 1.9168 | cls = 0.0578 | lr = 0.000989
+epoch 003 | step 0320 | total = 5.9836 | box = 0.7989 | obj = 1.9234 | cls = 0.0656 | lr = 0.000989
+epoch 003 | step 0340 | total = 6.0073 | box = 0.8441 | obj = 1.7359 | cls = 0.0508 | lr = 0.000989
+epoch 003 | step 0360 | total = 6.1695 | box = 0.8788 | obj = 1.7197 | cls = 0.0557 | lr = 0.000989
+epoch 003 | step 0380 | total = 5.7265 | box = 0.7901 | obj = 1.7245 | cls = 0.0516 | lr = 0.000989
+epoch 003 | step 0400 | total = 5.5951 | box = 0.7651 | obj = 1.7126 | cls = 0.0569 | lr = 0.000989
+epoch 003 | step 0420 | total = 6.6331 | box = 0.9586 | obj = 1.7957 | cls = 0.0442 | lr = 0.000989
+epoch 003 | step 0440 | total = 6.1030 | box = 0.8259 | obj = 1.9150 | cls = 0.0585 | lr = 0.000989
+epoch 003 | step 0460 | total = 5.7053 | box = 0.7653 | obj = 1.8237 | cls = 0.0549 | lr = 0.000989
+epoch 003 | step 0480 | total = 5.7101 | box = 0.7737 | obj = 1.7902 | cls = 0.0514 | lr = 0.000989
+epoch 003 | step 0500 | total = 5.6440 | box = 0.7312 | obj = 1.9279 | cls = 0.0599 | lr = 0.000989
+epoch 003 | step 0520 | total = 6.2056 | box = 0.8451 | obj = 1.9290 | cls = 0.0509 | lr = 0.000989
+epoch 003 | step 0540 | total = 6.1010 | box = 0.8466 | obj = 1.8088 | cls = 0.0590 | lr = 0.000989
+epoch 003 | step 0560 | total = 5.7229 | box = 0.7554 | obj = 1.8795 | cls = 0.0662 | lr = 0.000989
+epoch 003 | step 0580 | total = 6.8108 | box = 0.9884 | obj = 1.8165 | cls = 0.0525 | lr = 0.000989
+epoch 003 | step 0600 | total = 6.1267 | box = 0.8724 | obj = 1.7153 | cls = 0.0491 | lr = 0.000989
+epoch 003 | step 0620 | total = 6.1357 | box = 0.8690 | obj = 1.7453 | cls = 0.0453 | lr = 0.000989
+epoch 003 | step 0640 | total = 6.4869 | box = 0.9094 | obj = 1.8936 | cls = 0.0461 | lr = 0.000989
+epoch 003 | step 0660 | total = 6.1749 | box = 0.8322 | obj = 1.9553 | cls = 0.0588 | lr = 0.000989
+epoch 003 | step 0680 | total = 5.4330 | box = 0.7076 | obj = 1.8434 | cls = 0.0516 | lr = 0.000989
+epoch 003 | step 0700 | total = 5.4480 | box = 0.6950 | obj = 1.9107 | cls = 0.0623 | lr = 0.000989
+epoch 003 | step 0720 | total = 5.1882 | box = 0.6992 | obj = 1.6377 | cls = 0.0543 | lr = 0.000989
+epoch 003 | step 0740 | total = 6.3055 | box = 0.8981 | obj = 1.7670 | cls = 0.0482 | lr = 0.000989
+epoch 003 | step 0760 | total = 6.0905 | box = 0.8369 | obj = 1.8499 | cls = 0.0559 | lr = 0.000989
+epoch 003 | step 0780 | total = 5.9528 | box = 0.7910 | obj = 1.9371 | cls = 0.0609 | lr = 0.000989
+epoch 003 | step 0800 | total = 5.8116 | box = 0.8055 | obj = 1.7299 | cls = 0.0541 | lr = 0.000989
+epoch 003 | step 0820 | total = 5.3190 | box = 0.6939 | obj = 1.7973 | cls = 0.0523 | lr = 0.000989
+epoch 003 | step 0840 | total = 6.3791 | box = 0.8633 | obj = 2.0068 | cls = 0.0558 | lr = 0.000989
+epoch 003 | step 0860 | total = 6.9797 | box = 1.0345 | obj = 1.7540 | cls = 0.0530 | lr = 0.000989
+epoch 003 | step 0880 | total = 5.8740 | box = 0.8186 | obj = 1.7295 | cls = 0.0517 | lr = 0.000989
+epoch 003 | step 0900 | total = 5.3875 | box = 0.7232 | obj = 1.7046 | cls = 0.0671 | lr = 0.000989
+epoch 003 | step 0920 | total = 5.8093 | box = 0.7826 | obj = 1.8422 | cls = 0.0541 | lr = 0.000989
+[epoch 003 train] total = 6.0054 | box = 0.8301 | obj = 1.8007 | cls = 0.0542 | steps = 925 | global_batches = 7400 | samples = 118288 | time = 823.0s
+[epoch 003 val] total = 6.0846 | box = 0.8396 | obj = 1.8297 | cls = 0.0570 | steps = 40 | global_batches = 320 | samples = 5000 | time = 21.0s
+epoch 004 | step 0001 | total = 6.1776 | box = 0.8597 | obj = 1.8289 | cls = 0.0504 | lr = 0.000976
+epoch 004 | step 0020 | total = 6.0995 | box = 0.8581 | obj = 1.7605 | cls = 0.0487 | lr = 0.000976
+epoch 004 | step 0040 | total = 5.8625 | box = 0.8243 | obj = 1.6910 | cls = 0.0498 | lr = 0.000976
+epoch 004 | step 0060 | total = 6.2848 | box = 0.8972 | obj = 1.7520 | cls = 0.0468 | lr = 0.000976
+epoch 004 | step 0080 | total = 6.2901 | box = 0.8645 | obj = 1.9121 | cls = 0.0554 | lr = 0.000976
+epoch 004 | step 0100 | total = 5.5931 | box = 0.7665 | obj = 1.6987 | cls = 0.0616 | lr = 0.000976
+epoch 004 | step 0120 | total = 5.5044 | box = 0.6758 | obj = 2.0620 | cls = 0.0632 | lr = 0.000976
+epoch 004 | step 0140 | total = 4.9865 | box = 0.6209 | obj = 1.8261 | cls = 0.0557 | lr = 0.000976
+epoch 004 | step 0160 | total = 6.9667 | box = 1.0182 | obj = 1.8165 | cls = 0.0589 | lr = 0.000976
+epoch 004 | step 0180 | total = 5.7776 | box = 0.8027 | obj = 1.7202 | cls = 0.0437 | lr = 0.000976
+epoch 004 | step 0200 | total = 5.4773 | box = 0.7230 | obj = 1.8076 | cls = 0.0549 | lr = 0.000976
+epoch 004 | step 0220 | total = 5.3195 | box = 0.7049 | obj = 1.7372 | cls = 0.0580 | lr = 0.000976
+epoch 004 | step 0240 | total = 6.5020 | box = 0.9500 | obj = 1.7080 | cls = 0.0441 | lr = 0.000976
+epoch 004 | step 0260 | total = 6.3525 | box = 0.9136 | obj = 1.7407 | cls = 0.0441 | lr = 0.000976
+epoch 004 | step 0280 | total = 5.7635 | box = 0.7624 | obj = 1.8983 | cls = 0.0531 | lr = 0.000976
+epoch 004 | step 0300 | total = 5.6925 | box = 0.7815 | obj = 1.7314 | cls = 0.0535 | lr = 0.000976
+epoch 004 | step 0320 | total = 6.1922 | box = 0.8697 | obj = 1.7803 | cls = 0.0637 | lr = 0.000976
+epoch 004 | step 0340 | total = 6.2013 | box = 0.8863 | obj = 1.7222 | cls = 0.0474 | lr = 0.000976
+epoch 004 | step 0360 | total = 5.2289 | box = 0.6779 | obj = 1.7743 | cls = 0.0653 | lr = 0.000976
+epoch 004 | step 0380 | total = 6.1747 | box = 0.8905 | obj = 1.6827 | cls = 0.0392 | lr = 0.000976
+epoch 004 | step 0400 | total = 5.8485 | box = 0.8084 | obj = 1.7551 | cls = 0.0515 | lr = 0.000976
+epoch 004 | step 0420 | total = 6.1302 | box = 0.8557 | obj = 1.7995 | cls = 0.0519 | lr = 0.000976
+epoch 004 | step 0440 | total = 5.3375 | box = 0.7207 | obj = 1.6817 | cls = 0.0522 | lr = 0.000976
+epoch 004 | step 0460 | total = 5.6004 | box = 0.7721 | obj = 1.6961 | cls = 0.0439 | lr = 0.000976
+epoch 004 | step 0480 | total = 5.3604 | box = 0.7172 | obj = 1.7161 | cls = 0.0582 | lr = 0.000976
+epoch 004 | step 0500 | total = 5.7767 | box = 0.8074 | obj = 1.6865 | cls = 0.0531 | lr = 0.000976
+epoch 004 | step 0520 | total = 5.8609 | box = 0.8143 | obj = 1.7405 | cls = 0.0490 | lr = 0.000976
+epoch 004 | step 0540 | total = 5.6313 | box = 0.7312 | obj = 1.9208 | cls = 0.0547 | lr = 0.000976
+epoch 004 | step 0560 | total = 5.9281 | box = 0.8117 | obj = 1.8121 | cls = 0.0575 | lr = 0.000976
+epoch 004 | step 0580 | total = 5.1499 | box = 0.6855 | obj = 1.6807 | cls = 0.0416 | lr = 0.000976
+epoch 004 | step 0600 | total = 5.7733 | box = 0.8155 | obj = 1.6481 | cls = 0.0478 | lr = 0.000976
+epoch 004 | step 0620 | total = 6.5089 | box = 0.9452 | obj = 1.7365 | cls = 0.0464 | lr = 0.000976
+epoch 004 | step 0640 | total = 6.0121 | box = 0.8488 | obj = 1.7265 | cls = 0.0418 | lr = 0.000976
+epoch 004 | step 0660 | total = 5.0614 | box = 0.6343 | obj = 1.8263 | cls = 0.0638 | lr = 0.000976
+epoch 004 | step 0680 | total = 5.9060 | box = 0.7795 | obj = 1.9452 | cls = 0.0635 | lr = 0.000976
+epoch 004 | step 0700 | total = 6.3963 | box = 0.9087 | obj = 1.8013 | cls = 0.0515 | lr = 0.000976
+epoch 004 | step 0720 | total = 5.7882 | box = 0.7851 | obj = 1.8138 | cls = 0.0490 | lr = 0.000976
+epoch 004 | step 0740 | total = 5.7815 | box = 0.7928 | obj = 1.7688 | cls = 0.0487 | lr = 0.000976
+epoch 004 | step 0760 | total = 5.0486 | box = 0.6594 | obj = 1.7004 | cls = 0.0509 | lr = 0.000976
+epoch 004 | step 0780 | total = 6.2044 | box = 0.8558 | obj = 1.8687 | cls = 0.0566 | lr = 0.000976
+epoch 004 | step 0800 | total = 5.7882 | box = 0.7960 | obj = 1.7575 | cls = 0.0505 | lr = 0.000976
+epoch 004 | step 0820 | total = 5.4772 | box = 0.7364 | obj = 1.7429 | cls = 0.0523 | lr = 0.000976
+epoch 004 | step 0840 | total = 6.4166 | box = 0.9132 | obj = 1.7999 | cls = 0.0506 | lr = 0.000976
+epoch 004 | step 0860 | total = 6.2504 | box = 0.8911 | obj = 1.7462 | cls = 0.0489 | lr = 0.000976
+epoch 004 | step 0880 | total = 5.2378 | box = 0.6696 | obj = 1.8369 | cls = 0.0529 | lr = 0.000976
+epoch 004 | step 0900 | total = 5.3464 | box = 0.6659 | obj = 1.9498 | cls = 0.0670 | lr = 0.000976
+epoch 004 | step 0920 | total = 5.1589 | box = 0.6543 | obj = 1.8276 | cls = 0.0599 | lr = 0.000976
+[epoch 004 train] total = 5.7922 | box = 0.7955 | obj = 1.7622 | cls = 0.0524 | steps = 925 | global_batches = 7400 | samples = 118288 | time = 820.1s
+[epoch 004 val] total = 5.8195 | box = 0.7946 | obj = 1.7940 | cls = 0.0526 | steps = 40 | global_batches = 320 | samples = 5000 | time = 21.7s
+epoch 005 | step 0001 | total = 5.4870 | box = 0.7457 | obj = 1.7183 | cls = 0.0401 | lr = 0.000957
+epoch 005 | step 0020 | total = 5.1606 | box = 0.6734 | obj = 1.7296 | cls = 0.0641 | lr = 0.000957
+epoch 005 | step 0040 | total = 5.5299 | box = 0.7461 | obj = 1.7533 | cls = 0.0459 | lr = 0.000957
+epoch 005 | step 0060 | total = 5.6975 | box = 0.7800 | obj = 1.7536 | cls = 0.0439 | lr = 0.000957
+epoch 005 | step 0080 | total = 5.1563 | box = 0.7013 | obj = 1.5954 | cls = 0.0543 | lr = 0.000957
+epoch 005 | step 0100 | total = 5.8997 | box = 0.8179 | obj = 1.7597 | cls = 0.0504 | lr = 0.000957
+epoch 005 | step 0120 | total = 5.9581 | box = 0.8391 | obj = 1.7181 | cls = 0.0446 | lr = 0.000957
+epoch 005 | step 0140 | total = 6.0315 | box = 0.8273 | obj = 1.8408 | cls = 0.0540 | lr = 0.000957
+epoch 005 | step 0160 | total = 4.8881 | box = 0.6230 | obj = 1.7250 | cls = 0.0480 | lr = 0.000957
+epoch 005 | step 0180 | total = 5.5549 | box = 0.7466 | obj = 1.7744 | cls = 0.0477 | lr = 0.000957
+epoch 005 | step 0200 | total = 5.7721 | box = 0.7750 | obj = 1.8430 | cls = 0.0540 | lr = 0.000957
+epoch 005 | step 0220 | total = 5.8406 | box = 0.8214 | obj = 1.6776 | cls = 0.0560 | lr = 0.000957
+epoch 005 | step 0240 | total = 5.9208 | box = 0.8142 | obj = 1.7999 | cls = 0.0501 | lr = 0.000957
+epoch 005 | step 0260 | total = 6.1657 | box = 0.8709 | obj = 1.7616 | cls = 0.0495 | lr = 0.000957
+epoch 005 | step 0280 | total = 5.1144 | box = 0.6873 | obj = 1.6295 | cls = 0.0484 | lr = 0.000957
+epoch 005 | step 0300 | total = 6.4939 | box = 0.9584 | obj = 1.6587 | cls = 0.0432 | lr = 0.000957
+epoch 005 | step 0320 | total = 5.4729 | box = 0.7659 | obj = 1.5985 | cls = 0.0451 | lr = 0.000957
+epoch 005 | step 0340 | total = 5.3628 | box = 0.7127 | obj = 1.7413 | cls = 0.0578 | lr = 0.000957
+epoch 005 | step 0360 | total = 5.1945 | box = 0.6930 | obj = 1.6742 | cls = 0.0555 | lr = 0.000957
+epoch 005 | step 0380 | total = 5.9309 | box = 0.8123 | obj = 1.8190 | cls = 0.0504 | lr = 0.000957
+epoch 005 | step 0400 | total = 5.6562 | box = 0.7777 | obj = 1.7196 | cls = 0.0482 | lr = 0.000957
+epoch 005 | step 0420 | total = 6.0451 | box = 0.8552 | obj = 1.7198 | cls = 0.0493 | lr = 0.000957
+epoch 005 | step 0440 | total = 5.4625 | box = 0.7547 | obj = 1.6501 | cls = 0.0389 | lr = 0.000957
+epoch 005 | step 0460 | total = 5.6379 | box = 0.7818 | obj = 1.6839 | cls = 0.0452 | lr = 0.000957
+epoch 005 | step 0480 | total = 6.5645 | box = 0.9825 | obj = 1.6080 | cls = 0.0440 | lr = 0.000957
+epoch 005 | step 0500 | total = 5.4721 | box = 0.7136 | obj = 1.8492 | cls = 0.0549 | lr = 0.000957
+epoch 005 | step 0520 | total = 5.4166 | box = 0.7168 | obj = 1.7787 | cls = 0.0540 | lr = 0.000957
+epoch 005 | step 0540 | total = 5.1147 | box = 0.6608 | obj = 1.7512 | cls = 0.0596 | lr = 0.000957
+epoch 005 | step 0560 | total = 5.5653 | box = 0.7908 | obj = 1.5674 | cls = 0.0437 | lr = 0.000957
+epoch 005 | step 0580 | total = 6.0729 | box = 0.8726 | obj = 1.6664 | cls = 0.0437 | lr = 0.000957
+epoch 005 | step 0600 | total = 5.4657 | box = 0.7355 | obj = 1.7395 | cls = 0.0486 | lr = 0.000957
+epoch 005 | step 0620 | total = 6.3773 | box = 0.9209 | obj = 1.7210 | cls = 0.0517 | lr = 0.000957
+epoch 005 | step 0640 | total = 6.0632 | box = 0.8702 | obj = 1.6710 | cls = 0.0411 | lr = 0.000957
+epoch 005 | step 0660 | total = 5.1393 | box = 0.6540 | obj = 1.8171 | cls = 0.0524 | lr = 0.000957
+epoch 005 | step 0680 | total = 5.5398 | box = 0.7521 | obj = 1.7215 | cls = 0.0577 | lr = 0.000957
+epoch 005 | step 0700 | total = 5.6197 | box = 0.7584 | obj = 1.7766 | cls = 0.0512 | lr = 0.000957
+epoch 005 | step 0720 | total = 5.7369 | box = 0.7931 | obj = 1.7148 | cls = 0.0568 | lr = 0.000957
