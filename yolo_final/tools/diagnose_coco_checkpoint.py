@@ -47,6 +47,7 @@ def parse_args():
     parser.add_argument("--vis-nms-iou-threshold", type=float, default=0.5, help="NMS IoU threshold for saved visualizations.")
     parser.add_argument("--vis-score-alpha", type=float, default=2.0, help="Objectness score exponent for visualizations.")
     parser.add_argument("--vis-score-beta", type=float, default=1.0, help="Class score exponent for visualizations.")
+    parser.add_argument("--vis-hide-gt", action="store_true", help="Hide green ground-truth boxes in saved visualizations.")
     parser.add_argument("--output-json", type=str, required=True, help="Diagnostic JSON output path.")
     parser.add_argument("--vis-dir", type=str, required=True, help="Visualization output directory.")
     return parser.parse_args()
@@ -231,6 +232,7 @@ def save_visualizations(
     nms_iou_threshold: float,
     score_alpha: float,
     score_beta: float,
+    show_gt: bool,
 ):
     """Write COCO GT-vs-pred images for qualitative inspection."""
     data_cfg = config["data"]
@@ -256,7 +258,7 @@ def save_visualizations(
                 score_beta=score_beta,
             )
             image = tensor_to_pil(image_tensor)
-            image = draw_gt_and_predictions(image, target["boxes"], target["labels"], predictions)
+            image = draw_gt_and_predictions(image, target["boxes"], target["labels"], predictions, show_gt=show_gt)
             output_path = output_dir / f"{target['sample_id']}.png"
             image.save(output_path)
             saved.append(str(output_path))
@@ -310,6 +312,7 @@ def main():
         nms_iou_threshold=float(args.vis_nms_iou_threshold),
         score_alpha=float(args.vis_score_alpha),
         score_beta=float(args.vis_score_beta),
+        show_gt=not bool(args.vis_hide_gt),
     )
 
     result = {
@@ -327,6 +330,7 @@ def main():
             "nms_iou_threshold": float(args.vis_nms_iou_threshold),
             "score_alpha": float(args.vis_score_alpha),
             "score_beta": float(args.vis_score_beta),
+            "show_gt": not bool(args.vis_hide_gt),
         },
         "visualizations": visualizations,
     }

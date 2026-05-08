@@ -21,14 +21,16 @@ def draw_gt_and_predictions(
     gt_boxes: torch.Tensor,
     gt_labels: torch.Tensor,
     predictions: list[dict],
+    show_gt: bool = True,
 ) -> Image.Image:
     """Draw green GT boxes and red prediction boxes on one image."""
     draw = ImageDraw.Draw(image)
 
-    for box, label in zip(gt_boxes.tolist(), gt_labels.tolist()):
-        x1, y1, x2, y2 = box
-        draw.rectangle([x1, y1, x2, y2], outline="lime", width=2)
-        draw.text((x1 + 2, y1 + 2), f"gt:{label}", fill="lime")
+    if show_gt:
+        for box, label in zip(gt_boxes.tolist(), gt_labels.tolist()):
+            x1, y1, x2, y2 = box
+            draw.rectangle([x1, y1, x2, y2], outline="lime", width=2)
+            draw.text((x1 + 2, y1 + 2), f"gt:{label}", fill="lime")
 
     for pred in predictions:
         x1, y1, x2, y2 = pred["box_xyxy"]

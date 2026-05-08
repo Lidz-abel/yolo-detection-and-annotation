@@ -11,6 +11,18 @@ pip install -r backend/requirements.txt
 python backend/app.py
 ```
 
+Static frontend:
+
+```text
+http://127.0.0.1:5000/
+```
+
+Built React frontend, after `npm run build` in `frontend_react/`:
+
+```text
+http://127.0.0.1:5000/react
+```
+
 Useful environment overrides:
 
 ```bash

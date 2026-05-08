@@ -10,7 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, redirect, request, send_from_directory
 
 from backend.annotation_io import save_yolo_annotation
 from backend.config import BackendSettings, load_settings
@@ -20,6 +20,7 @@ from backend.schemas import parse_float, parse_int, validate_annotation_payload
 app = Flask(__name__)
 settings = load_settings()
 FRONTEND_DIR = PROJECT_ROOT / "frontend"
+REACT_FRONTEND_DIST = PROJECT_ROOT / "frontend_react" / "dist"
 _predictor = None
 _predictor_error = None
 
@@ -81,6 +82,30 @@ def frontend_index():
 def frontend_assets(filename):
     """Serve frontend static assets."""
     return send_from_directory(FRONTEND_DIR, filename)
+
+
+@app.get("/react/")
+def react_frontend_index():
+    """Serve the built React annotation frontend when available."""
+    if not (REACT_FRONTEND_DIST / "index.html").exists():
+        return _json_error(
+            "React frontend has not been built. Run `npm install` and `npm run build` in frontend_react, "
+            "or use the Vite dev server.",
+            404,
+        )
+    return send_from_directory(REACT_FRONTEND_DIST, "index.html")
+
+
+@app.get("/react")
+def react_frontend_redirect():
+    """Normalize the React app URL so relative Vite assets resolve correctly."""
+    return redirect("/react/", code=308)
+
+
+@app.get("/react/<path:filename>")
+def react_frontend_assets(filename):
+    """Serve built React frontend assets."""
+    return send_from_directory(REACT_FRONTEND_DIST, filename)
 
 
 @app.get("/health")

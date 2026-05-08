@@ -13,7 +13,7 @@
   "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
   "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
   "username": "lidz",
-  "status": "running",
+  "status": "completed",
   "stage": "full_loss_training_ddp",
   "backend": "nccl",
   "world_size": 8,
@@ -42,8 +42,85 @@
     "shear": 0.0,
     "min_box_size": 1.0
   },
-  "last_epoch": 4,
-  "best_epoch": 4,
-  "best_val_loss": 5.819460258865356,
-  "global_step": 3700
+  "last_epoch": 30,
+  "best_epoch": 30,
+  "best_val_loss": 4.5397016398429875,
+  "global_step": 27750,
+  "model_output_shape": {
+    "p4": [
+      1,
+      26,
+      26,
+      255
+    ],
+    "p5": [
+      1,
+      13,
+      13,
+      255
+    ]
+  },
+  "parameter_total": 36531294,
+  "parameter_trainable": 36531294,
+  "visualization_dir": "outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013/visualizations",
+  "full_coco_eval_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013_coco_eval.json",
+  "full_coco_metrics": {
+    "coco_ap": 0.16475807563258515,
+    "coco_ap50": 0.2711519469529804,
+    "coco_ap75": 0.1715533339336837,
+    "coco_ap_small": 0.0675576478398384,
+    "coco_ap_medium": 0.18332191600408376,
+    "coco_ap_large": 0.22774603676909833,
+    "coco_ar1": 0.2025673363343047,
+    "coco_ar10": 0.3133218799020677,
+    "coco_ar100": 0.3266675519546199,
+    "coco_ar_small": 0.11910143234558584,
+    "coco_ar_medium": 0.34957710896812166,
+    "coco_ar_large": 0.4595410949226796,
+    "num_predictions": 246490,
+    "predictions_per_image": 49.298,
+    "images_per_second": 277.2872427526862
+  },
+  "offline_sweep_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013_sweep_500.json",
+  "offline_sweep_num_samples": 500,
+  "offline_sweep_best_by_ap": {
+    "score_alpha": 2.0,
+    "score_beta": 1.0,
+    "score_threshold": 0.03,
+    "top_k": 200,
+    "nms_iou_threshold": 0.5,
+    "coco_ap": 0.21240980795852435,
+    "coco_ap50": 0.3238110835088555,
+    "coco_ap75": 0.2339579664523066,
+    "coco_ap_small": 0.0879350282099401,
+    "coco_ap_medium": 0.24223060195726218,
+    "coco_ap_large": 0.26567907707947797,
+    "coco_ar100": 0.3738482351676498,
+    "num_predictions": 37463,
+    "predictions_per_image": 74.926
+  },
+  "best_sweep_visualization_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013_best_sweep_vis12.json",
+  "best_sweep_visualization_dir": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013_best_sweep_vis12",
+  "best_sweep_visualization_count": 12,
+  "display_visualization_json": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013_display_pred_only_vis12.json",
+  "display_visualization_dir": "outputs/evaluations/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013_display_pred_only_vis12",
+  "display_visualization_count": 12,
+  "display_visualization_config": {
+    "score_alpha": 2.0,
+    "score_beta": 1.0,
+    "score_threshold": 0.5,
+    "top_k": 10,
+    "nms_iou_threshold": 0.5,
+    "show_gt": false
+  },
+  "epoch_timing": {
+    "train_time_seconds_sum": 24461.683,
+    "val_time_seconds_sum": 682.618,
+    "total_epoch_time_seconds_sum": 25144.301,
+    "total_epoch_time_hours_sum": 6.985,
+    "avg_train_epoch_seconds": 815.389,
+    "avg_val_epoch_seconds": 22.754,
+    "avg_total_epoch_minutes": 13.969
+  },
+  "tmux_log": "logs/training_tmux/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014007.log"
 }
