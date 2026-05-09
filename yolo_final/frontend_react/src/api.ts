@@ -35,20 +35,33 @@ export async function predictImage(options: {
 
 export async function saveAnnotation(options: {
   baseUrl: string;
+  file?: File;
   imageId: string;
   imageWidth: number;
   imageHeight: number;
   boxes: Box[];
 }): Promise<AnnotateResponse> {
+  const annotation = {
+    image_id: options.imageId,
+    image_width: options.imageWidth,
+    image_height: options.imageHeight,
+    bboxes: options.boxes.map(({ class_id, x1, y1, x2, y2 }) => ({ class_id, x1, y1, x2, y2 }))
+  };
+  const requestInit: RequestInit = options.file
+    ? (() => {
+        const form = new FormData();
+        form.append("image", options.file as File);
+        form.append("annotation", JSON.stringify(annotation));
+        return { method: "POST", body: form };
+      })()
+    : {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(annotation)
+      };
+
   const response = await fetch(`${trimBase(options.baseUrl)}/human_annotate`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      image_id: options.imageId,
-      image_width: options.imageWidth,
-      image_height: options.imageHeight,
-      bboxes: options.boxes.map(({ class_id, x1, y1, x2, y2 }) => ({ class_id, x1, y1, x2, y2 }))
-    })
+    ...requestInit
   });
   const payload = (await response.json()) as AnnotateResponse;
   if (!response.ok || !payload.success) {

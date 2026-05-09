@@ -178,7 +178,8 @@ button:disabled {
   min-height: calc(100vh - 166px);
   display: grid;
   place-items: center;
-  overflow: auto;
+  padding: 16px;
+  overflow: hidden;
   background:
     linear-gradient(45deg, #eef2f7 25%, transparent 25%),
     linear-gradient(-45deg, #eef2f7 25%, transparent 25%),
@@ -205,15 +206,13 @@ button:disabled {
 
 .viewport {
   position: relative;
-  max-width: calc(100% - 34px);
-  max-height: calc(100% - 34px);
+  overflow: hidden;
 }
 
 .viewport img {
   display: block;
-  max-width: 100%;
-  max-height: calc(100vh - 190px);
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
   user-select: none;
 }
 
@@ -237,13 +236,13 @@ button:disabled {
 
 .bbox span {
   position: absolute;
-  left: -2px;
-  top: -24px;
+  left: 0;
+  top: 0;
   height: 22px;
   padding: 0 7px;
   display: flex;
   align-items: center;
-  border-radius: 5px 5px 5px 0;
+  border-radius: 0 0 5px 0;
   background: #111827;
   color: #fff;
   font-size: 12px;
@@ -260,26 +259,26 @@ button:disabled {
 }
 
 .handle.nw {
-  left: -6px;
-  top: -6px;
+  left: 3px;
+  top: 3px;
   cursor: nwse-resize;
 }
 
 .handle.ne {
-  right: -6px;
-  top: -6px;
+  right: 3px;
+  top: 3px;
   cursor: nesw-resize;
 }
 
 .handle.sw {
-  left: -6px;
-  bottom: -6px;
+  left: 3px;
+  bottom: 3px;
   cursor: nesw-resize;
 }
 
 .handle.se {
-  right: -6px;
-  bottom: -6px;
+  right: 3px;
+  bottom: 3px;
   cursor: nwse-resize;
 }
 

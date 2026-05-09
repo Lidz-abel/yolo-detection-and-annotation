@@ -16,11 +16,18 @@ export type PredictResponse = {
   image_width: number;
   image_height: number;
   bboxes: Array<Omit<Box, "id">>;
+  latency_ms?: {
+    preprocess: number;
+    inference: number;
+    postprocess: number;
+    total: number;
+  };
   model?: {
     format: string;
     config: string;
     checkpoint: string;
     device: string;
+    fp16?: boolean;
   };
 };
 
@@ -28,6 +35,7 @@ export type AnnotateResponse = {
   success: boolean;
   error?: string;
   saved_path?: string;
+  saved_image_path?: string;
   num_boxes?: number;
 };
 

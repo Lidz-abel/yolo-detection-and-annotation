@@ -162,6 +162,42 @@ def _random_factor(strength, center=1.0):
     return random.uniform(max(0.0, center - float(strength)), center + float(strength))
 
 
+def _apply_scale_jitter(image, boxes, image_size, scale_min, scale_max, fill_value=0.0):
+    """Randomly resize the image, then crop or pad back to the training size."""
+    scale = random.uniform(float(scale_min), float(scale_max))
+    scaled_size = max(1, int(round(float(image_size) * scale)))
+    resized = F.interpolate(
+        image.unsqueeze(0),
+        size=(scaled_size, scaled_size),
+        mode="bilinear",
+        align_corners=False,
+    )[0]
+
+    boxes = boxes.clone().float()
+    if boxes.numel() > 0:
+        boxes = boxes * scale
+
+    if scaled_size >= image_size:
+        max_offset = scaled_size - image_size
+        offset_x = random.randint(0, max_offset) if max_offset > 0 else 0
+        offset_y = random.randint(0, max_offset) if max_offset > 0 else 0
+        image = resized[:, offset_y : offset_y + image_size, offset_x : offset_x + image_size]
+        if boxes.numel() > 0:
+            boxes[:, 0::2] -= float(offset_x)
+            boxes[:, 1::2] -= float(offset_y)
+        return image, boxes
+
+    max_offset = image_size - scaled_size
+    offset_x = random.randint(0, max_offset) if max_offset > 0 else 0
+    offset_y = random.randint(0, max_offset) if max_offset > 0 else 0
+    canvas = image.new_full((image.shape[0], image_size, image_size), float(fill_value))
+    canvas[:, offset_y : offset_y + scaled_size, offset_x : offset_x + scaled_size] = resized
+    if boxes.numel() > 0:
+        boxes[:, 0::2] += float(offset_x)
+        boxes[:, 1::2] += float(offset_y)
+    return canvas, boxes
+
+
 def apply_basic_detection_augmentation(image, boxes, labels, image_size, augmentation_cfg):
     """Apply conservative train-only bbox-safe augmentation on resized tensors."""
     if not augmentation_cfg or not bool(augmentation_cfg.get("enabled", False)):
@@ -200,6 +236,16 @@ def apply_basic_detection_augmentation(image, boxes, labels, image_size, augment
                 )
                 image = (image - gray) * _random_factor(saturation) + gray
         image = image.clamp(0.0, 1.0)
+
+    if random.random() < float(augmentation_cfg.get("scale_jitter_p", 0.0)):
+        image, boxes = _apply_scale_jitter(
+            image=image,
+            boxes=boxes,
+            image_size=image_size,
+            scale_min=float(augmentation_cfg.get("scale_jitter_min", 0.9)),
+            scale_max=float(augmentation_cfg.get("scale_jitter_max", 1.1)),
+            fill_value=float(augmentation_cfg.get("scale_jitter_fill", 0.0)),
+        )
 
     if random.random() < float(augmentation_cfg.get("affine_p", 0.0)):
         degrees = float(augmentation_cfg.get("degrees", 5.0))
@@ -246,6 +292,22 @@ def apply_basic_detection_augmentation(image, boxes, labels, image_size, augment
                 corners[:, 1] = y + shear_y_t * x
             corners = corners + center + torch.tensor([translate_x, translate_y], dtype=boxes.dtype, device=boxes.device)
             boxes = _corners_to_boxes(corners.reshape(-1, 4, 2))
+
+    if random.random() < float(augmentation_cfg.get("blur_p", 0.0)):
+        kernel_size = int(augmentation_cfg.get("blur_kernel_size", 3))
+        if kernel_size % 2 == 0:
+            kernel_size += 1
+        sigma_min = float(augmentation_cfg.get("blur_sigma_min", 0.1))
+        sigma_max = float(augmentation_cfg.get("blur_sigma_max", 1.0))
+        sigma = random.uniform(sigma_min, sigma_max)
+        image = TVF.gaussian_blur(image, kernel_size=[kernel_size, kernel_size], sigma=[sigma, sigma])
+
+    if random.random() < float(augmentation_cfg.get("noise_p", 0.0)):
+        std = random.uniform(
+            0.0,
+            float(augmentation_cfg.get("noise_std", 0.02)),
+        )
+        image = (image + torch.randn_like(image) * std).clamp(0.0, 1.0)
 
     boxes, labels = sanitize_boxes_xyxy(
         boxes,

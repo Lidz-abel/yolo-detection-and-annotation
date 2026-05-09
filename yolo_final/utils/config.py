@@ -128,6 +128,15 @@ def summarize_config(config: dict) -> list[str]:
         f"augmentation_scale_min = {augmentation_cfg.get('scale_min', 'n/a')}",
         f"augmentation_scale_max = {augmentation_cfg.get('scale_max', 'n/a')}",
         f"augmentation_shear = {augmentation_cfg.get('shear', 'n/a')}",
+        f"augmentation_scale_jitter_p = {augmentation_cfg.get('scale_jitter_p', 'n/a')}",
+        f"augmentation_scale_jitter_min = {augmentation_cfg.get('scale_jitter_min', 'n/a')}",
+        f"augmentation_scale_jitter_max = {augmentation_cfg.get('scale_jitter_max', 'n/a')}",
+        f"augmentation_blur_p = {augmentation_cfg.get('blur_p', 'n/a')}",
+        f"augmentation_blur_kernel_size = {augmentation_cfg.get('blur_kernel_size', 'n/a')}",
+        f"augmentation_blur_sigma_min = {augmentation_cfg.get('blur_sigma_min', 'n/a')}",
+        f"augmentation_blur_sigma_max = {augmentation_cfg.get('blur_sigma_max', 'n/a')}",
+        f"augmentation_noise_p = {augmentation_cfg.get('noise_p', 'n/a')}",
+        f"augmentation_noise_std = {augmentation_cfg.get('noise_std', 'n/a')}",
     ] + per_level_anchor_lines
 
 

@@ -36,6 +36,8 @@ function App() {
   const [messageType, setMessageType] = useState<"ok" | "bad" | "">("");
   const [isPredicting, setIsPredicting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const canvasRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const interactionRef = useRef<Interaction | null>(null);
   const draftRef = useRef<Box[] | null>(null);
@@ -45,6 +47,25 @@ function App() {
   const selectedBox = useMemo(() => history.boxes.find((box) => box.id === selectedId) || null, [history.boxes, selectedId]);
 
   const endpointBase = apiBase.trim();
+  const viewportSize = useMemo(() => {
+    if (!imageSize.width || !imageSize.height || !canvasSize.width || !canvasSize.height) {
+      return { width: 0, height: 0 };
+    }
+    const maxWidth = Math.max(260, canvasSize.width - 34);
+    const maxHeight = Math.max(220, canvasSize.height - 34);
+    const fitScale = Math.min(maxWidth / imageSize.width, maxHeight / imageSize.height);
+    return {
+      width: Math.max(1, imageSize.width * fitScale),
+      height: Math.max(1, imageSize.height * fitScale)
+    };
+  }, [canvasSize.height, canvasSize.width, imageSize.height, imageSize.width]);
+  const displayScale = useMemo(
+    () => ({
+      x: viewportSize.width / Math.max(imageSize.width, 1),
+      y: viewportSize.height / Math.max(imageSize.height, 1)
+    }),
+    [imageSize.height, imageSize.width, viewportSize.height, viewportSize.width]
+  );
 
   const checkHealth = useCallback(async () => {
     setApiState("busy");
@@ -62,6 +83,18 @@ function App() {
   useEffect(() => {
     void checkHealth();
   }, [checkHealth]);
+
+  useEffect(() => {
+    const target = canvasRef.current;
+    if (!target) return;
+    const observer = new ResizeObserver((entries) => {
+      const rect = entries[0]?.contentRect;
+      if (!rect) return;
+      setCanvasSize({ width: rect.width, height: rect.height });
+    });
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -91,14 +124,6 @@ function App() {
     return {
       x: Math.max(0, Math.min(((clientX - rect.left) * imageSize.width) / Math.max(rect.width, 1), imageSize.width)),
       y: Math.max(0, Math.min(((clientY - rect.top) * imageSize.height) / Math.max(rect.height, 1), imageSize.height))
-    };
-  }
-
-  function scale() {
-    const rect = imageRef.current?.getBoundingClientRect();
-    return {
-      x: (rect?.width || 1) / Math.max(imageSize.width, 1),
-      y: (rect?.height || 1) / Math.max(imageSize.height, 1)
     };
   }
 
@@ -226,13 +251,15 @@ function App() {
     try {
       const result = await saveAnnotation({
         baseUrl: endpointBase,
+        file: imageFile,
         imageId,
         imageWidth: imageSize.width,
         imageHeight: imageSize.height,
         boxes: history.boxes
       });
       downloadTxt(`${imageId}.txt`, toYoloTxt(history.boxes, imageSize.width, imageSize.height));
-      setMessage(`已保存 ${result.num_boxes || 0} 个框: ${result.saved_path}`);
+      const imageNote = result.saved_image_path ? `，原图: ${result.saved_image_path}` : "";
+      setMessage(`已保存 ${result.num_boxes || 0} 个框: ${result.saved_path}${imageNote}`);
       setMessageType("ok");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "保存失败");
@@ -241,8 +268,6 @@ function App() {
       setIsSaving(false);
     }
   }
-
-  const ratio = scale();
 
   return (
     <div className="app">
@@ -277,7 +302,7 @@ function App() {
             <button disabled={!history.canRedo} onClick={history.redo}><Redo2 size={17} />重做</button>
           </div>
 
-          <div className={`canvas ${imageFile ? "" : "empty"}`}>
+          <div ref={canvasRef} className={`canvas ${imageFile ? "" : "empty"}`}>
             {!imageFile && (
               <div className="emptyState">
                 <FileImage size={44} />
@@ -286,7 +311,13 @@ function App() {
               </div>
             )}
             {imageUrl && (
-              <div className="viewport">
+              <div
+                className="viewport"
+                style={{
+                  width: viewportSize.width || undefined,
+                  height: viewportSize.height || undefined
+                }}
+              >
                 <img
                   ref={imageRef}
                   src={imageUrl}
@@ -302,10 +333,10 @@ function App() {
                       key={box.id}
                       className={`bbox ${box.id === selectedId ? "selected" : ""}`}
                       style={{
-                        left: box.x1 * ratio.x,
-                        top: box.y1 * ratio.y,
-                        width: Math.max((box.x2 - box.x1) * ratio.x, 8),
-                        height: Math.max((box.y2 - box.y1) * ratio.y, 8)
+                        left: box.x1 * displayScale.x,
+                        top: box.y1 * displayScale.y,
+                        width: Math.max((box.x2 - box.x1) * displayScale.x, 8),
+                        height: Math.max((box.y2 - box.y1) * displayScale.y, 8)
                       }}
                       onPointerDown={(event) => beginInteraction(event, box)}
                     >

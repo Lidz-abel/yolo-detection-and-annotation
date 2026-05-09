@@ -27,10 +27,15 @@ Useful environment overrides:
 
 ```bash
 export YOLO_BACKEND_MODEL_FORMAT=pytorch
-export YOLO_BACKEND_CONFIG=configs/dual_scale_three_box_coco_only_noobj1_416.toml
-export YOLO_BACKEND_CHECKPOINT=outputs/dual_scale_three_box_coco_only_noobj1_416_ddp_20260430_124818/best.pth
+export YOLO_BACKEND_CONFIG=configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug.toml
+export YOLO_BACKEND_CHECKPOINT=outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_ddp_20260508_014013/best.pth
 export YOLO_BACKEND_DEVICE=auto
 export YOLO_BACKEND_ANNOTATION_DIR=backend/annotations
+export YOLO_BACKEND_MAX_UPLOAD_MB=20
+export YOLO_BACKEND_MAX_IMAGE_PIXELS=25000000
+export YOLO_BACKEND_MAX_TOP_K=500
+export YOLO_BACKEND_PRELOAD_MODEL=0
+export YOLO_BACKEND_USE_FP16=1
 ```
 
 Future ONNX switch:
@@ -39,6 +44,17 @@ Future ONNX switch:
 export YOLO_BACKEND_MODEL_FORMAT=onnx
 export YOLO_BACKEND_ONNX_MODEL=exports/model.onnx
 ```
+
+## Health And Warmup
+
+```bash
+curl http://127.0.0.1:5000/health
+curl -X POST http://127.0.0.1:5000/model_warmup
+```
+
+`/health` reports whether the model is loaded, the active config/checkpoint, class count,
+runtime device, and request limits. `/model_warmup` loads the model before the first real
+prediction request, which keeps the first UI prediction from paying the model load cost.
 
 ## Predict
 
@@ -51,6 +67,7 @@ curl -X POST http://127.0.0.1:5000/model_predict \
 ```
 
 Response boxes are in original-image pixel `xyxy` coordinates.
+The response also includes `latency_ms` with preprocess, inference, postprocess, and total time.
 
 ## Save Human Annotation
 
@@ -67,8 +84,23 @@ curl -X POST http://127.0.0.1:5000/human_annotate \
   }'
 ```
 
-This writes `backend/annotations/demo_001.txt` in YOLO format:
+This writes `backend/annotations/labels/demo_001.txt` in YOLO format:
 
 ```text
 0 0.171875 0.347222 0.156250 0.472222
+```
+
+To save the uploaded image and annotation together:
+
+```bash
+curl -X POST http://127.0.0.1:5000/human_annotate \
+  -F image=@test.jpg \
+  -F 'annotation={
+    "image_id": "demo_001",
+    "image_width": 1280,
+    "image_height": 720,
+    "bboxes": [
+      {"class_id": 0, "x1": 120, "y1": 80, "x2": 320, "y2": 420}
+    ]
+  }'
 ```

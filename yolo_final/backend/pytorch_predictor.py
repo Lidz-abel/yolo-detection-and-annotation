@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import threading
+import time
 from pathlib import Path
 
 import numpy as np
@@ -19,7 +20,14 @@ from utils.prediction import decode_predictions_for_image, select_prediction_for
 class PyTorchPredictor(BasePredictor):
     """Load a training config plus `.pth` checkpoint and run one-image inference."""
 
-    def __init__(self, config_path: Path, checkpoint_path: Path, device_name: str, metadata_path: Path | None = None):
+    def __init__(
+        self,
+        config_path: Path,
+        checkpoint_path: Path,
+        device_name: str,
+        metadata_path: Path | None = None,
+        use_fp16: bool = True,
+    ):
         self.config_path = Path(config_path).resolve()
         self.checkpoint_path = Path(checkpoint_path).resolve()
         self.metadata_path = Path(metadata_path).resolve() if metadata_path else None
@@ -35,6 +43,7 @@ class PyTorchPredictor(BasePredictor):
         self.anchors_by_level = parse_anchor_map(self.model_cfg, self.feature_levels)
         self.box_parameterization = str(self.model_cfg.get("box_parameterization", "legacy"))
         self.device = self._build_device(device_name)
+        self.use_fp16 = bool(use_fp16) and self.device.type == "cuda"
         self.class_names = self._load_class_names()
         self.model = self._load_model()
         self._lock = threading.Lock()
@@ -118,10 +127,22 @@ class PyTorchPredictor(BasePredictor):
         top_k: int,
         nms_iou_threshold: float,
     ) -> dict:
+        total_start = time.perf_counter()
         original_width, original_height = image.size
+        preprocess_start = time.perf_counter()
         image_tensor = self._preprocess(image)
-        with self._lock, torch.no_grad():
-            pred = select_prediction_for_image(self.model(image_tensor), 0)
+        preprocess_ms = (time.perf_counter() - preprocess_start) * 1000.0
+
+        with self._lock, torch.inference_mode():
+            inference_start = time.perf_counter()
+            autocast_enabled = self.use_fp16
+            with torch.autocast(device_type=self.device.type, enabled=autocast_enabled):
+                raw_pred = self.model(image_tensor)
+            if self.device.type == "cuda":
+                torch.cuda.synchronize(self.device)
+            inference_ms = (time.perf_counter() - inference_start) * 1000.0
+            postprocess_start = time.perf_counter()
+            pred = select_prediction_for_image(raw_pred, 0)
             decoded = self._decode(pred, score_threshold, top_k, nms_iou_threshold)
 
         scale_x = float(original_width) / float(self.image_size)
@@ -148,15 +169,24 @@ class PyTorchPredictor(BasePredictor):
                 }
             )
 
+        postprocess_ms = (time.perf_counter() - postprocess_start) * 1000.0
+        total_ms = (time.perf_counter() - total_start) * 1000.0
+
         return {
             "image_width": original_width,
             "image_height": original_height,
             "bboxes": bboxes,
+            "latency_ms": {
+                "preprocess": preprocess_ms,
+                "inference": inference_ms,
+                "postprocess": postprocess_ms,
+                "total": total_ms,
+            },
             "model": {
                 "format": "pytorch",
                 "config": str(self.config_path),
                 "checkpoint": str(self.checkpoint_path),
                 "device": str(self.device),
+                "fp16": self.use_fp16,
             },
         }
-

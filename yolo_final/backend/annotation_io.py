@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import shutil
 from pathlib import Path
 
 
@@ -80,6 +81,7 @@ def save_yolo_annotation(
     image_height: int,
     bboxes: list[dict],
     annotation_dir: Path,
+    num_classes: int | None = None,
 ) -> dict:
     """Validate boxes and save one YOLO txt annotation file."""
     if int(image_width) <= 0 or int(image_height) <= 0:
@@ -95,6 +97,8 @@ def save_yolo_annotation(
     clipped_boxes = []
     for box in bboxes:
         clipped = clip_xyxy(box, image_width=int(image_width), image_height=int(image_height))
+        if num_classes is not None and clipped["class_id"] >= int(num_classes):
+            raise ValueError(f"class_id must be < num_classes ({int(num_classes)}).")
         clipped_boxes.append(clipped)
         class_id, center_x, center_y, width, height = xyxy_to_yolo(
             clipped,
@@ -110,3 +114,16 @@ def save_yolo_annotation(
         "bboxes": clipped_boxes,
     }
 
+
+def save_uploaded_image(image_file, image_id: str, image_dir: Path) -> str:
+    """Save an uploaded image next to labels using a sanitized stem."""
+    safe_stem = sanitize_image_id(image_id)
+    suffix = Path(image_file.filename or "").suffix.lower()
+    if suffix not in {".jpg", ".jpeg", ".png", ".bmp", ".webp"}:
+        suffix = ".jpg"
+    image_dir.mkdir(parents=True, exist_ok=True)
+    output_path = image_dir / f"{safe_stem}{suffix}"
+    image_file.stream.seek(0)
+    with output_path.open("wb") as handle:
+        shutil.copyfileobj(image_file.stream, handle)
+    return str(output_path)

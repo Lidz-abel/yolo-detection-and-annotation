@@ -28,6 +28,11 @@ class BackendSettings:
     device: str
     metadata_path: Path
     annotation_dir: Path
+    max_upload_bytes: int
+    max_image_pixels: int
+    max_top_k: int
+    preload_model: bool
+    use_fp16: bool
     host: str
     port: int
     debug: bool
@@ -52,8 +57,12 @@ def load_settings() -> BackendSettings:
             "../DataSet/Unified/metadata/class_maps.json",
         ),
         annotation_dir=_resolve_path(os.getenv("YOLO_BACKEND_ANNOTATION_DIR"), "backend/annotations"),
+        max_upload_bytes=int(float(os.getenv("YOLO_BACKEND_MAX_UPLOAD_MB", "20")) * 1024 * 1024),
+        max_image_pixels=int(os.getenv("YOLO_BACKEND_MAX_IMAGE_PIXELS", "25000000")),
+        max_top_k=int(os.getenv("YOLO_BACKEND_MAX_TOP_K", "500")),
+        preload_model=os.getenv("YOLO_BACKEND_PRELOAD_MODEL", "0").strip().lower() in {"1", "true", "yes", "on"},
+        use_fp16=os.getenv("YOLO_BACKEND_USE_FP16", "1").strip().lower() in {"1", "true", "yes", "on"},
         host=os.getenv("YOLO_BACKEND_HOST", "127.0.0.1").strip(),
         port=int(os.getenv("YOLO_BACKEND_PORT", "5000")),
         debug=os.getenv("YOLO_BACKEND_DEBUG", "0").strip().lower() in {"1", "true", "yes", "on"},
     )
-
