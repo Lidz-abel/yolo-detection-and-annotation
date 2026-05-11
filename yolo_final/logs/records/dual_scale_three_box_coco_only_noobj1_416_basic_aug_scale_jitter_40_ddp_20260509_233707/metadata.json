@@ -1,14 +1,14 @@
 {
-  "run_id": "dual_scale_three_box_coco_only_noobj1_416_k6_basic_aug_v2_40_ddp_20260509_130637",
-  "run_name": "dual_scale_three_box_coco_only_noobj1_416_k6_basic_aug_v2_40_ddp",
-  "timestamp": "20260509_130637",
+  "run_id": "dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_40_ddp_20260509_233707",
+  "run_name": "dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_40_ddp",
+  "timestamp": "20260509_233707",
   "project_root": "/home/lidz/YOLO/yolo_final",
-  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1_416_k6_basic_aug_v2_40.toml",
-  "config_snapshot": "logs/records/dual_scale_three_box_coco_only_noobj1_416_k6_basic_aug_v2_40_ddp_20260509_130637/config.toml",
-  "tensorboard_dir": "runs/dual_scale_three_box_coco_only_noobj1_416_k6_basic_aug_v2_40_ddp_20260509_130637",
-  "output_dir": "outputs/dual_scale_three_box_coco_only_noobj1_416_k6_basic_aug_v2_40_ddp_20260509_130637",
-  "record_dir": "logs/records/dual_scale_three_box_coco_only_noobj1_416_k6_basic_aug_v2_40_ddp_20260509_130637",
-  "git_commit": "ce83d055a29057ceeb50e089e173cf9b2f3b3de4",
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_40.toml",
+  "config_snapshot": "logs/records/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_40_ddp_20260509_233707/config.toml",
+  "tensorboard_dir": "runs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_40_ddp_20260509_233707",
+  "output_dir": "outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_40_ddp_20260509_233707",
+  "record_dir": "logs/records/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_40_ddp_20260509_233707",
+  "git_commit": "8779bd48ae2fc20b9050535e2b22aa14f1e9c8e3",
   "hostname": "8x-4090-2",
   "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
   "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
@@ -44,17 +44,11 @@
     "scale_min": 0.96,
     "scale_max": 1.04,
     "shear": 0.0,
-    "blur_p": 0.15,
-    "blur_kernel_size": 3,
-    "blur_sigma_min": 0.1,
-    "blur_sigma_max": 0.8,
-    "noise_p": 0.15,
-    "noise_std": 0.015,
     "min_box_size": 1.0
   },
   "last_epoch": 40,
   "best_epoch": 39,
-  "best_val_loss": 4.3485245009660725,
+  "best_val_loss": 4.443094753694535,
   "global_step": 37000,
   "model_output_shape": {
     "p4": [
@@ -72,5 +66,5 @@
   },
   "parameter_total": 36531294,
   "parameter_trainable": 36531294,
-  "visualization_dir": "outputs/dual_scale_three_box_coco_only_noobj1_416_k6_basic_aug_v2_40_ddp_20260509_130637/visualizations"
+  "visualization_dir": "outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_40_ddp_20260509_233707/visualizations"
 }
