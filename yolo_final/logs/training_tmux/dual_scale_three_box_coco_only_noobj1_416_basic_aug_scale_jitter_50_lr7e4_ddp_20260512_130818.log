@@ -1,0 +1,33 @@
+session=train_416_basic_aug_scale_jitter_50_lr7e4
+config=configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4.toml
+log=logs/training_tmux/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130818.log
+stage=train_ddp_8gpu
+W0512 13:08:19.545000 2404964 site-packages/torch/distributed/run.py:851] 
+W0512 13:08:19.545000 2404964 site-packages/torch/distributed/run.py:851] *****************************************
+W0512 13:08:19.545000 2404964 site-packages/torch/distributed/run.py:851] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0512 13:08:19.545000 2404964 site-packages/torch/distributed/run.py:851] *****************************************
+DDP mode: ignoring train.use_data_parallel from config.
+dataset storage train: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_train/chunk_1024/index.json | chunks = 116 | samples = 118287 | chunk_size = 1024
+dataset storage val: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_val/chunk_1024/index.json | chunks = 5 | samples = 5000 | chunk_size = 1024
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+DDP configured global batch size: 128
+DDP per-rank batch size: 16
+DDP effective global batch size: 128
+DDP configured workers: 64
+DDP per-rank workers: 8
+starting yolov0 DDP training
+run id: dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823
+device: cuda:0
+backend: nccl
+world size: 8
+train dataset length: 118287
+val dataset length: 5000
+model output shape: {'p4': (1, 26, 26, 255), 'p5': (1, 13, 13, 255)}
+train augmentation: {'enabled': True, 'horizontal_flip_p': 0.5, 'color_jitter_p': 0.8, 'brightness': 0.15, 'contrast': 0.15, 'saturation': 0.15, 'scale_jitter_p': 0.5, 'scale_jitter_min': 0.9, 'scale_jitter_max': 1.1, 'scale_jitter_fill': 0.0, 'affine_p': 0.3, 'degrees': 3.0, 'translate': 0.04, 'scale_min': 0.96, 'scale_max': 1.04, 'shear': 0.0, 'min_box_size': 1.0}
+parameter total: 36531294
+parameter trainable: 36531294
+tensorboard dir: runs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823
+output dir: outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823
+epoch 001 | step 0001 | total = 11.3420 | box = 1.3816 | obj = 3.0250 | cls = 1.4091 | lr = 0.000700
+epoch 001 | step 0020 | total = 8.6595 | box = 1.2103 | obj = 2.2128 | cls = 0.3954 | lr = 0.000700
