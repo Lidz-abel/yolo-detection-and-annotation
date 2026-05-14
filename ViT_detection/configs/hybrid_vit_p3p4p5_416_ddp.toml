@@ -1,0 +1,140 @@
+# First-run quality recipe for the improved ViT detector:
+# Hybrid ViT backbone with p3/p4/p5 outputs, COCO k=9 anchors,
+# mature YOLO neck/head initialization, moderate bbox-safe augmentation,
+# and DDP-oriented training defaults.
+
+[data]
+train_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_train.jsonl"
+val_manifest = "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl"
+packing_format = "pt"
+packed_root = "/home/lidz/YOLO/DataSet/Unified/packed"
+packed_chunk_size = 1024
+packed_cache_size = 4
+image_size = 416
+grid_sizes = "52,26,13"
+num_classes = 80
+train_max_samples = 0
+val_max_samples = 0
+
+[model]
+name = "hybrid_vit_p3p4p5_three_box"
+width_mult = 1.0
+depth_mult = 1.0
+use_residual = false
+head_type = "decoupled"
+neck_type = "fpn_pan_lite"
+feature_levels = "p3,p4,p5"
+num_boxes = 3
+anchors_p3 = "0.030114,0.045818;0.074708,0.112171;0.231202,0.130471"
+anchors_p4 = "0.111978,0.272932;0.319911,0.302744;0.189913,0.537020"
+anchors_p5 = "0.723033,0.361291;0.412776,0.685597;0.836262,0.819971"
+box_parameterization = "yolov5"
+
+[loss]
+box_type = "giou"
+cls_type = "bce"
+use_objectness = true
+iou_loss = "giou"
+soft_objectness_target = "iou"
+soft_objectness_min = 0.05
+soft_classification_target = "iou"
+cls_loss_mode = "quality_bce"
+assignment_strategy = "dynamic_cost"
+dynamic_topk = 2
+dynamic_center_radius = 1
+dynamic_box_cost = 3.0
+dynamic_cls_cost = 1.0
+dynamic_ignore_iou = 0.5
+dynamic_anchor_shape_cost = 0.1
+lambda_box = 5.0
+lambda_obj = 1.0
+lambda_noobj = 1.0
+lambda_cls = 1.0
+
+[augmentation]
+enabled = true
+horizontal_flip_p = 0.5
+color_jitter_p = 0.7
+brightness = 0.15
+contrast = 0.15
+saturation = 0.15
+scale_jitter_p = 0.5
+scale_jitter_min = 0.90
+scale_jitter_max = 1.10
+scale_jitter_fill = 0.0
+affine_p = 0.25
+degrees = 3.0
+translate = 0.04
+scale_min = 0.96
+scale_max = 1.04
+shear = 0.0
+blur_p = 0.05
+blur_kernel_size = 3
+blur_sigma_min = 0.1
+blur_sigma_max = 0.8
+noise_p = 0.05
+noise_std = 0.015
+min_box_size = 1.0
+
+[train]
+batch_size = 64
+epochs = 30
+optimizer = "adamw"
+lr = 0.0004
+min_lr = 0.00001
+weight_decay = 0.0001
+scheduler = "cosine_warmup"
+warmup_epochs = 5
+warmup_start_factor = 0.1
+param_groups_enabled = true
+backbone_lr_mult = 1.0
+transformer_lr_mult = 0.75
+neck_lr_mult = 0.5
+head_lr_mult = 0.5
+shuffle = true
+seed = 42
+device = "auto"
+num_workers = 64
+pin_memory = true
+persistent_workers = true
+prefetch_factor = 4
+use_data_parallel = false
+max_steps_per_epoch = 0
+max_val_steps = 0
+use_amp = true
+grad_clip_norm = 1.0
+sync_batchnorm = true
+ddp_find_unused_parameters = true
+ema_enabled = true
+ema_decay = 0.9998
+ema_warmup_updates = 2000
+init_checkpoint = "/home/lidz/YOLO/yolo_final/outputs/dual_scale_three_box_coco_only_noobj1_416_p3p4p5_k9_scaleaware_ddp_20260502_141852/best.pth"
+init_include_prefixes = "neck,head"
+init_exclude_prefixes = ""
+freeze_modules = "neck,head"
+freeze_modules_epochs = 2
+
+[logging]
+run_name = "hybrid_vit_p3p4p5_416"
+runs_dir = "runs"
+output_dir = "outputs"
+records_dir = "logs/records"
+log_every_steps = 20
+save_interval_epochs = 5
+
+[evaluation]
+val_interval_epochs = 1
+score_threshold = 0.05
+score_alpha = 2.0
+score_beta = 1.0
+top_k = 150
+nms_iou_threshold = 0.5
+map_iou_threshold = 0.5
+
+[visualization]
+vis_interval_epochs = 5
+max_samples = 4
+score_threshold = 0.25
+score_alpha = 2.0
+score_beta = 1.0
+top_k = 16

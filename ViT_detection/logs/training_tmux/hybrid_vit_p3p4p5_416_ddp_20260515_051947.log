@@ -1,0 +1,395 @@
+session=train_hybrid_vit_p3p4p5_416_first
+config=configs/hybrid_vit_p3p4p5_416_ddp.toml
+log=logs/training_tmux/hybrid_vit_p3p4p5_416_ddp_20260515_051947.log
+cuda_visible_devices=0,1,2,3,4,5,6,7
+stage=smoke_check
+/home/lidz/YOLO/ViT_detection/models/backbone.py:276: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
+smoke config: /home/lidz/YOLO/ViT_detection/configs/hybrid_vit_p3p4p5_416_ddp.toml
+feature_levels: ['p3', 'p4', 'p5']
+grid_sizes: [52, 26, 13]
+anchors_by_level: {'p3': [(0.030114, 0.045818), (0.074708, 0.112171), (0.231202, 0.130471)], 'p4': [(0.111978, 0.272932), (0.319911, 0.302744), (0.189913, 0.53702)], 'p5': [(0.723033, 0.361291), (0.412776, 0.685597), (0.836262, 0.819971)]}
+dataset storage: pt
+packed index: /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_val/chunk_1024/index.json
+p3 output shape: (1, 52, 52, 255)
+p4 output shape: (1, 26, 26, 255)
+p5 output shape: (1, 13, 13, 255)
+loss total: 17.46038055419922
+loss box: 2.155181646347046
+loss obj: 4.528801918029785
+loss cls: 2.1556692123413086
+smoke_exit=0
+stage=train_ddp_8gpu
+dataset storage train: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_train/chunk_1024/index.json | chunks = 116 | samples = 118287 | chunk_size = 1024
+dataset storage val: pt | index = /home/lidz/YOLO/DataSet/Unified/packed/pt/coco2017_val/chunk_1024/index.json | chunks = 5 | samples = 5000 | chunk_size = 1024
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+DDP configured global batch size: 64
+DDP per-rank batch size: 8
+DDP effective global batch size: 64
+DDP configured workers: 64
+DDP per-rank workers: 8
+/home/lidz/YOLO/ViT_detection/models/backbone.py:276: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
+/home/lidz/YOLO/ViT_detection/models/backbone.py:276: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
+/home/lidz/YOLO/ViT_detection/models/backbone.py:276: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
+/home/lidz/YOLO/ViT_detection/models/backbone.py:276: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
+/home/lidz/YOLO/ViT_detection/models/backbone.py:276: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
+/home/lidz/YOLO/ViT_detection/models/backbone.py:276: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
+/home/lidz/YOLO/ViT_detection/models/backbone.py:276: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
+/home/lidz/YOLO/ViT_detection/models/backbone.py:276: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=depth)
+partial init checkpoint: {'enabled': True, 'checkpoint': '/home/lidz/YOLO/yolo_final/outputs/dual_scale_three_box_coco_only_noobj1_416_p3p4p5_k9_scaleaware_ddp_20260502_141852/best.pth', 'matched': 168, 'skipped_shape': 0, 'skipped_prefix': 192, 'skipped_missing': 0, 'include_prefixes': 'neck,head', 'exclude_prefixes': ''}
+starting yolov0 DDP training
+run id: hybrid_vit_p3p4p5_416_ddp_20260515_051956
+device: cuda:0
+backend: nccl
+world size: 8
+train dataset length: 118287
+val dataset length: 5000
+model output shape: {'p3': (1, 52, 52, 255), 'p4': (1, 26, 26, 255), 'p5': (1, 13, 13, 255)}
+train augmentation: {'enabled': True, 'horizontal_flip_p': 0.5, 'color_jitter_p': 0.7, 'brightness': 0.15, 'contrast': 0.15, 'saturation': 0.15, 'scale_jitter_p': 0.5, 'scale_jitter_min': 0.9, 'scale_jitter_max': 1.1, 'scale_jitter_fill': 0.0, 'affine_p': 0.25, 'degrees': 3.0, 'translate': 0.04, 'scale_min': 0.96, 'scale_max': 1.04, 'shear': 0.0, 'blur_p': 0.05, 'blur_kernel_size': 3, 'blur_sigma_min': 0.1, 'blur_sigma_max': 0.8, 'noise_p': 0.05, 'noise_std': 0.015, 'min_box_size': 1.0}
+parameter total: 28311613
+parameter trainable: 28311613
+amp enabled: True
+grad clip norm: 1.0
+ema enabled: True
+sync batchnorm: True
+partial init: {'enabled': True, 'checkpoint': '/home/lidz/YOLO/yolo_final/outputs/dual_scale_three_box_coco_only_noobj1_416_p3p4p5_k9_scaleaware_ddp_20260502_141852/best.pth', 'matched': 168, 'skipped_shape': 0, 'skipped_prefix': 192, 'skipped_missing': 0, 'include_prefixes': 'neck,head', 'exclude_prefixes': ''}
+freeze modules: neck,head
+freeze modules epochs: 2
+ddp find unused parameters: True
+tensorboard dir: runs/hybrid_vit_p3p4p5_416_ddp_20260515_051956
+output dir: outputs/hybrid_vit_p3p4p5_416_ddp_20260515_051956
+[epoch 001] frozen modules neck,head | affected params = 16136701
+epoch 001 | step 0001 | total = 17.6540 | box = 2.1925 | obj = 6.5902 | cls = 0.1011 | lr = 0.000040
+epoch 001 | step 0020 | total = 15.7939 | box = 2.1346 | obj = 5.0216 | cls = 0.0991 | lr = 0.000040
+epoch 001 | step 0040 | total = 14.0911 | box = 1.9212 | obj = 4.3741 | cls = 0.1109 | lr = 0.000040
+epoch 001 | step 0060 | total = 15.5090 | box = 1.7894 | obj = 6.4434 | cls = 0.1188 | lr = 0.000040
+epoch 001 | step 0080 | total = 13.6945 | box = 2.0390 | obj = 3.3940 | cls = 0.1056 | lr = 0.000040
+epoch 001 | step 0100 | total = 14.8909 | box = 1.9852 | obj = 4.8602 | cls = 0.1047 | lr = 0.000040
+epoch 001 | step 0120 | total = 13.8290 | box = 1.8749 | obj = 4.3523 | cls = 0.1025 | lr = 0.000040
+epoch 001 | step 0140 | total = 13.9638 | box = 1.9484 | obj = 4.1032 | cls = 0.1184 | lr = 0.000040
+epoch 001 | step 0160 | total = 14.0437 | box = 2.1577 | obj = 3.1639 | cls = 0.0913 | lr = 0.000040
+epoch 001 | step 0180 | total = 13.9282 | box = 2.1298 | obj = 3.1965 | cls = 0.0828 | lr = 0.000040
+epoch 001 | step 0200 | total = 12.8338 | box = 1.9444 | obj = 3.0143 | cls = 0.0974 | lr = 0.000040
+epoch 001 | step 0220 | total = 13.2409 | box = 1.8896 | obj = 3.6796 | cls = 0.1133 | lr = 0.000040
+epoch 001 | step 0240 | total = 12.5075 | box = 1.9077 | obj = 2.8612 | cls = 0.1080 | lr = 0.000040
+epoch 001 | step 0260 | total = 13.2297 | box = 1.8207 | obj = 4.0149 | cls = 0.1112 | lr = 0.000040
+epoch 001 | step 0280 | total = 12.5107 | box = 1.8439 | obj = 3.1911 | cls = 0.1003 | lr = 0.000040
+epoch 001 | step 0300 | total = 12.8355 | box = 1.8402 | obj = 3.5276 | cls = 0.1071 | lr = 0.000040
+epoch 001 | step 0320 | total = 13.1402 | box = 1.7888 | obj = 4.0879 | cls = 0.1082 | lr = 0.000040
+epoch 001 | step 0340 | total = 13.4661 | box = 1.6803 | obj = 4.9670 | cls = 0.0976 | lr = 0.000040
+epoch 001 | step 0360 | total = 12.8668 | box = 1.8712 | obj = 3.4138 | cls = 0.0972 | lr = 0.000040
+epoch 001 | step 0380 | total = 14.9717 | box = 2.0321 | obj = 4.7073 | cls = 0.1041 | lr = 0.000040
+epoch 001 | step 0400 | total = 13.0426 | box = 1.9745 | obj = 3.0779 | cls = 0.0921 | lr = 0.000040
+epoch 001 | step 0420 | total = 12.9757 | box = 2.0748 | obj = 2.5205 | cls = 0.0812 | lr = 0.000040
+epoch 001 | step 0440 | total = 12.0193 | box = 1.5449 | obj = 4.1777 | cls = 0.1173 | lr = 0.000040
+epoch 001 | step 0460 | total = 13.6816 | box = 2.1876 | obj = 2.6685 | cls = 0.0753 | lr = 0.000040
+epoch 001 | step 0480 | total = 13.0688 | box = 1.9935 | obj = 3.0189 | cls = 0.0825 | lr = 0.000040
+epoch 001 | step 0500 | total = 12.1195 | box = 1.6384 | obj = 3.8039 | cls = 0.1236 | lr = 0.000040
+epoch 001 | step 0520 | total = 12.5783 | box = 1.9753 | obj = 2.6087 | cls = 0.0933 | lr = 0.000040
+epoch 001 | step 0540 | total = 12.5061 | box = 1.8006 | obj = 3.4037 | cls = 0.0996 | lr = 0.000040
+epoch 001 | step 0560 | total = 12.4656 | box = 1.9778 | obj = 2.4859 | cls = 0.0908 | lr = 0.000040
+epoch 001 | step 0580 | total = 12.8972 | box = 1.9280 | obj = 3.1670 | cls = 0.0902 | lr = 0.000040
+epoch 001 | step 0600 | total = 13.2575 | box = 2.1183 | obj = 2.5842 | cls = 0.0820 | lr = 0.000040
+epoch 001 | step 0620 | total = 11.1447 | box = 1.6431 | obj = 2.8333 | cls = 0.0958 | lr = 0.000040
+epoch 001 | step 0640 | total = 12.1555 | box = 1.8127 | obj = 3.0048 | cls = 0.0873 | lr = 0.000040
+epoch 001 | step 0660 | total = 12.2231 | box = 1.8471 | obj = 2.8924 | cls = 0.0950 | lr = 0.000040
+epoch 001 | step 0680 | total = 12.2423 | box = 1.8269 | obj = 3.0182 | cls = 0.0896 | lr = 0.000040
+epoch 001 | step 0700 | total = 12.0929 | box = 1.7818 | obj = 3.0816 | cls = 0.1023 | lr = 0.000040
+epoch 001 | step 0720 | total = 12.3886 | box = 1.9652 | obj = 2.4790 | cls = 0.0834 | lr = 0.000040
+epoch 001 | step 0740 | total = 13.2025 | box = 2.1352 | obj = 2.4563 | cls = 0.0704 | lr = 0.000040
+epoch 001 | step 0760 | total = 11.8745 | box = 1.7305 | obj = 3.1182 | cls = 0.1039 | lr = 0.000040
+epoch 001 | step 0780 | total = 11.2665 | box = 1.6758 | obj = 2.7906 | cls = 0.0970 | lr = 0.000040
+epoch 001 | step 0800 | total = 12.4837 | box = 1.9121 | obj = 2.8392 | cls = 0.0839 | lr = 0.000040
+epoch 001 | step 0820 | total = 10.5675 | box = 1.4521 | obj = 3.1854 | cls = 0.1213 | lr = 0.000040
+epoch 001 | step 0840 | total = 11.0844 | box = 1.5847 | obj = 3.0550 | cls = 0.1059 | lr = 0.000040
+epoch 001 | step 0860 | total = 13.5078 | box = 1.6451 | obj = 5.1739 | cls = 0.1083 | lr = 0.000040
+epoch 001 | step 0880 | total = 11.7526 | box = 1.7875 | obj = 2.7184 | cls = 0.0965 | lr = 0.000040
+epoch 001 | step 0900 | total = 13.3848 | box = 2.0099 | obj = 3.2303 | cls = 0.1052 | lr = 0.000040
+epoch 001 | step 0920 | total = 12.7086 | box = 2.0536 | obj = 2.3568 | cls = 0.0840 | lr = 0.000040
+epoch 001 | step 0940 | total = 11.7494 | box = 1.6054 | obj = 3.6012 | cls = 0.1212 | lr = 0.000040
+epoch 001 | step 0960 | total = 12.1362 | box = 1.8324 | obj = 2.8897 | cls = 0.0846 | lr = 0.000040
+epoch 001 | step 0980 | total = 12.6608 | box = 1.9260 | obj = 2.9388 | cls = 0.0922 | lr = 0.000040
+epoch 001 | step 1000 | total = 12.6935 | box = 1.8870 | obj = 3.1749 | cls = 0.0836 | lr = 0.000040
+epoch 001 | step 1020 | total = 11.9078 | box = 1.8881 | obj = 2.3836 | cls = 0.0836 | lr = 0.000040
+epoch 001 | step 1040 | total = 11.2125 | box = 1.6192 | obj = 3.0171 | cls = 0.0993 | lr = 0.000040
+epoch 001 | step 1060 | total = 12.5456 | box = 1.9660 | obj = 2.6333 | cls = 0.0822 | lr = 0.000040
+epoch 001 | step 1080 | total = 13.3616 | box = 1.9875 | obj = 3.3278 | cls = 0.0966 | lr = 0.000040
+epoch 001 | step 1100 | total = 12.9512 | box = 2.0432 | obj = 2.6502 | cls = 0.0850 | lr = 0.000040
+epoch 001 | step 1120 | total = 11.5436 | box = 1.7161 | obj = 2.8830 | cls = 0.0799 | lr = 0.000040
+epoch 001 | step 1140 | total = 11.9826 | box = 1.7463 | obj = 3.1450 | cls = 0.1059 | lr = 0.000040
+epoch 001 | step 1160 | total = 13.5171 | box = 2.1703 | obj = 2.5981 | cls = 0.0676 | lr = 0.000040
+epoch 001 | step 1180 | total = 12.3327 | box = 1.8132 | obj = 3.1831 | cls = 0.0837 | lr = 0.000040
+epoch 001 | step 1200 | total = 12.5693 | box = 1.9260 | obj = 2.8596 | cls = 0.0796 | lr = 0.000040
+epoch 001 | step 1220 | total = 12.7798 | box = 1.9129 | obj = 3.1430 | cls = 0.0724 | lr = 0.000040
+epoch 001 | step 1240 | total = 12.1253 | box = 1.8710 | obj = 2.6809 | cls = 0.0891 | lr = 0.000040
+epoch 001 | step 1260 | total = 12.5495 | box = 1.9591 | obj = 2.6830 | cls = 0.0708 | lr = 0.000040
+epoch 001 | step 1280 | total = 11.1250 | box = 1.6151 | obj = 2.9632 | cls = 0.0861 | lr = 0.000040
+epoch 001 | step 1300 | total = 12.2999 | box = 1.9418 | obj = 2.5146 | cls = 0.0761 | lr = 0.000040
+epoch 001 | step 1320 | total = 12.5412 | box = 1.9879 | obj = 2.5187 | cls = 0.0830 | lr = 0.000040
+epoch 001 | step 1340 | total = 11.2525 | box = 1.6720 | obj = 2.7933 | cls = 0.0992 | lr = 0.000040
+epoch 001 | step 1360 | total = 11.9292 | box = 1.8195 | obj = 2.7394 | cls = 0.0924 | lr = 0.000040
+epoch 001 | step 1380 | total = 10.8226 | box = 1.5917 | obj = 2.7638 | cls = 0.1005 | lr = 0.000040
+epoch 001 | step 1400 | total = 11.7166 | box = 1.7512 | obj = 2.8555 | cls = 0.1051 | lr = 0.000040
+epoch 001 | step 1420 | total = 11.6736 | box = 1.7331 | obj = 2.9134 | cls = 0.0945 | lr = 0.000040
+epoch 001 | step 1440 | total = 11.4267 | box = 1.7174 | obj = 2.7423 | cls = 0.0972 | lr = 0.000040
+epoch 001 | step 1460 | total = 11.1582 | box = 1.6350 | obj = 2.8751 | cls = 0.1080 | lr = 0.000040
+epoch 001 | step 1480 | total = 11.8960 | box = 1.8625 | obj = 2.4908 | cls = 0.0926 | lr = 0.000040
+epoch 001 | step 1500 | total = 11.7874 | box = 1.7655 | obj = 2.8715 | cls = 0.0883 | lr = 0.000040
+epoch 001 | step 1520 | total = 11.3987 | box = 1.7014 | obj = 2.7840 | cls = 0.1077 | lr = 0.000040
+epoch 001 | step 1540 | total = 11.9107 | box = 1.7577 | obj = 3.0257 | cls = 0.0965 | lr = 0.000040
+epoch 001 | step 1560 | total = 11.5251 | box = 1.6284 | obj = 3.2747 | cls = 0.1086 | lr = 0.000040
+epoch 001 | step 1580 | total = 11.1205 | box = 1.6025 | obj = 3.0197 | cls = 0.0881 | lr = 0.000040
+epoch 001 | step 1600 | total = 10.6224 | box = 1.4915 | obj = 3.0493 | cls = 0.1156 | lr = 0.000040
+epoch 001 | step 1620 | total = 11.4220 | box = 1.7391 | obj = 2.6375 | cls = 0.0890 | lr = 0.000040
+epoch 001 | step 1640 | total = 11.4769 | box = 1.7641 | obj = 2.5644 | cls = 0.0919 | lr = 0.000040
+epoch 001 | step 1660 | total = 11.4265 | box = 1.6845 | obj = 2.9108 | cls = 0.0933 | lr = 0.000040
+epoch 001 | step 1680 | total = 10.9437 | box = 1.4647 | obj = 3.4988 | cls = 0.1212 | lr = 0.000040
+epoch 001 | step 1700 | total = 11.0946 | box = 1.6655 | obj = 2.6622 | cls = 0.1048 | lr = 0.000040
+epoch 001 | step 1720 | total = 11.8479 | box = 1.7817 | obj = 2.8597 | cls = 0.0794 | lr = 0.000040
+epoch 001 | step 1740 | total = 11.4072 | box = 1.7591 | obj = 2.5312 | cls = 0.0807 | lr = 0.000040
+epoch 001 | step 1760 | total = 10.0030 | box = 1.3536 | obj = 3.1167 | cls = 0.1184 | lr = 0.000040
+epoch 001 | step 1780 | total = 12.1051 | box = 1.8272 | obj = 2.8815 | cls = 0.0878 | lr = 0.000040
+epoch 001 | step 1800 | total = 11.0523 | box = 1.6206 | obj = 2.8606 | cls = 0.0885 | lr = 0.000040
+epoch 001 | step 1820 | total = 11.0911 | box = 1.6571 | obj = 2.7179 | cls = 0.0879 | lr = 0.000040
+epoch 001 | step 1840 | total = 12.0947 | box = 1.8893 | obj = 2.5675 | cls = 0.0806 | lr = 0.000040
+[epoch 001 train] total = 12.3795 | box = 1.8308 | obj = 3.1300 | cls = 0.0954 | steps = 1849 | global_batches = 14792 | samples = 118288 | time = 1130.7s
+[epoch 001 val] total = 11.7678 | box = 1.7549 | obj = 2.9018 | cls = 0.0917 | steps = 79 | global_batches = 632 | samples = 5000 | time = 33.5s
+epoch 002 | step 0001 | total = 10.8139 | box = 1.6194 | obj = 2.6225 | cls = 0.0943 | lr = 0.000112
+epoch 002 | step 0020 | total = 12.1289 | box = 1.8780 | obj = 2.6497 | cls = 0.0891 | lr = 0.000112
+epoch 002 | step 0040 | total = 10.6274 | box = 1.5136 | obj = 2.9489 | cls = 0.1106 | lr = 0.000112
+epoch 002 | step 0060 | total = 12.8229 | box = 1.9229 | obj = 3.1200 | cls = 0.0884 | lr = 0.000112
+epoch 002 | step 0080 | total = 12.3245 | box = 1.9538 | obj = 2.4835 | cls = 0.0718 | lr = 0.000112
+epoch 002 | step 0100 | total = 11.8819 | box = 1.7723 | obj = 2.9377 | cls = 0.0828 | lr = 0.000112
+epoch 002 | step 0120 | total = 12.4270 | box = 1.8652 | obj = 3.0149 | cls = 0.0862 | lr = 0.000112
+epoch 002 | step 0140 | total = 11.7127 | box = 1.7297 | obj = 2.9813 | cls = 0.0829 | lr = 0.000112
+epoch 002 | step 0160 | total = 12.4506 | box = 1.9359 | obj = 2.6742 | cls = 0.0969 | lr = 0.000112
+epoch 002 | step 0180 | total = 11.6530 | box = 1.7581 | obj = 2.7791 | cls = 0.0834 | lr = 0.000112
+epoch 002 | step 0200 | total = 11.4535 | box = 1.7419 | obj = 2.6574 | cls = 0.0867 | lr = 0.000112
+epoch 002 | step 0220 | total = 11.8289 | box = 1.7227 | obj = 3.1227 | cls = 0.0927 | lr = 0.000112
+epoch 002 | step 0240 | total = 11.8181 | box = 1.8361 | obj = 2.5592 | cls = 0.0783 | lr = 0.000112
+epoch 002 | step 0260 | total = 13.0205 | box = 2.0962 | obj = 2.4634 | cls = 0.0764 | lr = 0.000112
+epoch 002 | step 0280 | total = 12.7837 | box = 1.9187 | obj = 3.1106 | cls = 0.0796 | lr = 0.000112
+epoch 002 | step 0300 | total = 12.0035 | box = 1.8729 | obj = 2.5598 | cls = 0.0790 | lr = 0.000112
+epoch 002 | step 0320 | total = 11.9439 | box = 1.8531 | obj = 2.6001 | cls = 0.0783 | lr = 0.000112
+epoch 002 | step 0340 | total = 12.4176 | box = 1.9601 | obj = 2.5391 | cls = 0.0781 | lr = 0.000112
+epoch 002 | step 0360 | total = 11.1738 | box = 1.6445 | obj = 2.8449 | cls = 0.1064 | lr = 0.000112
+epoch 002 | step 0380 | total = 12.3572 | box = 1.8629 | obj = 2.9426 | cls = 0.0999 | lr = 0.000112
+epoch 002 | step 0400 | total = 12.2669 | box = 1.8127 | obj = 3.1195 | cls = 0.0836 | lr = 0.000112
+epoch 002 | step 0420 | total = 11.2131 | box = 1.5971 | obj = 3.1223 | cls = 0.1055 | lr = 0.000112
+epoch 002 | step 0440 | total = 11.8871 | box = 1.7748 | obj = 2.9321 | cls = 0.0808 | lr = 0.000112
+epoch 002 | step 0460 | total = 13.1472 | box = 2.1521 | obj = 2.3162 | cls = 0.0705 | lr = 0.000112
+epoch 002 | step 0480 | total = 11.1177 | box = 1.6489 | obj = 2.7786 | cls = 0.0947 | lr = 0.000112
+epoch 002 | step 0500 | total = 11.2057 | box = 1.6736 | obj = 2.7523 | cls = 0.0855 | lr = 0.000112
+epoch 002 | step 0520 | total = 11.0398 | box = 1.6071 | obj = 2.9151 | cls = 0.0892 | lr = 0.000112
+epoch 002 | step 0540 | total = 11.5773 | box = 1.7359 | obj = 2.8158 | cls = 0.0817 | lr = 0.000112
+epoch 002 | step 0560 | total = 12.1435 | box = 1.9021 | obj = 2.5572 | cls = 0.0760 | lr = 0.000112
+epoch 002 | step 0580 | total = 11.5327 | box = 1.8052 | obj = 2.4230 | cls = 0.0834 | lr = 0.000112
+epoch 002 | step 0600 | total = 12.3411 | box = 1.9255 | obj = 2.6340 | cls = 0.0797 | lr = 0.000112
+epoch 002 | step 0620 | total = 10.3673 | box = 1.5090 | obj = 2.7432 | cls = 0.0792 | lr = 0.000112
+epoch 002 | step 0640 | total = 11.9308 | box = 1.8719 | obj = 2.4927 | cls = 0.0787 | lr = 0.000112
+epoch 002 | step 0660 | total = 10.6164 | box = 1.6017 | obj = 2.5175 | cls = 0.0902 | lr = 0.000112
+epoch 002 | step 0680 | total = 11.9166 | box = 1.7215 | obj = 3.2124 | cls = 0.0965 | lr = 0.000112
+epoch 002 | step 0700 | total = 11.7644 | box = 1.7943 | obj = 2.7114 | cls = 0.0813 | lr = 0.000112
+epoch 002 | step 0720 | total = 11.1469 | box = 1.6589 | obj = 2.7713 | cls = 0.0810 | lr = 0.000112
+epoch 002 | step 0740 | total = 12.2579 | box = 1.9024 | obj = 2.6645 | cls = 0.0815 | lr = 0.000112
+epoch 002 | step 0760 | total = 11.4819 | box = 1.7461 | obj = 2.6601 | cls = 0.0914 | lr = 0.000112
+epoch 002 | step 0780 | total = 11.6024 | box = 1.6892 | obj = 3.0743 | cls = 0.0820 | lr = 0.000112
+epoch 002 | step 0800 | total = 10.7701 | box = 1.5837 | obj = 2.7577 | cls = 0.0940 | lr = 0.000112
+epoch 002 | step 0820 | total = 11.2900 | box = 1.7690 | obj = 2.3724 | cls = 0.0724 | lr = 0.000112
+epoch 002 | step 0840 | total = 11.2428 | box = 1.6844 | obj = 2.7176 | cls = 0.1031 | lr = 0.000112
+epoch 002 | step 0860 | total = 11.2394 | box = 1.7365 | obj = 2.4776 | cls = 0.0793 | lr = 0.000112
+epoch 002 | step 0880 | total = 11.1769 | box = 1.6509 | obj = 2.8343 | cls = 0.0879 | lr = 0.000112
+epoch 002 | step 0900 | total = 11.4144 | box = 1.7080 | obj = 2.7962 | cls = 0.0781 | lr = 0.000112
+epoch 002 | step 0920 | total = 11.4767 | box = 1.7989 | obj = 2.3947 | cls = 0.0874 | lr = 0.000112
+epoch 002 | step 0940 | total = 11.9355 | box = 1.8315 | obj = 2.7053 | cls = 0.0725 | lr = 0.000112
+epoch 002 | step 0960 | total = 11.8796 | box = 1.8296 | obj = 2.6464 | cls = 0.0851 | lr = 0.000112
+epoch 002 | step 0980 | total = 12.3865 | box = 1.9513 | obj = 2.5581 | cls = 0.0721 | lr = 0.000112
+epoch 002 | step 1000 | total = 9.8685 | box = 1.4766 | obj = 2.4011 | cls = 0.0845 | lr = 0.000112
+epoch 002 | step 1020 | total = 11.7648 | box = 1.8110 | obj = 2.6343 | cls = 0.0753 | lr = 0.000112
+epoch 002 | step 1040 | total = 11.3013 | box = 1.6797 | obj = 2.8127 | cls = 0.0902 | lr = 0.000112
+epoch 002 | step 1060 | total = 11.1720 | box = 1.6463 | obj = 2.8444 | cls = 0.0959 | lr = 0.000112
+epoch 002 | step 1080 | total = 11.1885 | box = 1.7152 | obj = 2.5375 | cls = 0.0749 | lr = 0.000112
+epoch 002 | step 1100 | total = 10.4503 | box = 1.4494 | obj = 3.0953 | cls = 0.1081 | lr = 0.000112
+epoch 002 | step 1120 | total = 10.9708 | box = 1.5824 | obj = 2.9692 | cls = 0.0898 | lr = 0.000112
+epoch 002 | step 1140 | total = 10.5522 | box = 1.5546 | obj = 2.6729 | cls = 0.1060 | lr = 0.000112
+epoch 002 | step 1160 | total = 9.8654 | box = 1.4525 | obj = 2.5123 | cls = 0.0905 | lr = 0.000112
+epoch 002 | step 1180 | total = 12.1123 | box = 1.8869 | obj = 2.5950 | cls = 0.0828 | lr = 0.000112
+epoch 002 | step 1200 | total = 11.7400 | box = 1.7703 | obj = 2.8056 | cls = 0.0827 | lr = 0.000112
+epoch 002 | step 1220 | total = 10.6811 | box = 1.6085 | obj = 2.5542 | cls = 0.0844 | lr = 0.000112
+epoch 002 | step 1240 | total = 10.5394 | box = 1.5493 | obj = 2.7024 | cls = 0.0905 | lr = 0.000112
+epoch 002 | step 1260 | total = 11.1653 | box = 1.5902 | obj = 3.1188 | cls = 0.0956 | lr = 0.000112
+epoch 002 | step 1280 | total = 10.4257 | box = 1.4104 | obj = 3.2633 | cls = 0.1102 | lr = 0.000112
+epoch 002 | step 1300 | total = 11.6916 | box = 1.7941 | obj = 2.6381 | cls = 0.0832 | lr = 0.000112
+epoch 002 | step 1320 | total = 10.1818 | box = 1.4542 | obj = 2.8210 | cls = 0.0897 | lr = 0.000112
+epoch 002 | step 1340 | total = 11.0566 | box = 1.6532 | obj = 2.7061 | cls = 0.0848 | lr = 0.000112
+epoch 002 | step 1360 | total = 10.7629 | box = 1.5616 | obj = 2.8665 | cls = 0.0883 | lr = 0.000112
+epoch 002 | step 1380 | total = 11.6402 | box = 1.6616 | obj = 3.2382 | cls = 0.0940 | lr = 0.000112
+epoch 002 | step 1400 | total = 12.3901 | box = 1.9719 | obj = 2.4580 | cls = 0.0727 | lr = 0.000112
+epoch 002 | step 1420 | total = 11.0079 | box = 1.5982 | obj = 2.9153 | cls = 0.1015 | lr = 0.000112
+epoch 002 | step 1440 | total = 11.8842 | box = 1.7992 | obj = 2.7960 | cls = 0.0922 | lr = 0.000112
+epoch 002 | step 1460 | total = 11.2131 | box = 1.7123 | obj = 2.5508 | cls = 0.1006 | lr = 0.000112
+epoch 002 | step 1480 | total = 11.9071 | box = 1.7426 | obj = 3.1193 | cls = 0.0746 | lr = 0.000112
+epoch 002 | step 1500 | total = 10.7892 | box = 1.5607 | obj = 2.8923 | cls = 0.0933 | lr = 0.000112
+epoch 002 | step 1520 | total = 12.7794 | box = 1.9911 | obj = 2.7400 | cls = 0.0836 | lr = 0.000112
+epoch 002 | step 1540 | total = 10.2227 | box = 1.4783 | obj = 2.7410 | cls = 0.0903 | lr = 0.000112
+epoch 002 | step 1560 | total = 10.7074 | box = 1.5857 | obj = 2.6700 | cls = 0.1090 | lr = 0.000112
+epoch 002 | step 1580 | total = 12.2403 | box = 1.9395 | obj = 2.4707 | cls = 0.0718 | lr = 0.000112
+epoch 002 | step 1600 | total = 10.9289 | box = 1.6104 | obj = 2.7793 | cls = 0.0978 | lr = 0.000112
+epoch 002 | step 1620 | total = 10.7195 | box = 1.6142 | obj = 2.5481 | cls = 0.1002 | lr = 0.000112
+epoch 002 | step 1640 | total = 11.4966 | box = 1.7139 | obj = 2.8444 | cls = 0.0829 | lr = 0.000112
+epoch 002 | step 1660 | total = 11.2663 | box = 1.6626 | obj = 2.8656 | cls = 0.0879 | lr = 0.000112
+epoch 002 | step 1680 | total = 9.7756 | box = 1.3260 | obj = 3.0299 | cls = 0.1158 | lr = 0.000112
+epoch 002 | step 1700 | total = 12.0185 | box = 1.8629 | obj = 2.6362 | cls = 0.0677 | lr = 0.000112
+epoch 002 | step 1720 | total = 11.6361 | box = 1.8171 | obj = 2.4767 | cls = 0.0740 | lr = 0.000112
+epoch 002 | step 1740 | total = 11.6103 | box = 1.6998 | obj = 3.0150 | cls = 0.0964 | lr = 0.000112
+epoch 002 | step 1760 | total = 12.0125 | box = 1.8698 | obj = 2.5771 | cls = 0.0865 | lr = 0.000112
+epoch 002 | step 1780 | total = 12.2279 | box = 1.9100 | obj = 2.6014 | cls = 0.0765 | lr = 0.000112
+epoch 002 | step 1800 | total = 11.2494 | box = 1.7762 | obj = 2.3010 | cls = 0.0672 | lr = 0.000112
+epoch 002 | step 1820 | total = 9.9716 | box = 1.4432 | obj = 2.6561 | cls = 0.0994 | lr = 0.000112
+epoch 002 | step 1840 | total = 11.6630 | box = 1.7895 | obj = 2.6365 | cls = 0.0789 | lr = 0.000112
+[epoch 002 train] total = 11.4066 | box = 1.7058 | obj = 2.7876 | cls = 0.0902 | steps = 1849 | global_batches = 14792 | samples = 118288 | time = 1184.8s
+[epoch 002 val] total = 11.2759 | box = 1.6689 | obj = 2.8418 | cls = 0.0894 | steps = 79 | global_batches = 632 | samples = 5000 | time = 34.2s
+[epoch 003] unfrozen modules neck,head | affected params = 16136701
+[rank7]:[W515 05:59:45.892788883 reducer.cpp:1502] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank1]:[W515 05:59:45.892802273 reducer.cpp:1502] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank4]:[W515 05:59:45.892943807 reducer.cpp:1502] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank2]:[W515 05:59:45.893197618 reducer.cpp:1502] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank6]:[W515 05:59:45.893216526 reducer.cpp:1502] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank3]:[W515 05:59:45.893227396 reducer.cpp:1502] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank5]:[W515 05:59:45.893387689 reducer.cpp:1502] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank0]:[W515 05:59:45.893522690 reducer.cpp:1502] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/autograd/graph.py:869: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [15, 256, 1, 1], strides() = [256, 1, 256, 256]
+bucket_view.sizes() = [15, 256, 1, 1], strides() = [256, 1, 1, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:332.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/autograd/graph.py:869: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [15, 256, 1, 1], strides() = [256, 1, 256, 256]
+bucket_view.sizes() = [15, 256, 1, 1], strides() = [256, 1, 1, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:332.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/autograd/graph.py:869: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [15, 256, 1, 1], strides() = [256, 1, 256, 256]
+bucket_view.sizes() = [15, 256, 1, 1], strides() = [256, 1, 1, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:332.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/autograd/graph.py:869: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [15, 256, 1, 1], strides() = [256, 1, 256, 256]
+bucket_view.sizes() = [15, 256, 1, 1], strides() = [256, 1, 1, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:332.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/autograd/graph.py:869: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [15, 256, 1, 1], strides() = [256, 1, 256, 256]
+bucket_view.sizes() = [15, 256, 1, 1], strides() = [256, 1, 1, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:332.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/autograd/graph.py:869: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [15, 256, 1, 1], strides() = [256, 1, 256, 256]
+bucket_view.sizes() = [15, 256, 1, 1], strides() = [256, 1, 1, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:332.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/autograd/graph.py:869: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [15, 256, 1, 1], strides() = [256, 1, 256, 256]
+bucket_view.sizes() = [15, 256, 1, 1], strides() = [256, 1, 1, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:332.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/lidz/miniconda3/envs/yolov1/lib/python3.10/site-packages/torch/autograd/graph.py:869: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [15, 256, 1, 1], strides() = [256, 1, 256, 256]
+bucket_view.sizes() = [15, 256, 1, 1], strides() = [256, 1, 1, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:332.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+epoch 003 | step 0001 | total = 10.9337 | box = 1.6451 | obj = 2.6205 | cls = 0.0875 | lr = 0.000184
+epoch 003 | step 0020 | total = 10.5927 | box = 1.5536 | obj = 2.7268 | cls = 0.0981 | lr = 0.000184
+epoch 003 | step 0040 | total = 12.0622 | box = 1.7630 | obj = 3.1750 | cls = 0.0722 | lr = 0.000184
+epoch 003 | step 0060 | total = 10.8936 | box = 1.6231 | obj = 2.7000 | cls = 0.0783 | lr = 0.000184
+epoch 003 | step 0080 | total = 9.8355 | box = 1.3765 | obj = 2.8515 | cls = 0.1017 | lr = 0.000184
+epoch 003 | step 0100 | total = 10.4019 | box = 1.5344 | obj = 2.6388 | cls = 0.0913 | lr = 0.000184
+epoch 003 | step 0120 | total = 9.1590 | box = 1.1950 | obj = 3.0717 | cls = 0.1125 | lr = 0.000184
+epoch 003 | step 0140 | total = 9.3511 | box = 1.2916 | obj = 2.8040 | cls = 0.0892 | lr = 0.000184
+epoch 003 | step 0160 | total = 9.5687 | box = 1.3314 | obj = 2.8219 | cls = 0.0899 | lr = 0.000184
+epoch 003 | step 0180 | total = 10.0119 | box = 1.4403 | obj = 2.7249 | cls = 0.0854 | lr = 0.000184
+epoch 003 | step 0200 | total = 10.0481 | box = 1.4695 | obj = 2.6210 | cls = 0.0794 | lr = 0.000184
+epoch 003 | step 0220 | total = 9.1554 | box = 1.2300 | obj = 2.9227 | cls = 0.0828 | lr = 0.000184
+epoch 003 | step 0240 | total = 10.6348 | box = 1.5940 | obj = 2.5924 | cls = 0.0726 | lr = 0.000184
+epoch 003 | step 0260 | total = 9.6856 | box = 1.3379 | obj = 2.9036 | cls = 0.0926 | lr = 0.000184
+epoch 003 | step 0280 | total = 11.4474 | box = 1.7903 | obj = 2.4368 | cls = 0.0589 | lr = 0.000184
+epoch 003 | step 0300 | total = 8.6702 | box = 1.1488 | obj = 2.8172 | cls = 0.1091 | lr = 0.000184
+epoch 003 | step 0320 | total = 10.7171 | box = 1.5885 | obj = 2.6971 | cls = 0.0776 | lr = 0.000184
+epoch 003 | step 0340 | total = 8.5124 | box = 1.0737 | obj = 3.0564 | cls = 0.0876 | lr = 0.000184
+epoch 003 | step 0360 | total = 10.3018 | box = 1.4889 | obj = 2.7639 | cls = 0.0933 | lr = 0.000184
+epoch 003 | step 0380 | total = 9.7661 | box = 1.4002 | obj = 2.6605 | cls = 0.1048 | lr = 0.000184
+epoch 003 | step 0400 | total = 7.6379 | box = 0.9442 | obj = 2.7928 | cls = 0.1239 | lr = 0.000184
+epoch 003 | step 0420 | total = 8.9675 | box = 1.2088 | obj = 2.8309 | cls = 0.0926 | lr = 0.000184
+epoch 003 | step 0440 | total = 10.8997 | box = 1.7329 | obj = 2.1821 | cls = 0.0530 | lr = 0.000184
+epoch 003 | step 0460 | total = 8.0441 | box = 0.9439 | obj = 3.2147 | cls = 0.1100 | lr = 0.000184
+epoch 003 | step 0480 | total = 9.2013 | box = 1.2675 | obj = 2.7911 | cls = 0.0726 | lr = 0.000184
+epoch 003 | step 0500 | total = 8.4141 | box = 1.1298 | obj = 2.6788 | cls = 0.0864 | lr = 0.000184
+epoch 003 | step 0520 | total = 9.2788 | box = 1.2543 | obj = 2.9096 | cls = 0.0975 | lr = 0.000184
+epoch 003 | step 0540 | total = 9.4699 | box = 1.3450 | obj = 2.6736 | cls = 0.0714 | lr = 0.000184
+epoch 003 | step 0560 | total = 8.1762 | box = 1.0502 | obj = 2.8351 | cls = 0.0900 | lr = 0.000184
+epoch 003 | step 0580 | total = 10.0302 | box = 1.4574 | obj = 2.6734 | cls = 0.0699 | lr = 0.000184
+epoch 003 | step 0600 | total = 9.5032 | box = 1.3189 | obj = 2.8186 | cls = 0.0898 | lr = 0.000184
+epoch 003 | step 0620 | total = 10.0881 | box = 1.4494 | obj = 2.7686 | cls = 0.0727 | lr = 0.000184
+epoch 003 | step 0640 | total = 9.0066 | box = 1.2224 | obj = 2.7952 | cls = 0.0993 | lr = 0.000184
+epoch 003 | step 0660 | total = 8.4221 | box = 1.1299 | obj = 2.6995 | cls = 0.0729 | lr = 0.000184
+epoch 003 | step 0680 | total = 10.4049 | box = 1.5041 | obj = 2.8078 | cls = 0.0764 | lr = 0.000184
+epoch 003 | step 0700 | total = 8.0302 | box = 0.9514 | obj = 3.1591 | cls = 0.1138 | lr = 0.000184
+epoch 003 | step 0720 | total = 10.3461 | box = 1.5971 | obj = 2.2969 | cls = 0.0638 | lr = 0.000184
+epoch 003 | step 0740 | total = 9.6861 | box = 1.3930 | obj = 2.6255 | cls = 0.0957 | lr = 0.000184
+epoch 003 | step 0760 | total = 7.6771 | box = 0.9672 | obj = 2.7284 | cls = 0.1128 | lr = 0.000184
+epoch 003 | step 0780 | total = 8.9877 | box = 1.2003 | obj = 2.8948 | cls = 0.0913 | lr = 0.000184
+epoch 003 | step 0800 | total = 9.1718 | box = 1.2949 | obj = 2.6176 | cls = 0.0799 | lr = 0.000184
+epoch 003 | step 0820 | total = 8.5609 | box = 1.1584 | obj = 2.6678 | cls = 0.1012 | lr = 0.000184
+epoch 003 | step 0840 | total = 9.8677 | box = 1.4047 | obj = 2.7689 | cls = 0.0752 | lr = 0.000184
+epoch 003 | step 0860 | total = 8.4792 | box = 1.1779 | obj = 2.5191 | cls = 0.0708 | lr = 0.000184
+epoch 003 | step 0880 | total = 9.8522 | box = 1.3893 | obj = 2.8285 | cls = 0.0769 | lr = 0.000184
+epoch 003 | step 0900 | total = 8.4139 | box = 1.0767 | obj = 2.9362 | cls = 0.0943 | lr = 0.000184
+epoch 003 | step 0920 | total = 8.9057 | box = 1.2094 | obj = 2.7806 | cls = 0.0779 | lr = 0.000184
+epoch 003 | step 0940 | total = 10.7881 | box = 1.5956 | obj = 2.7202 | cls = 0.0897 | lr = 0.000184
+epoch 003 | step 0960 | total = 9.3350 | box = 1.2831 | obj = 2.8367 | cls = 0.0825 | lr = 0.000184
+epoch 003 | step 0980 | total = 10.0571 | box = 1.4583 | obj = 2.6951 | cls = 0.0704 | lr = 0.000184
+epoch 003 | step 1000 | total = 9.6500 | box = 1.3666 | obj = 2.7325 | cls = 0.0843 | lr = 0.000184
+epoch 003 | step 1020 | total = 7.0696 | box = 0.8653 | obj = 2.6290 | cls = 0.1141 | lr = 0.000184
+epoch 003 | step 1040 | total = 9.2650 | box = 1.2306 | obj = 3.0268 | cls = 0.0852 | lr = 0.000184
+epoch 003 | step 1060 | total = 9.1014 | box = 1.2808 | obj = 2.6209 | cls = 0.0766 | lr = 0.000184
+epoch 003 | step 1080 | total = 9.3011 | box = 1.2635 | obj = 2.8745 | cls = 0.1090 | lr = 0.000184
+epoch 003 | step 1100 | total = 7.5897 | box = 0.9913 | obj = 2.5516 | cls = 0.0815 | lr = 0.000184
+epoch 003 | step 1120 | total = 8.4071 | box = 1.1014 | obj = 2.7959 | cls = 0.1045 | lr = 0.000184
+epoch 003 | step 1140 | total = 10.6439 | box = 1.6838 | obj = 2.1533 | cls = 0.0714 | lr = 0.000184
+epoch 003 | step 1160 | total = 11.2202 | box = 1.7046 | obj = 2.6318 | cls = 0.0654 | lr = 0.000184
+epoch 003 | step 1180 | total = 9.0738 | box = 1.2349 | obj = 2.8118 | cls = 0.0875 | lr = 0.000184
+epoch 003 | step 1200 | total = 9.0680 | box = 1.2998 | obj = 2.4839 | cls = 0.0850 | lr = 0.000184
+epoch 003 | step 1220 | total = 9.2364 | box = 1.3461 | obj = 2.4338 | cls = 0.0723 | lr = 0.000184
+epoch 003 | step 1240 | total = 8.7550 | box = 1.2237 | obj = 2.5501 | cls = 0.0866 | lr = 0.000184
+epoch 003 | step 1260 | total = 10.5162 | box = 1.5168 | obj = 2.8495 | cls = 0.0827 | lr = 0.000184
+epoch 003 | step 1280 | total = 9.4267 | box = 1.3302 | obj = 2.7055 | cls = 0.0703 | lr = 0.000184
+epoch 003 | step 1300 | total = 9.7592 | box = 1.3942 | obj = 2.7115 | cls = 0.0768 | lr = 0.000184
+epoch 003 | step 1320 | total = 9.3903 | box = 1.3062 | obj = 2.7719 | cls = 0.0874 | lr = 0.000184
+epoch 003 | step 1340 | total = 8.8317 | box = 1.1811 | obj = 2.8388 | cls = 0.0876 | lr = 0.000184
+epoch 003 | step 1360 | total = 7.6893 | box = 0.9858 | obj = 2.6738 | cls = 0.0867 | lr = 0.000184
+epoch 003 | step 1380 | total = 8.4785 | box = 1.1116 | obj = 2.8284 | cls = 0.0923 | lr = 0.000184
+epoch 003 | step 1400 | total = 8.9778 | box = 1.2286 | obj = 2.7556 | cls = 0.0793 | lr = 0.000184
+epoch 003 | step 1420 | total = 8.8453 | box = 1.1962 | obj = 2.7944 | cls = 0.0700 | lr = 0.000184
+epoch 003 | step 1440 | total = 8.4385 | box = 1.1356 | obj = 2.6802 | cls = 0.0801 | lr = 0.000184
+epoch 003 | step 1460 | total = 8.6258 | box = 1.1840 | obj = 2.6299 | cls = 0.0757 | lr = 0.000184
+epoch 003 | step 1480 | total = 9.7415 | box = 1.4053 | obj = 2.6482 | cls = 0.0666 | lr = 0.000184
+epoch 003 | step 1500 | total = 10.6388 | box = 1.5684 | obj = 2.7350 | cls = 0.0621 | lr = 0.000184
+epoch 003 | step 1520 | total = 8.7964 | box = 1.1871 | obj = 2.7613 | cls = 0.0997 | lr = 0.000184
+epoch 003 | step 1540 | total = 8.6577 | box = 1.1807 | obj = 2.6635 | cls = 0.0909 | lr = 0.000184
+epoch 003 | step 1560 | total = 9.7230 | box = 1.3438 | obj = 2.9254 | cls = 0.0784 | lr = 0.000184
+epoch 003 | step 1580 | total = 8.9303 | box = 1.2033 | obj = 2.8425 | cls = 0.0715 | lr = 0.000184
+epoch 003 | step 1600 | total = 9.0077 | box = 1.2859 | obj = 2.5057 | cls = 0.0726 | lr = 0.000184
+epoch 003 | step 1620 | total = 7.0253 | box = 0.7747 | obj = 3.0050 | cls = 0.1470 | lr = 0.000184
+epoch 003 | step 1640 | total = 8.3755 | box = 1.1265 | obj = 2.6605 | cls = 0.0827 | lr = 0.000184
+epoch 003 | step 1660 | total = 8.6745 | box = 1.1587 | obj = 2.7978 | cls = 0.0834 | lr = 0.000184
+epoch 003 | step 1680 | total = 9.1865 | box = 1.1784 | obj = 3.1974 | cls = 0.0969 | lr = 0.000184
+epoch 003 | step 1700 | total = 7.8348 | box = 1.0534 | obj = 2.4833 | cls = 0.0843 | lr = 0.000184
+epoch 003 | step 1720 | total = 9.5311 | box = 1.3563 | obj = 2.6637 | cls = 0.0857 | lr = 0.000184
+epoch 003 | step 1740 | total = 10.5315 | box = 1.5505 | obj = 2.7043 | cls = 0.0745 | lr = 0.000184
+epoch 003 | step 1760 | total = 8.1430 | box = 1.0889 | obj = 2.6207 | cls = 0.0778 | lr = 0.000184
+epoch 003 | step 1780 | total = 8.6282 | box = 1.2078 | obj = 2.5267 | cls = 0.0623 | lr = 0.000184
+epoch 003 | step 1800 | total = 7.0533 | box = 0.8582 | obj = 2.6511 | cls = 0.1112 | lr = 0.000184
+epoch 003 | step 1820 | total = 9.0481 | box = 1.3160 | obj = 2.3577 | cls = 0.1107 | lr = 0.000184
+epoch 003 | step 1840 | total = 8.0472 | box = 1.0295 | obj = 2.8086 | cls = 0.0912 | lr = 0.000184
+[epoch 003 train] total = 9.2983 | box = 1.2985 | obj = 2.7228 | cls = 0.0829 | steps = 1849 | global_batches = 14792 | samples = 118288 | time = 1420.5s
