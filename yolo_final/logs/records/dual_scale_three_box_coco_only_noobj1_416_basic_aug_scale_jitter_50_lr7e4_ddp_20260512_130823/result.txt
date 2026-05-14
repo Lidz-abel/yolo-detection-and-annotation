@@ -1,0 +1,232 @@
+run_id = dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823
+timestamp = 20260512_130823
+status = completed
+stage = full_loss_training_ddp
+project_root = /home/lidz/YOLO/yolo_final
+config_path = /home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4.toml
+config_snapshot = logs/records/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823/config.toml
+tensorboard_dir = runs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823
+output_dir = outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823
+record_dir = logs/records/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823
+git_commit = 0e633c6b52a5d195f66c7367e567ef07e0e3a0c4
+backend = nccl
+world_size = 8
+device = cuda:0
+per_rank_batch_size = 16
+effective_global_batch_size = 128
+per_rank_num_workers = 8
+resume_checkpoint = 
+resume_epoch = 0
+train_dataset_length = 118287
+val_dataset_length = 5000
+model_output_shape = {'p4': (1, 26, 26, 255), 'p5': (1, 13, 13, 255)}
+parameter_total = 36531294
+parameter_trainable = 36531294
+visualization_dir = outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823/visualizations
+
+config summary:
+run_name = dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp
+train_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/coco2017_train.jsonl
+val_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl
+packing_format = pt
+packed_root = /home/lidz/YOLO/DataSet/Unified/packed
+packed_chunk_size = 1024
+packed_cache_size = 4
+image_size = 416
+grid_size = n/a
+grid_sizes = 26,13
+num_classes = 80
+train_max_samples = 0
+val_max_samples = 0
+model_name = deep_residual_dual_scale_three_box
+width_mult = 1.0
+depth_mult = 2.0
+use_residual = True
+head_type = decoupled
+neck_type = fpn_pan_lite
+num_boxes = 3
+multiscale = False
+feature_levels = p4,p5
+anchors = n/a
+anchor_positive_iou = n/a
+anchor_ignore_iou = n/a
+anchor_match_metric = iou
+anchor_shape_ratio = n/a
+anchor_ignore_shape_ratio = n/a
+box_parameterization = yolov5
+box_type = giou
+cls_type = bce
+use_objectness = True
+iou_loss = giou
+soft_objectness_target = iou
+soft_objectness_min = 0.05
+soft_classification_target = iou
+cls_loss_mode = quality_bce
+varifocal_alpha = n/a
+varifocal_gamma = n/a
+assignment_strategy = dynamic_cost
+dynamic_topk = 2
+dynamic_center_radius = 1
+dynamic_box_cost = 3.0
+dynamic_cls_cost = 1.0
+dynamic_ignore_iou = 0.5
+dynamic_anchor_shape_cost = n/a
+scale_assignment = all
+scale_area_threshold = n/a
+scale_area_thresholds = n/a
+scale_loss_weights = n/a
+lambda_obj = 1.0
+lambda_noobj = 1.0
+optimizer = adamw
+batch_size = 128
+epochs = 50
+lr = 0.0007
+min_lr = 1e-05
+weight_decay = 0.0001
+scheduler = cosine
+num_workers = 64
+use_data_parallel = True
+max_steps_per_epoch = 0
+max_val_steps = 0
+val_interval_epochs = 1
+vis_interval_epochs = 5
+vis_max_samples = 4
+eval_score_threshold = 0.05
+eval_score_alpha = 2.0
+eval_score_beta = 1.0
+vis_score_threshold = 0.25
+vis_score_alpha = 2.0
+vis_score_beta = 1.0
+augmentation_enabled = True
+augmentation_horizontal_flip_p = 0.5
+augmentation_color_jitter_p = 0.8
+augmentation_affine_p = 0.3
+augmentation_brightness = 0.15
+augmentation_contrast = 0.15
+augmentation_saturation = 0.15
+augmentation_degrees = 3.0
+augmentation_translate = 0.04
+augmentation_scale_min = 0.96
+augmentation_scale_max = 1.04
+augmentation_shear = 0.0
+augmentation_scale_jitter_p = 0.5
+augmentation_scale_jitter_min = 0.9
+augmentation_scale_jitter_max = 1.1
+augmentation_blur_p = n/a
+augmentation_blur_kernel_size = n/a
+augmentation_blur_sigma_min = n/a
+augmentation_blur_sigma_max = n/a
+augmentation_noise_p = n/a
+augmentation_noise_std = n/a
+anchors_p4 = 0.040,0.055;0.075,0.110;0.130,0.180
+anchors_p5 = 0.180,0.240;0.320,0.420;0.520,0.620
+
+train history:
+epoch = 001 | total = 7.178878 | box = 1.031756 | obj = 1.939561 | cls = 0.080535 | giou = 0.484122 | obj_target = 0.511916 | pos_cells = 26.073439 | collisions = 1.455219 | ignored = 72.183079 | dropped_gt = 0.331149 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 809.530s
+epoch = 002 | total = 6.360951 | box = 0.891293 | obj = 1.847804 | cls = 0.056684 | giou = 0.554354 | obj_target = 0.577083 | pos_cells = 26.843315 | collisions = 1.456885 | ignored = 99.341412 | dropped_gt = 0.201398 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 811.163s
+epoch = 003 | total = 6.025331 | box = 0.835476 | obj = 1.793833 | cls = 0.054117 | giou = 0.582262 | obj_target = 0.603238 | pos_cells = 27.079070 | collisions = 1.453351 | ignored = 111.913728 | dropped_gt = 0.167718 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 806.329s
+epoch = 004 | total = 5.813813 | box = 0.800832 | obj = 1.757287 | cls = 0.052366 | giou = 0.599584 | obj_target = 0.619485 | pos_cells = 27.204095 | collisions = 1.454569 | ignored = 119.153777 | dropped_gt = 0.150928 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 806.488s
+epoch = 005 | total = 5.656743 | box = 0.775244 | obj = 1.729593 | cls = 0.050929 | giou = 0.612378 | obj_target = 0.631468 | pos_cells = 27.296945 | collisions = 1.457612 | ignored = 124.167439 | dropped_gt = 0.140589 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 806.754s
+epoch = 006 | total = 5.532475 | box = 0.755096 | obj = 1.707152 | cls = 0.049842 | giou = 0.622452 | obj_target = 0.640881 | pos_cells = 27.371128 | collisions = 1.455642 | ignored = 128.017686 | dropped_gt = 0.131552 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.706s
+epoch = 007 | total = 5.419314 | box = 0.736841 | obj = 1.686179 | cls = 0.048929 | giou = 0.631579 | obj_target = 0.649410 | pos_cells = 27.428201 | collisions = 1.454366 | ignored = 131.390538 | dropped_gt = 0.125685 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 806.591s
+epoch = 008 | total = 5.333464 | box = 0.723495 | obj = 1.668023 | cls = 0.047969 | giou = 0.638253 | obj_target = 0.655623 | pos_cells = 27.462676 | collisions = 1.449361 | ignored = 134.413364 | dropped_gt = 0.120790 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 806.740s
+epoch = 009 | total = 5.251309 | box = 0.710442 | obj = 1.651840 | cls = 0.047262 | giou = 0.644779 | obj_target = 0.661754 | pos_cells = 27.504607 | collisions = 1.453579 | ignored = 136.987623 | dropped_gt = 0.117747 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.459s
+epoch = 010 | total = 5.176788 | box = 0.698824 | obj = 1.636049 | cls = 0.046619 | giou = 0.650588 | obj_target = 0.667173 | pos_cells = 27.537240 | collisions = 1.457849 | ignored = 139.882160 | dropped_gt = 0.114948 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.468s
+epoch = 011 | total = 5.108679 | box = 0.688408 | obj = 1.620607 | cls = 0.046030 | giou = 0.655796 | obj_target = 0.672106 | pos_cells = 27.571055 | collisions = 1.452793 | ignored = 140.577294 | dropped_gt = 0.108997 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 805.368s
+epoch = 012 | total = 5.051691 | box = 0.679305 | obj = 1.609735 | cls = 0.045431 | giou = 0.660348 | obj_target = 0.676304 | pos_cells = 27.606604 | collisions = 1.459108 | ignored = 142.884105 | dropped_gt = 0.106630 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.099s
+epoch = 013 | total = 4.991624 | box = 0.670343 | obj = 1.595019 | cls = 0.044888 | giou = 0.664828 | obj_target = 0.680532 | pos_cells = 27.636497 | collisions = 1.454230 | ignored = 145.366090 | dropped_gt = 0.100940 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.303s
+epoch = 014 | total = 4.942700 | box = 0.662878 | obj = 1.583859 | cls = 0.044450 | giou = 0.668561 | obj_target = 0.684009 | pos_cells = 27.660735 | collisions = 1.454120 | ignored = 147.101329 | dropped_gt = 0.098844 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.954s
+epoch = 015 | total = 4.897828 | box = 0.656132 | obj = 1.573281 | cls = 0.043885 | giou = 0.671934 | obj_target = 0.687179 | pos_cells = 27.680061 | collisions = 1.453672 | ignored = 148.876556 | dropped_gt = 0.096738 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.096s
+epoch = 016 | total = 4.850215 | box = 0.648900 | obj = 1.562232 | cls = 0.043484 | giou = 0.675550 | obj_target = 0.690517 | pos_cells = 27.708271 | collisions = 1.455093 | ignored = 150.261100 | dropped_gt = 0.095073 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.366s
+epoch = 017 | total = 4.807561 | box = 0.642461 | obj = 1.552065 | cls = 0.043193 | giou = 0.678770 | obj_target = 0.693503 | pos_cells = 27.718002 | collisions = 1.456276 | ignored = 152.816761 | dropped_gt = 0.093484 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.625s
+epoch = 018 | total = 4.765314 | box = 0.635904 | obj = 1.543021 | cls = 0.042773 | giou = 0.682048 | obj_target = 0.696630 | pos_cells = 27.748005 | collisions = 1.455135 | ignored = 153.623301 | dropped_gt = 0.090804 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.668s
+epoch = 019 | total = 4.731174 | box = 0.631056 | obj = 1.533487 | cls = 0.042406 | giou = 0.684472 | obj_target = 0.698839 | pos_cells = 27.763907 | collisions = 1.456454 | ignored = 155.530789 | dropped_gt = 0.088758 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.824s
+epoch = 020 | total = 4.697756 | box = 0.626137 | obj = 1.524989 | cls = 0.042084 | giou = 0.686932 | obj_target = 0.701141 | pos_cells = 27.774449 | collisions = 1.456690 | ignored = 156.544899 | dropped_gt = 0.087355 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.213s
+epoch = 021 | total = 4.661436 | box = 0.620299 | obj = 1.518138 | cls = 0.041806 | giou = 0.689851 | obj_target = 0.703928 | pos_cells = 27.783503 | collisions = 1.450223 | ignored = 156.734817 | dropped_gt = 0.086568 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.638s
+epoch = 022 | total = 4.627487 | box = 0.615604 | obj = 1.507991 | cls = 0.041478 | giou = 0.692198 | obj_target = 0.706078 | pos_cells = 27.805077 | collisions = 1.449817 | ignored = 159.172477 | dropped_gt = 0.083702 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.367s
+epoch = 023 | total = 4.591258 | box = 0.610125 | obj = 1.499416 | cls = 0.041217 | giou = 0.694937 | obj_target = 0.708657 | pos_cells = 27.807419 | collisions = 1.456039 | ignored = 161.009908 | dropped_gt = 0.083398 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.637s
+epoch = 024 | total = 4.564057 | box = 0.606358 | obj = 1.491410 | cls = 0.040854 | giou = 0.696821 | obj_target = 0.710396 | pos_cells = 27.826525 | collisions = 1.457688 | ignored = 161.358692 | dropped_gt = 0.083077 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.562s
+epoch = 025 | total = 4.534093 | box = 0.601808 | obj = 1.484413 | cls = 0.040641 | giou = 0.699096 | obj_target = 0.712542 | pos_cells = 27.850610 | collisions = 1.455591 | ignored = 162.723658 | dropped_gt = 0.079129 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.305s
+epoch = 026 | total = 4.503148 | box = 0.597340 | obj = 1.476104 | cls = 0.040343 | giou = 0.701330 | obj_target = 0.714625 | pos_cells = 27.854271 | collisions = 1.451305 | ignored = 164.478874 | dropped_gt = 0.078393 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.434s
+epoch = 027 | total = 4.473327 | box = 0.593056 | obj = 1.467956 | cls = 0.040089 | giou = 0.703472 | obj_target = 0.716584 | pos_cells = 27.873757 | collisions = 1.452988 | ignored = 164.721358 | dropped_gt = 0.076736 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 804.539s
+epoch = 028 | total = 4.448417 | box = 0.589442 | obj = 1.461341 | cls = 0.039868 | giou = 0.705279 | obj_target = 0.718341 | pos_cells = 27.886658 | collisions = 1.455498 | ignored = 165.600695 | dropped_gt = 0.076043 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 805.340s
+epoch = 029 | total = 4.420685 | box = 0.585547 | obj = 1.453344 | cls = 0.039609 | giou = 0.707227 | obj_target = 0.720147 | pos_cells = 27.898291 | collisions = 1.456462 | ignored = 166.304021 | dropped_gt = 0.075105 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.761s
+epoch = 030 | total = 4.394483 | box = 0.581685 | obj = 1.446689 | cls = 0.039371 | giou = 0.709158 | obj_target = 0.721868 | pos_cells = 27.914192 | collisions = 1.456276 | ignored = 167.274593 | dropped_gt = 0.073947 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.243s
+epoch = 031 | total = 4.373902 | box = 0.578538 | obj = 1.441974 | cls = 0.039238 | giou = 0.710731 | obj_target = 0.723384 | pos_cells = 27.907032 | collisions = 1.455262 | ignored = 169.019909 | dropped_gt = 0.073330 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.557s
+epoch = 032 | total = 4.341933 | box = 0.574079 | obj = 1.432495 | cls = 0.039042 | giou = 0.712960 | obj_target = 0.725474 | pos_cells = 27.922173 | collisions = 1.454340 | ignored = 170.089307 | dropped_gt = 0.072019 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.639s
+epoch = 033 | total = 4.327475 | box = 0.572185 | obj = 1.427698 | cls = 0.038853 | giou = 0.713908 | obj_target = 0.726341 | pos_cells = 27.931794 | collisions = 1.454611 | ignored = 171.169941 | dropped_gt = 0.070920 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 802.870s
+epoch = 034 | total = 4.299008 | box = 0.568134 | obj = 1.419759 | cls = 0.038577 | giou = 0.715933 | obj_target = 0.728212 | pos_cells = 27.939766 | collisions = 1.454915 | ignored = 171.872802 | dropped_gt = 0.070464 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 804.511s
+epoch = 035 | total = 4.278359 | box = 0.565155 | obj = 1.414097 | cls = 0.038489 | giou = 0.717423 | obj_target = 0.729577 | pos_cells = 27.956369 | collisions = 1.454340 | ignored = 172.571554 | dropped_gt = 0.069897 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 804.058s
+epoch = 036 | total = 4.259432 | box = 0.562638 | obj = 1.407956 | cls = 0.038285 | giou = 0.718681 | obj_target = 0.730777 | pos_cells = 27.965111 | collisions = 1.455025 | ignored = 173.524237 | dropped_gt = 0.068384 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 803.757s
+epoch = 037 | total = 4.236244 | box = 0.559028 | obj = 1.402905 | cls = 0.038201 | giou = 0.720486 | obj_target = 0.732468 | pos_cells = 27.979990 | collisions = 1.455600 | ignored = 174.021287 | dropped_gt = 0.066566 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 804.571s
+epoch = 038 | total = 4.220369 | box = 0.557038 | obj = 1.397140 | cls = 0.038040 | giou = 0.721481 | obj_target = 0.733409 | pos_cells = 27.981875 | collisions = 1.455591 | ignored = 174.671243 | dropped_gt = 0.066541 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 805.090s
+epoch = 039 | total = 4.204185 | box = 0.554864 | obj = 1.391930 | cls = 0.037934 | giou = 0.722568 | obj_target = 0.734399 | pos_cells = 27.987539 | collisions = 1.455312 | ignored = 175.393489 | dropped_gt = 0.065366 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 805.802s
+epoch = 040 | total = 4.185662 | box = 0.552128 | obj = 1.387203 | cls = 0.037817 | giou = 0.723936 | obj_target = 0.735627 | pos_cells = 27.996356 | collisions = 1.457265 | ignored = 176.577210 | dropped_gt = 0.065087 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 804.766s
+epoch = 041 | total = 4.172469 | box = 0.550477 | obj = 1.382346 | cls = 0.037739 | giou = 0.724762 | obj_target = 0.736488 | pos_cells = 27.997988 | collisions = 1.455439 | ignored = 177.095563 | dropped_gt = 0.064884 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 805.061s
+epoch = 042 | total = 4.162613 | box = 0.549115 | obj = 1.379435 | cls = 0.037604 | giou = 0.725443 | obj_target = 0.737077 | pos_cells = 28.003348 | collisions = 1.458440 | ignored = 178.013197 | dropped_gt = 0.064563 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 806.216s
+epoch = 043 | total = 4.147935 | box = 0.546989 | obj = 1.375462 | cls = 0.037526 | giou = 0.726505 | obj_target = 0.738067 | pos_cells = 28.006510 | collisions = 1.453216 | ignored = 178.905950 | dropped_gt = 0.065078 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 809.315s
+epoch = 044 | total = 4.137859 | box = 0.545912 | obj = 1.370848 | cls = 0.037449 | giou = 0.727044 | obj_target = 0.738572 | pos_cells = 28.009570 | collisions = 1.457240 | ignored = 179.584759 | dropped_gt = 0.064225 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 807.494s
+epoch = 045 | total = 4.131218 | box = 0.544839 | obj = 1.369651 | cls = 0.037374 | giou = 0.727581 | obj_target = 0.739078 | pos_cells = 28.014837 | collisions = 1.455938 | ignored = 179.837634 | dropped_gt = 0.064157 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 807.115s
+epoch = 046 | total = 4.119175 | box = 0.543138 | obj = 1.366177 | cls = 0.037310 | giou = 0.728431 | obj_target = 0.739932 | pos_cells = 28.016663 | collisions = 1.454814 | ignored = 179.755673 | dropped_gt = 0.062889 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 809.485s
+epoch = 047 | total = 4.117019 | box = 0.542822 | obj = 1.365582 | cls = 0.037326 | giou = 0.728589 | obj_target = 0.740037 | pos_cells = 28.021372 | collisions = 1.453918 | ignored = 179.518015 | dropped_gt = 0.062601 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 810.370s
+epoch = 048 | total = 4.109745 | box = 0.541896 | obj = 1.362978 | cls = 0.037287 | giou = 0.729052 | obj_target = 0.740448 | pos_cells = 28.022521 | collisions = 1.457688 | ignored = 180.272428 | dropped_gt = 0.063591 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 811.315s
+epoch = 049 | total = 4.107033 | box = 0.541551 | obj = 1.362041 | cls = 0.037237 | giou = 0.729225 | obj_target = 0.740641 | pos_cells = 28.030569 | collisions = 1.455236 | ignored = 180.220327 | dropped_gt = 0.062052 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 807.306s
+epoch = 050 | total = 4.106101 | box = 0.541502 | obj = 1.361366 | cls = 0.037228 | giou = 0.729249 | obj_target = 0.740631 | pos_cells = 28.026850 | collisions = 1.455811 | ignored = 180.147124 | dropped_gt = 0.062771 | optimizer_steps = 925 | global_batches = 7400 | samples = 118288 | time = 808.178s
+
+val history:
+epoch = 001 | total = 6.687548 | box = 0.942650 | obj = 1.916599 | cls = 0.057699 | giou = 0.528675 | obj_target = 0.553404 | pos_cells = 27.028800 | collisions = 1.474600 | ignored = 91.081000 | dropped_gt = 0.243400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 19.567s
+epoch = 002 | total = 6.270747 | box = 0.870430 | obj = 1.862184 | cls = 0.056415 | giou = 0.564785 | obj_target = 0.585986 | pos_cells = 27.353600 | collisions = 1.474600 | ignored = 110.970000 | dropped_gt = 0.193000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 20.715s
+epoch = 003 | total = 6.140711 | box = 0.845178 | obj = 1.860524 | cls = 0.054296 | giou = 0.577411 | obj_target = 0.598645 | pos_cells = 27.284200 | collisions = 1.474600 | ignored = 132.897600 | dropped_gt = 0.208600 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.041s
+epoch = 004 | total = 5.864672 | box = 0.800114 | obj = 1.811664 | cls = 0.052438 | giou = 0.599943 | obj_target = 0.620406 | pos_cells = 27.676600 | collisions = 1.474600 | ignored = 129.767200 | dropped_gt = 0.148600 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 21.395s
+epoch = 005 | total = 5.698046 | box = 0.777584 | obj = 1.758338 | cls = 0.051788 | giou = 0.611208 | obj_target = 0.628948 | pos_cells = 27.650000 | collisions = 1.474600 | ignored = 119.454400 | dropped_gt = 0.151400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 20.976s
+epoch = 006 | total = 5.590764 | box = 0.760749 | obj = 1.736805 | cls = 0.050213 | giou = 0.619625 | obj_target = 0.637793 | pos_cells = 27.845600 | collisions = 1.474600 | ignored = 120.224200 | dropped_gt = 0.127800 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 20.740s
+epoch = 007 | total = 5.466313 | box = 0.743250 | obj = 1.701114 | cls = 0.048949 | giou = 0.628375 | obj_target = 0.648103 | pos_cells = 28.011000 | collisions = 1.474600 | ignored = 127.194400 | dropped_gt = 0.106000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 21.086s
+epoch = 008 | total = 5.385834 | box = 0.730036 | obj = 1.686062 | cls = 0.049591 | giou = 0.634982 | obj_target = 0.652490 | pos_cells = 27.841200 | collisions = 1.474600 | ignored = 137.727800 | dropped_gt = 0.141800 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 21.593s
+epoch = 009 | total = 5.299362 | box = 0.718347 | obj = 1.660447 | cls = 0.047182 | giou = 0.640827 | obj_target = 0.657362 | pos_cells = 27.793200 | collisions = 1.474600 | ignored = 146.525600 | dropped_gt = 0.136200 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.251s
+epoch = 010 | total = 5.179034 | box = 0.698571 | obj = 1.638982 | cls = 0.047200 | giou = 0.650715 | obj_target = 0.668026 | pos_cells = 27.985600 | collisions = 1.474600 | ignored = 141.960600 | dropped_gt = 0.112600 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.011s
+epoch = 011 | total = 5.191160 | box = 0.704370 | obj = 1.623450 | cls = 0.045860 | giou = 0.647815 | obj_target = 0.663679 | pos_cells = 27.651200 | collisions = 1.474600 | ignored = 150.405600 | dropped_gt = 0.171200 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.235s
+epoch = 012 | total = 5.106299 | box = 0.689390 | obj = 1.614576 | cls = 0.044774 | giou = 0.655305 | obj_target = 0.672487 | pos_cells = 28.112000 | collisions = 1.474600 | ignored = 143.092200 | dropped_gt = 0.098000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.032s
+epoch = 013 | total = 5.072836 | box = 0.680034 | obj = 1.627648 | cls = 0.045017 | giou = 0.659983 | obj_target = 0.676688 | pos_cells = 28.085800 | collisions = 1.474600 | ignored = 145.169400 | dropped_gt = 0.097400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.162s
+epoch = 014 | total = 4.997498 | box = 0.671987 | obj = 1.593522 | cls = 0.044040 | giou = 0.664006 | obj_target = 0.679406 | pos_cells = 28.095800 | collisions = 1.474600 | ignored = 156.340200 | dropped_gt = 0.096000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.974s
+epoch = 015 | total = 4.928239 | box = 0.661761 | obj = 1.575791 | cls = 0.043645 | giou = 0.669120 | obj_target = 0.684388 | pos_cells = 28.076000 | collisions = 1.474600 | ignored = 157.019200 | dropped_gt = 0.100600 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.743s
+epoch = 016 | total = 4.989742 | box = 0.668245 | obj = 1.603712 | cls = 0.044806 | giou = 0.665878 | obj_target = 0.682169 | pos_cells = 28.091400 | collisions = 1.474600 | ignored = 142.038200 | dropped_gt = 0.097400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 21.841s
+epoch = 017 | total = 4.914812 | box = 0.658368 | obj = 1.579068 | cls = 0.043905 | giou = 0.670816 | obj_target = 0.685445 | pos_cells = 28.085200 | collisions = 1.474600 | ignored = 160.887800 | dropped_gt = 0.104800 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.333s
+epoch = 018 | total = 4.840854 | box = 0.646331 | obj = 1.566299 | cls = 0.042901 | giou = 0.676835 | obj_target = 0.691729 | pos_cells = 28.162400 | collisions = 1.474600 | ignored = 152.492400 | dropped_gt = 0.094400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.437s
+epoch = 019 | total = 4.813214 | box = 0.643043 | obj = 1.555530 | cls = 0.042471 | giou = 0.678479 | obj_target = 0.694177 | pos_cells = 28.180600 | collisions = 1.474600 | ignored = 158.749800 | dropped_gt = 0.090200 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.838s
+epoch = 020 | total = 4.775608 | box = 0.637628 | obj = 1.545095 | cls = 0.042374 | giou = 0.681186 | obj_target = 0.695724 | pos_cells = 28.155400 | collisions = 1.474600 | ignored = 161.776600 | dropped_gt = 0.097000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.909s
+epoch = 021 | total = 4.792354 | box = 0.639676 | obj = 1.551638 | cls = 0.042337 | giou = 0.680162 | obj_target = 0.694093 | pos_cells = 28.100800 | collisions = 1.474600 | ignored = 163.753000 | dropped_gt = 0.100000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.944s
+epoch = 022 | total = 4.716554 | box = 0.626903 | obj = 1.540096 | cls = 0.041945 | giou = 0.686549 | obj_target = 0.701202 | pos_cells = 28.215600 | collisions = 1.474600 | ignored = 159.270800 | dropped_gt = 0.085600 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.544s
+epoch = 023 | total = 4.693879 | box = 0.625604 | obj = 1.524517 | cls = 0.041343 | giou = 0.687198 | obj_target = 0.701639 | pos_cells = 28.193200 | collisions = 1.474600 | ignored = 165.829800 | dropped_gt = 0.089200 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.416s
+epoch = 024 | total = 4.700528 | box = 0.625966 | obj = 1.529430 | cls = 0.041268 | giou = 0.687017 | obj_target = 0.701805 | pos_cells = 28.180600 | collisions = 1.474600 | ignored = 166.494600 | dropped_gt = 0.096800 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.327s
+epoch = 025 | total = 4.640549 | box = 0.617788 | obj = 1.510783 | cls = 0.040825 | giou = 0.691106 | obj_target = 0.705162 | pos_cells = 28.263200 | collisions = 1.474600 | ignored = 157.441400 | dropped_gt = 0.078000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.318s
+epoch = 026 | total = 4.635009 | box = 0.615282 | obj = 1.517807 | cls = 0.040792 | giou = 0.692359 | obj_target = 0.706045 | pos_cells = 28.227400 | collisions = 1.474600 | ignored = 164.448200 | dropped_gt = 0.083000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 22.990s
+epoch = 027 | total = 4.597595 | box = 0.610489 | obj = 1.504826 | cls = 0.040325 | giou = 0.694756 | obj_target = 0.709082 | pos_cells = 28.243000 | collisions = 1.474600 | ignored = 168.316000 | dropped_gt = 0.086200 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.485s
+epoch = 028 | total = 4.597756 | box = 0.611340 | obj = 1.501207 | cls = 0.039850 | giou = 0.694330 | obj_target = 0.708533 | pos_cells = 28.240600 | collisions = 1.474600 | ignored = 173.386600 | dropped_gt = 0.088600 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.702s
+epoch = 029 | total = 4.606057 | box = 0.611092 | obj = 1.510556 | cls = 0.040041 | giou = 0.694454 | obj_target = 0.708212 | pos_cells = 28.220000 | collisions = 1.474600 | ignored = 172.611600 | dropped_gt = 0.084800 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.431s
+epoch = 030 | total = 4.548950 | box = 0.602760 | obj = 1.495338 | cls = 0.039814 | giou = 0.698620 | obj_target = 0.712346 | pos_cells = 28.315000 | collisions = 1.474600 | ignored = 166.777200 | dropped_gt = 0.077000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.211s
+epoch = 031 | total = 4.543940 | box = 0.601419 | obj = 1.496963 | cls = 0.039881 | giou = 0.699290 | obj_target = 0.713005 | pos_cells = 28.257600 | collisions = 1.474600 | ignored = 172.751800 | dropped_gt = 0.081400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.549s
+epoch = 032 | total = 4.514253 | box = 0.597568 | obj = 1.486523 | cls = 0.039889 | giou = 0.701216 | obj_target = 0.714796 | pos_cells = 28.244000 | collisions = 1.474600 | ignored = 170.187200 | dropped_gt = 0.094400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.471s
+epoch = 033 | total = 4.510959 | box = 0.596865 | obj = 1.487418 | cls = 0.039218 | giou = 0.701568 | obj_target = 0.715090 | pos_cells = 28.293800 | collisions = 1.474600 | ignored = 173.851000 | dropped_gt = 0.082000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.601s
+epoch = 034 | total = 4.481167 | box = 0.593003 | obj = 1.477230 | cls = 0.038923 | giou = 0.703499 | obj_target = 0.716818 | pos_cells = 28.284200 | collisions = 1.474600 | ignored = 175.231600 | dropped_gt = 0.084400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.787s
+epoch = 035 | total = 4.485814 | box = 0.592848 | obj = 1.482743 | cls = 0.038829 | giou = 0.703576 | obj_target = 0.717075 | pos_cells = 28.277000 | collisions = 1.474600 | ignored = 177.664000 | dropped_gt = 0.086200 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.780s
+epoch = 036 | total = 4.461041 | box = 0.589879 | obj = 1.472918 | cls = 0.038729 | giou = 0.705061 | obj_target = 0.718541 | pos_cells = 28.322600 | collisions = 1.474600 | ignored = 174.107600 | dropped_gt = 0.077000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.711s
+epoch = 037 | total = 4.448291 | box = 0.588102 | obj = 1.469110 | cls = 0.038669 | giou = 0.705949 | obj_target = 0.719423 | pos_cells = 28.322400 | collisions = 1.474600 | ignored = 172.932600 | dropped_gt = 0.078800 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.705s
+epoch = 038 | total = 4.459019 | box = 0.588587 | obj = 1.477570 | cls = 0.038511 | giou = 0.705706 | obj_target = 0.719069 | pos_cells = 28.343600 | collisions = 1.474600 | ignored = 174.404600 | dropped_gt = 0.072200 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.979s
+epoch = 039 | total = 4.443427 | box = 0.587060 | obj = 1.469634 | cls = 0.038492 | giou = 0.706470 | obj_target = 0.719482 | pos_cells = 28.296000 | collisions = 1.474600 | ignored = 177.480400 | dropped_gt = 0.078600 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.838s
+epoch = 040 | total = 4.445228 | box = 0.585007 | obj = 1.481717 | cls = 0.038478 | giou = 0.707497 | obj_target = 0.720971 | pos_cells = 28.334000 | collisions = 1.474600 | ignored = 178.027600 | dropped_gt = 0.078000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.858s
+epoch = 041 | total = 4.426484 | box = 0.583461 | obj = 1.470800 | cls = 0.038381 | giou = 0.708270 | obj_target = 0.721359 | pos_cells = 28.321800 | collisions = 1.474600 | ignored = 178.487200 | dropped_gt = 0.080000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.914s
+epoch = 042 | total = 4.420932 | box = 0.582513 | obj = 1.470206 | cls = 0.038162 | giou = 0.708744 | obj_target = 0.722020 | pos_cells = 28.339400 | collisions = 1.474600 | ignored = 178.098000 | dropped_gt = 0.073400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.911s
+epoch = 043 | total = 4.412033 | box = 0.581646 | obj = 1.465640 | cls = 0.038165 | giou = 0.709177 | obj_target = 0.722243 | pos_cells = 28.346200 | collisions = 1.474600 | ignored = 176.465600 | dropped_gt = 0.074800 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.623s
+epoch = 044 | total = 4.423722 | box = 0.581563 | obj = 1.477815 | cls = 0.038091 | giou = 0.709218 | obj_target = 0.722391 | pos_cells = 28.349000 | collisions = 1.474600 | ignored = 182.914800 | dropped_gt = 0.074800 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 24.040s
+epoch = 045 | total = 4.409047 | box = 0.580131 | obj = 1.470311 | cls = 0.038081 | giou = 0.709934 | obj_target = 0.722907 | pos_cells = 28.344800 | collisions = 1.474600 | ignored = 179.929200 | dropped_gt = 0.077200 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.894s
+epoch = 046 | total = 4.409854 | box = 0.580124 | obj = 1.470996 | cls = 0.038239 | giou = 0.709938 | obj_target = 0.723118 | pos_cells = 28.367600 | collisions = 1.474600 | ignored = 177.952400 | dropped_gt = 0.074600 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.910s
+epoch = 047 | total = 4.391692 | box = 0.578211 | obj = 1.462593 | cls = 0.038044 | giou = 0.710895 | obj_target = 0.723898 | pos_cells = 28.358600 | collisions = 1.474600 | ignored = 178.064400 | dropped_gt = 0.075000 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.844s
+epoch = 048 | total = 4.405255 | box = 0.579709 | obj = 1.468751 | cls = 0.037961 | giou = 0.710146 | obj_target = 0.723307 | pos_cells = 28.365200 | collisions = 1.474600 | ignored = 178.095600 | dropped_gt = 0.068400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 24.146s
+epoch = 049 | total = 4.398248 | box = 0.578364 | obj = 1.468426 | cls = 0.038001 | giou = 0.710818 | obj_target = 0.723785 | pos_cells = 28.363400 | collisions = 1.474600 | ignored = 177.062200 | dropped_gt = 0.071200 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.893s
+epoch = 050 | total = 4.395143 | box = 0.578238 | obj = 1.465928 | cls = 0.038025 | giou = 0.710881 | obj_target = 0.723942 | pos_cells = 28.364600 | collisions = 1.474600 | ignored = 178.374600 | dropped_gt = 0.074400 | optimizer_steps = 40 | global_batches = 320 | samples = 5000 | time = 23.734s
+
+artifacts:
+last_checkpoint = outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823/last.pth
+best_checkpoint = outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823/best.pth
+best_epoch = 47
+best_val_loss = 4.391691702842713

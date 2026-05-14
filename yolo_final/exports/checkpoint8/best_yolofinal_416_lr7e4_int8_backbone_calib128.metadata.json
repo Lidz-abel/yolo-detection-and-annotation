@@ -1,0 +1,37 @@
+{
+  "artifact": {
+    "bytes": 56980035,
+    "path": "/home/lidz/YOLO/yolo_final/exports/checkpoint8/best_yolofinal_416_lr7e4_int8_backbone_calib128.torchscript.pt"
+  },
+  "backend": "x86",
+  "calibration_samples_requested": 128,
+  "calibration_samples_used": 128,
+  "checkpoint_path": "/home/lidz/YOLO/yolo_final/outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823/best.pth",
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4.toml",
+  "correctness_on_random_input": {
+    "output_0_max_abs_diff": 33.243614196777344,
+    "output_0_mean_abs_diff": 3.446822166442871,
+    "output_1_max_abs_diff": 19.41494369506836,
+    "output_1_mean_abs_diff": 3.1838691234588623
+  },
+  "feature_levels": [
+    "p4",
+    "p5"
+  ],
+  "float_module_regex": ".*head.*",
+  "format": "torchscript_int8_fx_ptq",
+  "image_size": 416,
+  "manifest_path": "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl",
+  "notes": [
+    "This is CPU post-training static INT8 quantization with FX graph mode.",
+    "The exported model keeps raw prediction tensors in feature-level tuple order.",
+    "Use YOLO_BACKEND_MODEL_FORMAT=torchscript and YOLO_BACKEND_DEVICE=cpu for backend demos.",
+    "Accuracy-sensitive conclusions require COCO eval or decoded prediction parity after quantization."
+  ],
+  "timing_seconds": {
+    "calibration": 10.768114456906915,
+    "convert_fx": 0.7687322688288987,
+    "prepare_fx": 0.466465757926926,
+    "trace": 1.0819374830462039
+  }
+}

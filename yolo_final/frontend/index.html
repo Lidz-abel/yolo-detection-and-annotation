@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>YOLO 标注工作台</title>
+    <title>YOLO 检测工具</title>
     <link rel="stylesheet" href="/frontend/styles.css" />
   </head>
   <body>
@@ -12,8 +12,8 @@
         <div class="brand">
           <div class="brand-mark">Y</div>
           <div>
-            <h1>YOLO 标注工作台</h1>
-            <p>模型预标注、人工修正、YOLO txt 导出</p>
+            <h1>YOLO 检测工具</h1>
+            <p>上传图片、目标检测、结果修正与 YOLO txt 导出</p>
           </div>
         </div>
         <div class="status-strip">
@@ -29,15 +29,15 @@
               <input id="imageInput" type="file" accept="image/*" />
               <span>上传图片</span>
             </label>
-            <button id="predictButton" class="primary-button" type="button" disabled>模型预标注</button>
+            <button id="predictButton" class="primary-button" type="button" disabled>运行检测</button>
             <button id="addBoxButton" class="ghost-button" type="button" disabled>新增框</button>
             <button id="fitButton" class="icon-button" type="button" title="适配视图" disabled>Fit</button>
           </div>
 
           <div id="canvasShell" class="canvas-shell empty">
             <div id="emptyState" class="empty-state">
-              <div class="empty-title">上传一张图片开始标注</div>
-              <div class="empty-copy">模型预测后可拖动、缩放、增删 bbox，再确认保存为 YOLO txt。</div>
+              <div class="empty-title">上传一张图片开始检测</div>
+              <div class="empty-copy">检测结果会显示类别、置信度和 bbox，可修正后导出 YOLO txt。</div>
             </div>
             <div id="imageViewport" class="image-viewport">
               <img id="previewImage" alt="待标注图片" />
@@ -80,12 +80,15 @@
               <div><dt>文件</dt><dd id="imageName">未上传</dd></div>
               <div><dt>尺寸</dt><dd id="imageSize">-</dd></div>
               <div><dt>框数量</dt><dd id="boxCount">0</dd></div>
+              <div><dt>模型</dt><dd id="modelInfo">未加载</dd></div>
+              <div><dt>设备</dt><dd id="deviceInfo">-</dd></div>
+              <div><dt>耗时</dt><dd id="latencyInfo">-</dd></div>
             </dl>
           </section>
 
           <section class="panel-section grow">
             <div class="section-title">
-              <h2>标注列表</h2>
+              <h2>检测结果</h2>
               <button id="deleteButton" class="danger-button" type="button" disabled>删除</button>
             </div>
             <div id="boxList" class="box-list"></div>
@@ -117,7 +120,7 @@
           </section>
 
           <section class="panel-section">
-            <button id="saveButton" class="confirm-button" type="button" disabled>确认标注并保存</button>
+            <button id="saveButton" class="confirm-button" type="button" disabled>保存检测结果</button>
             <a id="downloadLink" class="download-link hidden" download>下载本地 txt 副本</a>
             <p id="saveMessage" class="save-message"></p>
           </section>

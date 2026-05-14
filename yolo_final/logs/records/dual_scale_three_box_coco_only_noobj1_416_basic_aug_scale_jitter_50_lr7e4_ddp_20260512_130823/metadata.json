@@ -13,7 +13,7 @@
   "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39",
   "python_version": "3.10.20 (main, Mar 11 2026, 17:46:40) [GCC 14.3.0]",
   "username": "lidz",
-  "status": "running",
+  "status": "completed",
   "stage": "full_loss_training_ddp",
   "backend": "nccl",
   "world_size": 8,
@@ -45,5 +45,26 @@
     "scale_max": 1.04,
     "shear": 0.0,
     "min_box_size": 1.0
-  }
+  },
+  "last_epoch": 50,
+  "best_epoch": 47,
+  "best_val_loss": 4.391691702842713,
+  "global_step": 46250,
+  "model_output_shape": {
+    "p4": [
+      1,
+      26,
+      26,
+      255
+    ],
+    "p5": [
+      1,
+      13,
+      13,
+      255
+    ]
+  },
+  "parameter_total": 36531294,
+  "parameter_trainable": 36531294,
+  "visualization_dir": "outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823/visualizations"
 }

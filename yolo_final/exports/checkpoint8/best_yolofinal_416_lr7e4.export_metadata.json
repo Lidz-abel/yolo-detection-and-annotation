@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "onnx": {
+      "path": "/home/lidz/YOLO/yolo_final/exports/checkpoint8/best_yolofinal_416_lr7e4.onnx",
+      "reason": "onnx package is not installed; skipping ONNX export.",
+      "skipped": true
+    },
+    "torchscript": {
+      "bytes": 146112000,
+      "correctness": {
+        "output_0_max_abs_diff": 0.07400894165039062,
+        "output_0_mean_abs_diff": 0.005467748269438744,
+        "output_1_max_abs_diff": 0.036487579345703125,
+        "output_1_mean_abs_diff": 0.006601324304938316
+      },
+      "path": "/home/lidz/YOLO/yolo_final/exports/checkpoint8/best_yolofinal_416_lr7e4.torchscript.pt"
+    }
+  },
+  "checkpoint_path": "/home/lidz/YOLO/yolo_final/outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823/best.pth",
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4.toml",
+  "dynamic_axes": {
+    "images": {
+      "0": "batch"
+    },
+    "p4": {
+      "0": "batch"
+    },
+    "p5": {
+      "0": "batch"
+    }
+  },
+  "formats_requested": [
+    "torchscript",
+    "onnx"
+  ],
+  "image_size": 416,
+  "input_names": [
+    "images"
+  ],
+  "notes": [
+    "Outputs are raw prediction tensors in feature-level order.",
+    "Post-processing stays in Python to keep PyTorch, TorchScript, and ONNX comparisons controlled.",
+    "Dynamic axes are batch-only; image H/W are fixed by the 416-grid training config."
+  ],
+  "opset": 17,
+  "output_names": [
+    "p4",
+    "p5"
+  ]
+}

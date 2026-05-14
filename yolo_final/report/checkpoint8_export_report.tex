@@ -1,0 +1,198 @@
+% YOLO final checkpoint 8 export and inference-service report.
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{enumitem}
+
+\setmainfont{Noto Serif CJK SC}
+\setsansfont{Noto Sans CJK SC}
+\setmonofont{Noto Sans Mono CJK SC}
+
+\title{YOLO Final 检查点 8 报告\\模型导出、推理服务与速度测试}
+\author{}
+\date{2026-05-13}
+
+\begin{document}
+
+\maketitle
+
+\section{任务目标}
+
+本检查点聚焦模型导出与推理服务，不包含量化实验。本轮工作基于已经完成训练和评估的当前最佳策略：
+
+\begin{itemize}[leftmargin=2em]
+  \item 配置：\path{configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4.toml}
+  \item checkpoint：\path{outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823/best.pth}
+  \item 模型：\texttt{deep\_residual\_dual\_scale\_three\_box}，416 输入，P4/P5 双尺度，三框检测头。
+  \item 训练口径：COCO-only，basic augmentation + scale jitter，50 epoch，学习率 0.0007。
+\end{itemize}
+
+该模型的正式 COCO 指标为：AP 0.192170，AP50 0.310452，AP75 0.200965，APS 0.084709，AR100 0.351947。本报告只记录模型导出、前后端接入和速度测试，不重新讨论训练过程。
+
+\section{现有前后端接入方式}
+
+项目中已经存在可用的前后端，不需要重新实现服务框架：
+
+\begin{itemize}[leftmargin=2em]
+  \item 后端：\path{backend/app.py}，Flask REST API。
+  \item 前端：\path{frontend/index.html}、\path{frontend/app.js}、\path{frontend/styles.css}。
+  \item 推理接口：\texttt{/model\_predict}。
+  \item 健康检查：\texttt{/health}。
+\end{itemize}
+
+前端向 \texttt{/model\_predict} 发送 multipart form，包括图片、\texttt{score\_threshold}、\texttt{top\_k} 和 \texttt{nms\_iou\_threshold}。后端返回原图像素坐标下的 bbox、类别、置信度和分阶段耗时。因此，本轮没有修改前端协议，而是在后端预留的 predictor 位置补充 PyTorch、TorchScript 和 ONNX 三种后端切换。
+
+\begin{table}[H]
+  \centering
+  \caption{后端推理格式切换}
+  \begin{tabular}{lll}
+    \toprule
+    格式 & 环境变量 & 当前状态 \\
+    \midrule
+    PyTorch & \texttt{YOLO\_BACKEND\_MODEL\_FORMAT=pytorch} & 可用，加载 \texttt{best.pth} \\
+    TorchScript & \texttt{YOLO\_BACKEND\_MODEL\_FORMAT=torchscript} & 可用，加载导出 \texttt{.pt} \\
+    ONNX & \texttt{YOLO\_BACKEND\_MODEL\_FORMAT=onnx} & 代码已接入，当前环境缺少依赖 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{导出实现}
+
+新增脚本 \path{tools/export_model.py} 用于导出训练好的 detector。由于模型原始输出是多尺度字典，为了让 TorchScript 和 ONNX 的输出顺序稳定，脚本使用一个轻量 wrapper 将输出转换为按 feature level 排列的 tuple：
+
+\begin{itemize}[leftmargin=2em]
+  \item 输入名：\texttt{images}
+  \item 输出名：\texttt{p4}、\texttt{p5}
+  \item 动态轴：batch 维动态，图像高宽固定为 416。
+  \item 后处理：仍保留在 Python 侧，保证 PyTorch、TorchScript、ONNX 比较时只替换模型前向部分。
+\end{itemize}
+
+导出命令如下：
+
+\begin{verbatim}
+python tools/export_model.py \
+  --formats torchscript,onnx \
+  --output-dir exports/checkpoint8 \
+  --prefix best_yolofinal_416_lr7e4 \
+  --device cuda \
+  --batch-size 1
+\end{verbatim}
+
+当前生成文件如下：
+
+\begin{table}[H]
+  \centering
+  \caption{导出产物}
+  \begin{tabular}{lll}
+    \toprule
+    产物 & 路径 & 状态 \\
+    \midrule
+    TorchScript & \path{exports/checkpoint8/best_yolofinal_416_lr7e4.torchscript.pt} & 已生成，约 140 MB \\
+    元数据 & \path{exports/checkpoint8/best_yolofinal_416_lr7e4.export_metadata.json} & 已生成 \\
+    ONNX & \path{exports/checkpoint8/best_yolofinal_416_lr7e4.onnx} & 跳过，缺少 \texttt{onnx} 包 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+TorchScript 导出后与 PyTorch wrapper 的 raw tensor 输出做了数值检查。记录结果为：P4 最大绝对差 0.074009、均值绝对差 0.005468；P5 最大绝对差 0.036488、均值绝对差 0.006601。该差异记录在导出 metadata 中，后续速度和可视化测试使用同一套解码与 NMS 流程。
+
+\section{速度测试}
+
+新增脚本 \path{tools/benchmark_exported_model.py} 用于在同一批 COCO val 图像上比较 PyTorch checkpoint、TorchScript 和 ONNX 后端。测试参数如下：
+
+\begin{itemize}[leftmargin=2em]
+  \item 样本数：64 张 COCO val 图片。
+  \item warmup：8 张。
+  \item 可视化：16 张。
+  \item score threshold：0.5。
+  \item top-k：10。
+  \item NMS IoU threshold：0.5。
+  \item 后处理：三种格式共用同一套 Python 解码、阈值过滤和 NMS。
+\end{itemize}
+
+\begin{table}[H]
+  \centering
+  \caption{导出前后速度对比}
+  \begin{tabular}{lrrrrr}
+    \toprule
+    格式 & 样本数 & 推理均值 ms & 总耗时均值 ms & P95 总耗时 ms & 端到端 FPS \\
+    \midrule
+    PyTorch \texttt{.pth} & 64 & 4.003 & 6.643 & 7.367 & 150.54 \\
+    TorchScript & 64 & 2.954 & 5.587 & 6.295 & 178.98 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+从该测试看，TorchScript 相比原始 PyTorch checkpoint：
+
+\begin{itemize}[leftmargin=2em]
+  \item 模型前向平均耗时从 4.003 ms 降到 2.954 ms，约提升 26.2\%；
+  \item 端到端平均耗时从 6.643 ms 降到 5.587 ms，约提升 15.9\%；
+  \item 端到端 FPS 从 150.54 提升到 178.98。
+\end{itemize}
+
+ONNX 后端代码已经接入，但当前 \texttt{yolov1} 环境缺少 \texttt{onnxruntime}，因此测速记录为不可用。ONNX 导出也因为缺少 \texttt{onnx} 包被跳过。这属于环境依赖未安装，不是模型结构不支持。
+
+\section{16 张推理可视化}
+
+以下图片由 TorchScript 后端生成，使用同一组展示参数：score threshold 0.5，top-k 10，NMS IoU threshold 0.5。红框为预测框，标签包含类别名和置信度。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000397133.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000037777.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000252219.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000087038.png}
+
+  \vspace{0.4em}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000174482.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000403385.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000006818.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000480985.png}
+
+  \vspace{0.4em}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000458054.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000331352.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000296649.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000386912.png}
+
+  \vspace{0.4em}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000502136.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000491497.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000184791.png}
+  \includegraphics[width=0.235\textwidth]{../outputs/export_benchmark/checkpoint8_lr7e4_vis16/torchscript/coco2017_val_000000348881.png}
+  \caption{TorchScript 后端 16 张 COCO val 推理结果展示}
+\end{figure}
+
+\section{复现记录}
+
+本轮新增或修改的核心文件包括：
+
+\begin{itemize}[leftmargin=2em]
+  \item \path{tools/export_model.py}
+  \item \path{tools/benchmark_exported_model.py}
+  \item \path{backend/exported_predictor_utils.py}
+  \item \path{backend/torchscript_predictor.py}
+  \item \path{backend/onnx_predictor.py}
+  \item \path{backend/pytorch_predictor.py}
+  \item \path{backend/app.py}
+  \item \path{backend/config.py}
+  \item \path{backend/README.md}
+\end{itemize}
+
+当前 Git commit 为 \texttt{1c0c2c1}。由于实验输出、导出产物和报告文件仍处于工作区未提交状态，本报告记录的是该 commit 上的 dirty working tree。正式提交时应将代码、配置、导出脚本、测速 JSON、16 张展示图和本 PDF 一起纳入可复现记录。
+
+\section{结论}
+
+检查点 8 的核心目标已经完成：在已有前后端框架中接入导出模型推理路径，并完成 TorchScript 导出、速度测试和 16 张图片可视化。TorchScript 后端在不改变前端接口、不改变 Python 后处理逻辑的前提下，将端到端 FPS 从 150.54 提升到 178.98，是当前可直接用于演示的导出方案。
+
+ONNX 路径已经在代码层面预留并实现 predictor，但当前环境缺少依赖，暂不作为本阶段有效测速结论。后续如果需要 ONNX 对比，应先在 \texttt{yolov1} 环境安装 \texttt{onnx} 与 \texttt{onnxruntime-gpu}，再重新导出、测速并补充报告。
+
+\end{document}

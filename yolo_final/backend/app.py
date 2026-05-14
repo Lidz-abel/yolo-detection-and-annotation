@@ -67,7 +67,21 @@ def _build_predictor(current_settings: BackendSettings):
     if current_settings.model_format == "onnx":
         from backend.onnx_predictor import ONNXPredictor
 
-        return ONNXPredictor(current_settings.onnx_model_path)
+        return ONNXPredictor(
+            model_path=current_settings.onnx_model_path,
+            config_path=current_settings.config_path,
+            metadata_path=current_settings.metadata_path,
+        )
+    if current_settings.model_format == "torchscript":
+        from backend.torchscript_predictor import TorchScriptPredictor
+
+        return TorchScriptPredictor(
+            model_path=current_settings.torchscript_model_path,
+            config_path=current_settings.config_path,
+            device_name=current_settings.device,
+            metadata_path=current_settings.metadata_path,
+            use_fp16=current_settings.use_fp16,
+        )
     raise ValueError(f"Unsupported YOLO_BACKEND_MODEL_FORMAT: {current_settings.model_format}")
 
 
@@ -88,6 +102,20 @@ def get_predictor():
 
 def model_loaded() -> bool:
     return _predictor is not None
+
+
+def warmup_predictor(predictor):
+    """Run one tiny dummy prediction so the first user request avoids runtime warmup."""
+    from PIL import Image
+
+    image_size = int(getattr(predictor, "image_size", 416))
+    dummy = Image.new("RGB", (image_size, image_size), color=(0, 0, 0))
+    return predictor.predict(
+        image=dummy,
+        score_threshold=0.99,
+        top_k=1,
+        nms_iou_threshold=0.5,
+    )
 
 
 def get_config_num_classes() -> int:
@@ -187,6 +215,7 @@ def health():
             "config": str(settings.config_path),
             "checkpoint": str(settings.checkpoint_path),
             "onnx_model": str(settings.onnx_model_path),
+            "torchscript_model": str(settings.torchscript_model_path),
             "annotation_dir": str(settings.annotation_dir),
             "device": str(getattr(_predictor, "device", settings.device)),
             "num_classes": get_config_num_classes(),
@@ -204,6 +233,7 @@ def model_warmup():
     """Load the model before the first real prediction request."""
     try:
         predictor = get_predictor()
+        warmup_result = warmup_predictor(predictor)
         return jsonify(
             {
                 "success": True,
@@ -214,6 +244,7 @@ def model_warmup():
                     "checkpoint": str(settings.checkpoint_path),
                     "device": str(getattr(predictor, "device", settings.device)),
                 },
+                "latency_ms": warmup_result.get("latency_ms", {}),
             }
         )
     except Exception as exc:
@@ -305,5 +336,5 @@ def human_annotate():
 
 if __name__ == "__main__":
     if settings.preload_model:
-        get_predictor()
+        warmup_predictor(get_predictor())
     app.run(host=settings.host, port=settings.port, debug=settings.debug)

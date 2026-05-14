@@ -30,6 +30,9 @@ const els = {
   imageName: document.getElementById("imageName"),
   imageSize: document.getElementById("imageSize"),
   boxCount: document.getElementById("boxCount"),
+  modelInfo: document.getElementById("modelInfo"),
+  deviceInfo: document.getElementById("deviceInfo"),
+  latencyInfo: document.getElementById("latencyInfo"),
   boxList: document.getElementById("boxList"),
   deleteButton: document.getElementById("deleteButton"),
   editorEmpty: document.getElementById("editorEmpty"),
@@ -117,6 +120,39 @@ function yoloLine(box) {
     .join(" ");
 }
 
+function classLabel(box) {
+  const name = box.class_name && box.class_name !== String(box.class_id) ? box.class_name : `Class ${box.class_id}`;
+  return `${name} #${box.class_id}`;
+}
+
+function shortPath(path) {
+  if (!path) return "";
+  const parts = String(path).split("/");
+  return parts.slice(-2).join("/");
+}
+
+function setModelInfo(model = null) {
+  if (!model) {
+    els.modelInfo.textContent = "未加载";
+    els.deviceInfo.textContent = "-";
+    return;
+  }
+  const format = model.format || "unknown";
+  const modelPath = model.model_path || model.checkpoint || "";
+  els.modelInfo.textContent = modelPath ? `${format} · ${shortPath(modelPath)}` : format;
+  els.deviceInfo.textContent = model.device || model.providers?.join(", ") || "-";
+}
+
+function setLatencyInfo(latency = null) {
+  if (!latency) {
+    els.latencyInfo.textContent = "-";
+    return;
+  }
+  const total = Number(latency.total || 0).toFixed(1);
+  const inference = Number(latency.inference || 0).toFixed(1);
+  els.latencyInfo.textContent = `${total} ms total / ${inference} ms infer`;
+}
+
 function updateDownload(txt) {
   if (els.downloadLink.href) {
     URL.revokeObjectURL(els.downloadLink.href);
@@ -150,7 +186,7 @@ function renderBoxes() {
 
     const label = document.createElement("div");
     label.className = "bbox-label";
-    label.textContent = `#${box.class_id}${box.score != null ? ` ${box.score.toFixed(2)}` : ""}`;
+    label.textContent = `${classLabel(box)}${box.score != null ? ` ${box.score.toFixed(2)}` : ""}`;
     node.appendChild(label);
 
     for (const corner of ["nw", "ne", "sw", "se"]) {
@@ -187,7 +223,7 @@ function renderList() {
     const text = document.createElement("div");
     const title = document.createElement("div");
     title.className = "box-row-title";
-    title.textContent = `Class ${box.class_id}`;
+    title.textContent = classLabel(box);
     const meta = document.createElement("div");
     meta.className = "box-row-meta";
     meta.textContent = `${Math.round(box.x1)}, ${Math.round(box.y1)} - ${Math.round(box.x2)}, ${Math.round(box.y2)}`;
@@ -312,6 +348,13 @@ async function checkHealth() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const payload = await response.json();
     setStatus(payload.success ? "ok" : "bad", payload.success ? "后端可用" : "后端异常");
+    if (payload.success) {
+      setModelInfo({
+        format: payload.model_format,
+        model_path: payload.model_format === "torchscript" ? payload.torchscript_model : payload.checkpoint,
+        device: payload.device,
+      });
+    }
   } catch (error) {
     setStatus("bad", `后端不可用: ${error.message}`);
   }
@@ -320,7 +363,7 @@ async function checkHealth() {
 async function runPredict() {
   if (!state.imageFile) return;
   els.predictButton.disabled = true;
-  els.predictButton.textContent = "推理中";
+  els.predictButton.textContent = "检测中";
   setMessage("");
   setStatus("busy", "模型推理中");
   try {
@@ -345,6 +388,8 @@ async function runPredict() {
       y2: box.y2,
     }));
     state.selectedId = state.boxes[0]?.id || null;
+    setModelInfo(payload.model);
+    setLatencyInfo(payload.latency_ms);
     setStatus("ok", `推理完成，${state.boxes.length} 个框`);
     render();
   } catch (error) {
@@ -352,7 +397,7 @@ async function runPredict() {
     setMessage(error.message, "bad");
   } finally {
     els.predictButton.disabled = !state.imageFile;
-    els.predictButton.textContent = "模型预标注";
+    els.predictButton.textContent = "运行检测";
   }
 }
 
@@ -397,6 +442,7 @@ function loadImage(file) {
   state.selectedId = null;
   state.nextBoxId = 1;
   setMessage("");
+  setLatencyInfo(null);
   els.downloadLink.classList.add("hidden");
 
   const objectUrl = URL.createObjectURL(file);

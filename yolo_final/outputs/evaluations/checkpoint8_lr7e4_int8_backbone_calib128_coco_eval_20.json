@@ -1,0 +1,33 @@
+{
+  "box_parameterization": "yolov5",
+  "coco_ap": 0.24506299222200686,
+  "coco_ap50": 0.3681428069308836,
+  "coco_ap75": 0.27735435856509605,
+  "coco_ap_large": 0.36372731023102306,
+  "coco_ap_medium": 0.4105462618599155,
+  "coco_ap_small": 0.11440159932854321,
+  "coco_ar1": 0.20781319108242186,
+  "coco_ar10": 0.3141396808319885,
+  "coco_ar100": 0.33114039806347495,
+  "coco_ar_large": 0.4322916666666667,
+  "coco_ar_medium": 0.4982712215320911,
+  "coco_ar_small": 0.1493822843822844,
+  "config_path": "/home/lidz/YOLO/yolo_final/configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4.toml",
+  "device": "cpu",
+  "feature_levels": [
+    "p4",
+    "p5"
+  ],
+  "format": "torchscript",
+  "manifest_path": "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl",
+  "metadata_path": "/home/lidz/YOLO/DataSet/Unified/metadata/class_maps.json",
+  "nms_iou_threshold": 0.5,
+  "num_boxes": 3,
+  "num_predictions": 1308.0,
+  "num_samples": 20.0,
+  "score_alpha": 2.0,
+  "score_beta": 1.0,
+  "score_threshold": 0.05,
+  "top_k": 100,
+  "torchscript_model": "/home/lidz/YOLO/yolo_final/exports/checkpoint8/best_yolofinal_416_lr7e4_int8_backbone_calib128.torchscript.pt"
+}
