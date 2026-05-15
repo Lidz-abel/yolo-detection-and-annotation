@@ -70,8 +70,8 @@
   "freeze_modules": "neck,head",
   "freeze_modules_epochs": 2,
   "ddp_find_unused_parameters": true,
-  "last_epoch": 2,
-  "best_epoch": 2,
-  "best_val_loss": 11.27593014831543,
-  "global_step": 3698
+  "last_epoch": 27,
+  "best_epoch": 27,
+  "best_val_loss": 6.755650434589386,
+  "global_step": 49923
 }

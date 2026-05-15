@@ -1,0 +1,110 @@
+<!doctype html><html><head><meta charset="utf-8"><title>YOLO Final 项目代码速览与汇报辅助总结</title><style>
+@page { size: A4; margin: 16mm 14mm; }
+body { font-family: "Noto Serif CJK SC", "AR PL UMing CN", serif; color: #111827; line-height: 1.55; font-size: 12px; }
+h1 { font-size: 24px; text-align: center; margin: 10px 0 18px; }
+h2 { font-size: 17px; margin-top: 18px; padding-bottom: 3px; border-bottom: 1px solid #cbd5e1; color: #0f172a; }
+h3 { font-size: 14px; margin-top: 13px; color: #1f2937; }
+p { margin: 6px 0; }
+ul, ol { margin: 6px 0 8px 22px; padding: 0; }
+li { margin: 3px 0; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0 12px; font-size: 10.5px; page-break-inside: avoid; }
+th, td { border: 1px solid #cbd5e1; padding: 5px 6px; vertical-align: top; }
+th { background: #e5e7eb; font-weight: bold; }
+pre { background: #f3f4f6; border: 1px solid #d1d5db; padding: 8px; white-space: pre-wrap; word-break: break-word; font-family: "Noto Sans Mono", monospace; font-size: 10px; }
+figure { page-break-inside: avoid; margin: 10px 0; text-align: center; }
+figure img { max-width: 100%; border: 1px solid #d1d5db; }
+figcaption { font-size: 10px; color: #4b5563; margin-top: 4px; }
+</style></head><body><h1>YOLO Final 项目代码速览与汇报辅助总结</h1>
+<p>用途：这份 PDF 不是正式论文，而是帮助现场按代码讲清楚项目。它把模型结构、训练配置、实验路线、错误复盘、量化部署和最终成果整理成一份速览材料。</p>
+<h2>一、现场讲代码的推荐顺序</h2>
+<ol><li>先打开 configs/，说明最终实验配置和训练超参数。</li><li>打开 models/detector.py，说明模型如何由 backbone、neck、head 组装。</li><li>打开 models/backbone.py，说明残差 stage 和 p4/p5 多尺度输出。</li><li>打开 models/neck.py，说明 FPN top-down 和 PAN bottom-up 融合。</li><li>打开 models/head.py，说明 decoupled head 如何分别处理分类与回归。</li><li>打开 data/detection_dataset.py，说明 COCO-only、.pt packed loader 和 bbox sanitize。</li><li>打开 losses/yolo_loss.py，说明 dynamic assignment 和四个 loss term。</li><li>打开 tools/train_ddp.py，说明 8GPU DDP 正式训练。</li><li>打开 utils/coco_eval.py，说明 COCO AP 评估和坐标修复。</li><li>打开 tools/quantize_model.py 以及 backend/frontend，说明导出、量化和检测工具。</li></ol>
+<h2>二、最终成果</h2>
+<ul><li>完成一个可训练、可评估、可对比、可导出、可量化、可部署的 YOLO 检测系统。</li><li>最终模型：deep_residual_dual_scale_three_box。</li><li>输入尺寸：416 x 416。</li><li>检测尺度：p4/p5 双尺度。</li><li>每尺度 3 anchors，COCO 80 类。</li><li>训练：8GPU DDP，50 epoch，AdamW + cosine scheduler，lr=7e-4。</li><li>数据：COCO-only，.pt packed loader，train-only bbox-safe augmentation + scale jitter。</li><li>部署：TorchScript 导出，backbone INT8 + detection head FP32。</li></ul>
+<pre><code>最佳 checkpoint:
+yolo_final/outputs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4_ddp_20260512_130823/best.pth</code></pre>
+<table><thead><tr><th>指标</th><th>数值</th></tr></thead><tbody><tr><td>COCO AP</td><td>0.192170</td></tr><tr><td>AP50</td><td>0.310452</td></tr><tr><td>AP75</td><td>0.200965</td></tr><tr><td>AP small</td><td>0.084709</td></tr><tr><td>AP medium</td><td>0.211648</td></tr><tr><td>AP large</td><td>0.261832</td></tr><tr><td>AR100</td><td>0.351947</td></tr></tbody></table>
+<h2>三、关键代码目录</h2>
+<table><thead><tr><th>目录或文件</th><th>讲解重点</th></tr></thead><tbody><tr><td>configs/</td><td>所有正式实验由 TOML 配置驱动，最终配置是 416 + scale jitter + 50 epoch + lr=7e-4。</td></tr><tr><td>models/common.py</td><td>ConvBNAct、ResidualBlock、BasicResidualBlock 等基础模块。</td></tr><tr><td>models/backbone.py</td><td>MultiScaleBaselineBackbone 输出 p4/p5，支持残差和多尺度特征。</td></tr><tr><td>models/neck.py</td><td>DualScaleFPNPANLite 进行 FPN/PAN-lite 特征融合。</td></tr><tr><td>models/head.py</td><td>DecoupledDetectionHead 将分类与回归/objectness 解耦。</td></tr><tr><td>models/detector.py</td><td>YOLOv0Baseline 统一组装 backbone、neck、head。</td></tr><tr><td>data/detection_dataset.py</td><td>COCO manifest、.pt packed loader、resize、bbox sanitize、collate。</td></tr><tr><td>losses/yolo_loss.py</td><td>GIoU、objectness、classification loss、dynamic cost assignment。</td></tr><tr><td>engine/distributed_trainer.py</td><td>DDP epoch 训练、验证和全局指标聚合。</td></tr><tr><td>tools/train_ddp.py</td><td>8GPU DDP 正式训练入口。</td></tr><tr><td>utils/prediction.py</td><td>prediction tensor 解码、score 计算、NMS。</td></tr><tr><td>utils/coco_eval.py</td><td>pycocotools 官方 COCO AP 评估和原图坐标映射。</td></tr><tr><td>tools/quantize_model.py</td><td>INT8 量化和 calibration。</td></tr><tr><td>backend/ + frontend/</td><td>最终可使用的图片检测工具。</td></tr></tbody></table>
+<h2>四、模型结构</h2>
+<h3>1. Detector 总入口</h3>
+<p>总入口是 models/detector.py 中的 YOLOv0Baseline。它不直接写死某个网络，而是根据配置组装 backbone、neck 和 head。</p>
+<pre><code>features = self.backbone(x)
+if self.neck is not None:
+    features = self.neck(features)
+return {level: self.head[level](features[level]) for level in self.feature_levels}</code></pre>
+<h3>2. Backbone 理论设计</h3>
+<p>backbone 的作用是把图像逐级转成语义更强的特征。浅层保留边缘、纹理和局部形状；深层分辨率更低，但目标语义更强。最终使用 MultiScaleBaselineBackbone，输出 p4/p5。</p>
+<p>残差块学习 y = x + F(x)，比直接学习 y = F(x) 更容易优化，能缓解深层网络的梯度传播问题。</p>
+<pre><code>ConvBNAct: Conv2d -&gt; BatchNorm2d -&gt; ReLU
+ResidualBlock: y = x + ConvBNAct(ConvBNAct(x))
+
+p4: 分辨率更高，适合中小目标
+p5: 语义更强，适合中大目标</code></pre>
+<h3>3. Neck 理论设计</h3>
+<p>neck 使用 DualScaleFPNPANLite。FPN top-down 把 p5 的强语义传给 p4，PAN bottom-up 把 p4 的定位信息再传回 p5。这样每个检测尺度都同时具有语义和定位信息。</p>
+<pre><code>p5_td = self.p5_lateral(p5)
+p5_up = F.interpolate(p5_td, size=p4.shape[-2:], mode=&quot;nearest&quot;)
+p4_td = self.p4_fuse(self.p4_reduce(p4) + p5_up)
+
+p4_down = self.p4_downsample(p4_out)
+p5_out = self.p5_fuse(self.p5_reduce(p5) + p4_down)</code></pre>
+<h3>4. Decoupled Head 理论设计</h3>
+<p>head 使用 DecoupledDetectionHead。分类和定位关注的信息不同：分类更依赖语义，bbox 回归更依赖边界和尺度，objectness 更像候选质量判断。解耦 head 可以减少梯度冲突。</p>
+<pre><code>x = self.stem(x)
+cls_feat = self.cls_branch(x)
+reg_feat = self.reg_branch(x)
+
+cls_logits = self.cls_pred(cls_feat)
+reg_logits = self.reg_pred(reg_feat)</code></pre>
+<p>最终每个尺度输出 [B, H, W, A(5+C)]。最终 A=3，C=80，所以每个 grid 输出 3*(5+80)=255 维。</p>
+<h2>五、Prediction Tensor 到 Detection Result</h2>
+<ol><li>按 YOLOv5 风格参数化解码 bbox。</li><li>对 objectness 和 class logits 做 sigmoid。</li><li>计算 score = objectness^alpha * class_score^beta。</li><li>执行 NMS，最后保留 top-k 检测框。</li></ol>
+<p>最终评估和展示常用 alpha=2.0, beta=1.0，表示更强调 objectness 的质量校准。</p>
+<h2>六、Loss 与正样本分配</h2>
+<p>最终 loss 由 box、正样本 objectness、负样本 objectness、classification 四部分组成。</p>
+<pre><code>L = lambda_box * L_box
+  + lambda_obj * L_obj_pos
+  + lambda_noobj * L_obj_neg
+  + lambda_cls * L_cls</code></pre>
+<table><thead><tr><th>参数</th><th>含义</th></tr></thead><tbody><tr><td>lambda_box=5.0</td><td>提高定位损失权重，COCO AP 对定位质量敏感。</td></tr><tr><td>lambda_obj=1.0</td><td>正样本 objectness 权重。</td></tr><tr><td>lambda_noobj=1.0</td><td>背景 objectness 权重，用于抑制误检。</td></tr><tr><td>lambda_cls=1.0</td><td>分类损失权重。</td></tr><tr><td>dynamic_topk=2</td><td>每个 GT 最多选择 2 个低 cost 正样本。</td></tr><tr><td>soft_objectness_target=iou</td><td>用 IoU 作为 objectness soft target。</td></tr><tr><td>cls_loss_mode=quality_bce</td><td>BCE 形式，类别 target 可由 IoU soft target 调整。</td></tr></tbody></table>
+<p>dynamic_cost assignment 的核心是根据当前预测质量分配正样本，而不是固定把 GT 交给某一个 anchor。</p>
+<h2>七、数据读取与增广</h2>
+<p>正式训练统一使用 COCO-only，避免 VOC 与 COCO label id 语义冲突。</p>
+<pre><code>train_manifest = /home/lidz/YOLO/DataSet/Unified/manifests/coco2017_train.jsonl
+val_manifest   = /home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl
+num_classes    = 80</code></pre>
+<p>数据读取使用 .pt packed chunks，降低大量小文件随机 IO，对 8GPU DDP 更稳定。</p>
+<pre><code>packing_format = &quot;pt&quot;
+packed_root = &quot;/home/lidz/YOLO/DataSet/Unified/packed&quot;
+packed_chunk_size = 1024
+packed_cache_size = 4</code></pre>
+<p>最终增广是 train-only bbox-safe：horizontal flip、color jitter、light scale jitter、light affine。增广后必须同步更新 bbox，并通过 bbox sanitize 删除无效框。</p>
+<h2>八、训练链路</h2>
+<pre><code>torchrun --standalone --nproc_per_node=8   tools/train_ddp.py   --config configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4.toml</code></pre>
+<ol><li>rank0 初始化 run_id、config snapshot、metadata。</li><li>每个 rank 绑定一张 GPU。</li><li>DistributedSampler 划分数据。</li><li>DistributedDataParallel 包装模型。</li><li>rank0 保存 TensorBoard、best.pth、last.pth。</li><li>每个 epoch 汇总 optimizer_steps、global_batch_count 和 sample_count。</li></ol>
+<h2>九、正式评估与可视化</h2>
+<p>正式指标使用 pycocotools COCO AP。最关键的修复是把预测框从 resize 坐标映射回原图坐标，否则 COCO AP 会接近 0。</p>
+<pre><code>original_height, original_width = target[&quot;original_size&quot;].tolist()
+scale_x = original_width / image_size
+scale_y = original_height / image_size
+
+x1 = x1 * scale_x
+x2 = x2 * scale_x
+y1 = y1 * scale_y
+y2 = y2 * scale_y</code></pre>
+<p>正式实验结束后固定流程：full COCO eval、500 图离线 sweep、12 张 pred-only 展示图、loss 曲线和 metadata 归档。</p>
+<h2>十、主要实验路线</h2>
+<table><thead><tr><th>实验</th><th>AP</th><th>AP50</th><th>AP75</th><th>AR100</th><th>结论</th></tr></thead><tbody><tr><td>320 COCO-only topk2</td><td>0.126985</td><td>0.218369</td><td>0.129184</td><td>0.260567</td><td>COCO-only 起点</td></tr><tr><td>320 topk1</td><td>0.108180</td><td>0.195980</td><td>0.105638</td><td>0.239071</td><td>topk 降低伤害召回</td></tr><tr><td>416 original</td><td>0.148786</td><td>0.248717</td><td>0.155263</td><td>0.302299</td><td>分辨率提升明确有效</td></tr><tr><td>416 K6</td><td>0.146778</td><td>0.244778</td><td>0.153023</td><td>0.303445</td><td>召回略好，AP 未超过原 anchors</td></tr><tr><td>416 P3/P4/P5 K9</td><td>0.136481</td><td>0.228555</td><td>0.143862</td><td>0.313965</td><td>AR 提升但 AP 下降</td></tr><tr><td>416 scale jitter 40</td><td>0.181671</td><td>0.295159</td><td>0.189616</td><td>0.343730</td><td>数据增广主线有效</td></tr><tr><td>416 scale jitter 50 lr1e-3</td><td>0.188057</td><td>0.307415</td><td>0.195546</td><td>0.348692</td><td>50 epoch 继续提升</td></tr><tr><td>416 scale jitter 50 lr7e-4</td><td>0.192170</td><td>0.310452</td><td>0.200965</td><td>0.351947</td><td>最终最佳 FP32</td></tr><tr><td>416 scale jitter 50 lr5e-4</td><td>0.190307</td><td>0.305895</td><td>0.200180</td><td>0.350863</td><td>接近但不如 7e-4</td></tr></tbody></table>
+<h2>十一、我们犯过的关键错误</h2>
+<table><thead><tr><th>错误</th><th>原因</th><th>修复</th></tr></thead><tbody><tr><td>COCO AP 接近 0</td><td>预测框是 resize 坐标，GT 是原图坐标</td><td>在 utils/coco_eval.py 中映射回原图坐标</td></tr><tr><td>VOC/COCO 混合训练</td><td>VOC 和 COCO label id 语义不同</td><td>正式实验改为 COCO-only</td></tr><tr><td>.pt loader 未真正落地</td><td>配置写了 packed，但读取仍可能走 raw image</td><td>补齐 PackedPtStore 和启动校验</td></tr><tr><td>positive_cells 统计错</td><td>多 anchor 下平均掉 anchor 维</td><td>展平 [H,W,A] 后按图求和</td></tr><tr><td>quality_bce 语义不清</td><td>旧代码没有显式分支</td><td>明确支持 bce/quality_bce/varifocal</td></tr><tr><td>训练过慢</td><td>早期使用 DataParallel</td><td>改为 torchrun + 8GPU DDP</td></tr><tr><td>DDP step 日志误导</td><td>把所有 rank batch 总数当 optimizer steps</td><td>区分 optimizer_steps 和 global_batch_count</td></tr><tr><td>只看 val loss 误判 P3</td><td>scale-aware 降低 loss，但 COCO AP 下降</td><td>正式结论以 COCO AP/AR 和 sweep 为准</td></tr><tr><td>展示框数量不可比</td><td>4 张图和 12 张图使用不同阈值/top-k</td><td>固定展示参数</td></tr></tbody></table>
+<h2>十二、量化与部署</h2>
+<p>最终量化策略是 Backbone INT8 + Detection Head FP32。backbone 占主要卷积计算量，适合量化；head 输出 bbox、objectness 和 class logits，对数值更敏感，所以保留 FP32。</p>
+<pre><code>manifest = /home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl
+calibration_samples = 128
+input_size = 416 x 416</code></pre>
+<table><thead><tr><th>模型</th><th>AP</th><th>AP50</th><th>AP75</th><th>AR100</th></tr></thead><tbody><tr><td>FP32</td><td>0.192170</td><td>0.310452</td><td>0.200965</td><td>0.351947</td></tr><tr><td>INT8 backbone</td><td>0.191483</td><td>0.309759</td><td>0.199871</td><td>0.351494</td></tr></tbody></table>
+<p>AP 只下降约 0.000687，说明 backbone-only INT8 是稳定的部署方案。</p>
+<figure><img src="../outputs/export_benchmark/checkpoint8_calibration128_samples/calibration128_contact_sheet_all.jpg" alt="calibration 128"><figcaption>INT8 backbone calibration 使用的 128 张 COCO val 样本总览。</figcaption></figure>
+<p>最终检测工具由 scripts/start_yolo_detection_tool.sh 启动，后端加载 TorchScript 模型，前端上传图片并展示检测框、类别、置信度和推理耗时。</p>
+<h2>十三、一句话总结</h2>
+<p>这个项目最终完成了从 YOLO 检测模型设计、COCO-only 数据训练、8GPU DDP、正式 COCO AP 评估、实验消融、错误诊断、TorchScript 导出、INT8 量化到前后端检测工具的完整闭环。最重要的成果不是单一 AP 数字，而是建立了一条可信、可复现、可解释、可部署的目标检测工程链路。</p></body></html>
