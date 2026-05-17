@@ -1,0 +1,101 @@
+{
+  "anchors": {
+    "p3": [
+      [
+        0.030114,
+        0.045818
+      ],
+      [
+        0.074708,
+        0.112171
+      ],
+      [
+        0.231202,
+        0.130471
+      ]
+    ],
+    "p4": [
+      [
+        0.111978,
+        0.272932
+      ],
+      [
+        0.319911,
+        0.302744
+      ],
+      [
+        0.189913,
+        0.53702
+      ]
+    ],
+    "p5": [
+      [
+        0.723033,
+        0.361291
+      ],
+      [
+        0.412776,
+        0.685597
+      ],
+      [
+        0.836262,
+        0.819971
+      ]
+    ]
+  },
+  "batch_size": 1.0,
+  "box_parameterization": "yolov5",
+  "checkpoint_path": "/home/lidz/YOLO/ViT_detection/outputs/hybrid_vit_p3p4p5_416_ddp_20260515_051956/best.pth",
+  "coco_ap": 0.16005960281214182,
+  "coco_ap50": 0.28131171907313995,
+  "coco_ap75": 0.1595720194357235,
+  "coco_ap_large": 0.2120705350086892,
+  "coco_ap_medium": 0.17719319654246524,
+  "coco_ap_small": 0.07835119533536467,
+  "coco_ar1": 0.19704185840488717,
+  "coco_ar10": 0.3198066529862663,
+  "coco_ar100": 0.3441293630059063,
+  "coco_ar_large": 0.46283449653480546,
+  "coco_ar_medium": 0.3728176438868489,
+  "coco_ar_small": 0.15260259577280855,
+  "config_path": "/home/lidz/YOLO/ViT_detection/configs/hybrid_vit_p3p4p5_416_ddp.toml",
+  "conv2d_flops": 38757189120.0,
+  "device": "cuda",
+  "duration_seconds": 0.4658078190404922,
+  "images_per_second": 214.68081022338336,
+  "linear_flops": 8388608.0,
+  "manifest_path": "/home/lidz/YOLO/DataSet/Unified/manifests/coco2017_val.jsonl",
+  "measure_iters": 100.0,
+  "milliseconds_per_batch": 4.658078190404922,
+  "model_name": "hybrid_vit_p3p4p5_three_box",
+  "num_boxes": 3,
+  "num_predictions": 492138.0,
+  "num_samples": 5000.0,
+  "output_shape": {
+    "p3": [
+      1,
+      52,
+      52,
+      255
+    ],
+    "p4": [
+      1,
+      26,
+      26,
+      255
+    ],
+    "p5": [
+      1,
+      13,
+      13,
+      255
+    ]
+  },
+  "params_total": 28311613,
+  "params_trainable": 28311613,
+  "score_alpha": 2.0,
+  "score_beta": 1.0,
+  "total_flops": 38765577728.0,
+  "total_gflops": 38.765577728,
+  "warmup_iters": 20.0
+}

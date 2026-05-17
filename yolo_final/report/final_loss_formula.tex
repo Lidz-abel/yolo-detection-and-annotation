@@ -1,0 +1,786 @@
+\documentclass[UTF8,12pt]{ctexart}
+
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    columns=fullflexible
+}
+
+\title{最终 YOLO Loss 设计：公式、例子与基础概念}
+\author{YOLO Final Project}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{最终 Loss 总览}
+
+我们最终使用的是一个双尺度 YOLO-style detection loss。模型输出两个尺度：
+
+\[
+p4,\quad p5
+\]
+
+其中每个尺度有 3 个 anchors，每个 anchor 输出：
+
+\[
+4\ \text{bbox parameters} + 1\ \text{objectness} + 80\ \text{class logits}
+\]
+
+因此每个 grid cell 的 prediction dimension 为：
+
+\[
+3 \times (4 + 1 + 80) = 255
+\]
+
+对于输入分辨率 $416 \times 416$，最终 prediction tensor 形状为：
+
+\[
+\text{pred}_{p4} \in \mathbb{R}^{B \times 26 \times 26 \times 255}
+\]
+
+\[
+\text{pred}_{p5} \in \mathbb{R}^{B \times 13 \times 13 \times 255}
+\]
+
+最终总 loss 为：
+
+\[
+\mathcal{L}_{total} = \mathcal{L}_{p4} + \mathcal{L}_{p5}
+\]
+
+单个尺度上的 loss 为：
+
+\[
+\mathcal{L}_{scale}
+= \lambda_{box}\mathcal{L}_{box}
++ \lambda_{obj}\mathcal{L}_{obj}
++ \lambda_{cls}\mathcal{L}_{cls}
+\]
+
+最终超参数为：
+
+\[
+\lambda_{box}=5.0,\quad
+\lambda_{obj}=1.0,\quad
+\lambda_{cls}=1.0,\quad
+\lambda_{noobj}=1.0
+\]
+
+所以：
+
+\[
+\mathcal{L}_{scale}
+= 5.0\mathcal{L}_{box}
++ \mathcal{L}_{obj}
++ \mathcal{L}_{cls}
+\]
+
+而 objectness loss 内部为：
+
+\[
+\mathcal{L}_{obj}
+= \mathcal{L}_{obj}^{pos}
++ \lambda_{noobj}\mathcal{L}_{obj}^{neg}
+\]
+
+由于最终：
+
+\[
+\lambda_{noobj}=1.0
+\]
+
+因此：
+
+\[
+\mathcal{L}_{obj}
+= \mathcal{L}_{obj}^{pos}
++ \mathcal{L}_{obj}^{neg}
+\]
+
+展开到双尺度后：
+
+\[
+\mathcal{L}_{total}
+=
+\left[
+5\mathcal{L}_{box}^{p4}
++ \mathcal{L}_{obj}^{p4}
++ \mathcal{L}_{cls}^{p4}
+\right]
++
+\left[
+5\mathcal{L}_{box}^{p5}
++ \mathcal{L}_{obj}^{p5}
++ \mathcal{L}_{cls}^{p5}
+\right]
+\]
+
+\section{Dynamic Assignment}
+
+在计算 loss 之前，我们需要确定哪些 prediction slot 是正样本。一个 slot 表示：
+
+\[
+(grid_y, grid_x, anchor\_index)
+\]
+
+最终使用的正样本分配策略为：
+
+\[
+\texttt{assignment\_strategy = dynamic\_cost}
+\]
+
+对于每一个 ground truth box，代码会在其中心附近的候选区域中选择正样本。最终超参数为：
+
+\[
+\texttt{dynamic\_center\_radius}=1
+\]
+
+也就是说候选 grid cell 是 GT 中心 cell 周围的 $3 \times 3$ 区域。由于每个 cell 有 3 个 anchors，因此每个尺度上每个 GT 最多先考虑：
+
+\[
+3 \times 3 \times 3 = 27
+\]
+
+个候选 slot。
+
+每个候选 slot 的 dynamic cost 为：
+
+\[
+\text{cost}
+= \lambda_{dyn\_box}(1 - IoU)
++ \lambda_{dyn\_cls}\mathcal{L}_{BCE}^{cls}
+\]
+
+最终超参数为：
+
+\[
+\lambda_{dyn\_box}=3.0,\quad
+\lambda_{dyn\_cls}=1.0
+\]
+
+所以：
+
+\[
+\text{cost}
+= 3.0(1 - IoU)
++ 1.0\mathcal{L}_{BCE}^{cls}
+\]
+
+其中 $IoU$ 是候选预测框和当前 GT box 的交并比，$\mathcal{L}_{BCE}^{cls}$ 是候选分类 logits 与 GT one-hot 类别之间的 BCE。
+
+然后按 cost 从小到大排序，每个 GT 最多选：
+
+\[
+\texttt{dynamic\_topk}=2
+\]
+
+个正样本。
+
+如果某个 slot 没有被选为正样本，但它与某个 GT 的 IoU 较高，则不会被当成普通背景惩罚。最终阈值为：
+
+\[
+\texttt{dynamic\_ignore\_iou}=0.5
+\]
+
+也就是：
+
+\[
+IoU \geq 0.5
+\]
+
+但未被选中的 slot 会被从 no-object loss 中忽略。
+
+\section{Box Loss：GIoU Loss}
+
+记动态分配后的正样本集合为 $\mathcal{P}$。对于每个正样本 $i$，模型预测框为：
+
+\[
+\hat{b}_i
+\]
+
+对应 GT 框为：
+
+\[
+b_i
+\]
+
+我们使用 GIoU 作为定位质量度量，box loss 为：
+
+\[
+\mathcal{L}_{box}
+=
+\frac{1}{|\mathcal{P}|}
+\sum_{i \in \mathcal{P}}
+\left[
+1 - GIoU(\hat{b}_i, b_i)
+\right]
+\]
+
+当预测框越接近 GT 框时：
+
+\[
+GIoU(\hat{b}_i,b_i) \to 1
+\]
+
+因此：
+
+\[
+1 - GIoU(\hat{b}_i,b_i) \to 0
+\]
+
+box loss 越小。
+
+\section{Objectness Loss：IoU Soft Target BCE}
+
+objectness 表示当前 slot 是否包含目标，以及目标框质量是否可靠。
+
+最终我们不是把正样本 objectness target 固定为 1，而是使用当前预测框和 GT 的 IoU 作为 soft target：
+
+\[
+q_i = \text{clamp}(IoU(\hat{b}_i,b_i),\ 0.05,\ 1.0)
+\]
+
+其中：
+
+\[
+\texttt{soft\_objectness\_min}=0.05
+\]
+
+这样设计的原因是：如果训练早期预测框很差，IoU 可能非常低。最低值 0.05 可以避免正样本被压成接近背景。
+
+正样本 objectness loss 为：
+
+\[
+\mathcal{L}_{obj}^{pos}
+=
+\frac{1}{|\mathcal{P}|}
+\sum_{i \in \mathcal{P}}
+BCEWithLogits(o_i, q_i)
+\]
+
+其中 $o_i$ 是 objectness logit。
+
+负样本集合记为 $\mathcal{N}$。负样本 objectness target 为 0：
+
+\[
+\mathcal{L}_{obj}^{neg}
+=
+\frac{1}{|\mathcal{N}|}
+\sum_{j \in \mathcal{N}}
+BCEWithLogits(o_j, 0)
+\]
+
+所以：
+
+\[
+\mathcal{L}_{obj}
+=
+\mathcal{L}_{obj}^{pos}
++ \lambda_{noobj}\mathcal{L}_{obj}^{neg}
+\]
+
+最终：
+
+\[
+\lambda_{noobj}=1.0
+\]
+
+\section{Classification Loss：Quality BCE}
+
+最终分类 loss 使用：
+
+\[
+\texttt{cls\_loss\_mode = quality\_bce}
+\]
+
+分类仍然使用 BCE，但 target 不是普通 one-hot，而是 IoU quality target。
+
+记类别数为：
+
+\[
+C=80
+\]
+
+对于正样本 $i$，GT 类别为 $c_i$。分类 target 为：
+
+\[
+t_{i,k}
+=
+\begin{cases}
+IoU(\hat{b}_i,b_i), & k = c_i \\
+0, & k \neq c_i
+\end{cases}
+\]
+
+因此分类 loss 为：
+
+\[
+\mathcal{L}_{cls}
+=
+\frac{1}{|\mathcal{P}|C}
+\sum_{i \in \mathcal{P}}
+\sum_{k=1}^{C}
+BCEWithLogits(s_{i,k}, t_{i,k})
+\]
+
+其中 $s_{i,k}$ 是第 $i$ 个正样本在第 $k$ 类上的 class logit。
+
+直观理解：
+
+\begin{itemize}[leftmargin=2em]
+    \item 如果预测框质量高，正确类别的 target 更接近 1；
+    \item 如果预测框质量差，正确类别的 target 会降低；
+    \item 这样分类置信度会和定位质量绑定，而不是只要类别对就给满分。
+\end{itemize}
+
+\section{一个具体 Prediction Vector 的 Loss 计算例子}
+
+考虑一个正样本 anchor，其 prediction vector 为：
+
+\[
+\text{pred}
+=
+[
+t_x,t_y,t_w,t_h,\ o,\ s_1,\ldots,s_{80}
+]
+\]
+
+长度为：
+
+\[
+4 + 1 + 80 = 85
+\]
+
+假设经过 bbox decode 后，预测框为：
+
+\[
+\hat{b}=[0.40,0.40,0.70,0.70]
+\]
+
+GT 框为：
+
+\[
+b=[0.45,0.45,0.75,0.75]
+\]
+
+GT 类别为 dog。假设：
+
+\[
+o=1.2
+\]
+
+dog 类 logit 为：
+
+\[
+s_{dog}=2.0
+\]
+
+其他 79 类 logit 都为：
+
+\[
+s_{neg}=-2.0
+\]
+
+\subsection{计算 IoU}
+
+预测框和 GT 框的交集为：
+
+\[
+[0.45,0.45,0.70,0.70]
+\]
+
+交集宽高为：
+
+\[
+0.70-0.45=0.25
+\]
+
+所以交集面积：
+
+\[
+A_{inter}=0.25 \times 0.25=0.0625
+\]
+
+预测框面积：
+
+\[
+A_{\hat{b}}=(0.70-0.40)(0.70-0.40)=0.30 \times 0.30=0.09
+\]
+
+GT 框面积：
+
+\[
+A_b=(0.75-0.45)(0.75-0.45)=0.30 \times 0.30=0.09
+\]
+
+并集面积：
+
+\[
+A_{union}=0.09+0.09-0.0625=0.1175
+\]
+
+因此：
+
+\[
+IoU=\frac{0.0625}{0.1175}\approx 0.5319
+\]
+
+\subsection{计算 GIoU}
+
+最小外接框为：
+
+\[
+[0.40,0.40,0.75,0.75]
+\]
+
+面积：
+
+\[
+A_C=(0.75-0.40)(0.75-0.40)
+=0.35 \times 0.35
+=0.1225
+\]
+
+GIoU 公式为：
+
+\[
+GIoU
+= IoU - \frac{A_C-A_{union}}{A_C}
+\]
+
+代入：
+
+\[
+GIoU
+=0.5319-\frac{0.1225-0.1175}{0.1225}
+\approx 0.4911
+\]
+
+所以 box loss 为：
+
+\[
+\mathcal{L}_{box}
+=1-GIoU
+=1-0.4911
+=0.5089
+\]
+
+\subsection{计算 Objectness Loss}
+
+正样本 objectness target 为：
+
+\[
+q=\text{clamp}(IoU,0.05,1.0)=0.5319
+\]
+
+objectness logit 为：
+
+\[
+o=1.2
+\]
+
+所以正样本 objectness loss 为：
+
+\[
+\mathcal{L}_{obj}^{pos}
+=BCEWithLogits(1.2,0.5319)
+\approx 0.8250
+\]
+
+再假设有一个负样本 slot，其 objectness logit 为：
+
+\[
+o_{neg}=-1.0
+\]
+
+负样本 target 为 0，则：
+
+\[
+\mathcal{L}_{obj}^{neg}
+=BCEWithLogits(-1.0,0)
+\approx 0.3133
+\]
+
+最终：
+
+\[
+\mathcal{L}_{obj}
+=0.8250+1.0 \times 0.3133
+=1.1383
+\]
+
+\subsection{计算 Classification Loss}
+
+分类 target 是 quality target。
+
+对于 dog 类：
+
+\[
+t_{dog}=IoU=0.5319
+\]
+
+对于其他类别：
+
+\[
+t_k=0,\quad k \neq dog
+\]
+
+dog 类 logit 为：
+
+\[
+s_{dog}=2.0
+\]
+
+所以：
+
+\[
+BCEWithLogits(2.0,0.5319)\approx 1.0631
+\]
+
+其他 79 个类别的 logit 都为：
+
+\[
+s_{neg}=-2.0
+\]
+
+target 为 0：
+
+\[
+BCEWithLogits(-2.0,0)\approx 0.1269
+\]
+
+所以 79 个负类总和为：
+
+\[
+79 \times 0.1269 \approx 10.0251
+\]
+
+分类 BCE 总和为：
+
+\[
+1.0631+10.0251=11.0882
+\]
+
+由于分类 loss 要除以类别数 80：
+
+\[
+\mathcal{L}_{cls}
+=\frac{11.0882}{80}
+\approx 0.1386
+\]
+
+\subsection{计算单尺度总 Loss}
+
+最终单尺度 loss 为：
+
+\[
+\mathcal{L}_{scale}
+=5\mathcal{L}_{box}
++\mathcal{L}_{obj}
++\mathcal{L}_{cls}
+\]
+
+代入：
+
+\[
+\mathcal{L}_{scale}
+=5 \times 0.5089
++1.1383
++0.1386
+\]
+
+\[
+\mathcal{L}_{scale}
+=2.5445+1.1383+0.1386
+\approx 3.8214
+\]
+
+这个例子说明：
+
+\begin{itemize}[leftmargin=2em]
+    \item box loss 权重最大，因为 $\lambda_{box}=5.0$；
+    \item objectness 同时考虑正样本和负样本；
+    \item classification 的正确类别 target 是 IoU，而不是固定 1；
+    \item 预测框质量会同时影响 box loss、objectness target 和 classification target。
+\end{itemize}
+
+\section{IoU、GIoU 和 BCE}
+
+\subsection{IoU}
+
+IoU 是 Intersection over Union，中文通常叫交并比。
+
+公式为：
+
+\[
+IoU(A,B)=\frac{|A \cap B|}{|A \cup B|}
+\]
+
+其中：
+
+\begin{itemize}[leftmargin=2em]
+    \item $A$ 是预测框；
+    \item $B$ 是 GT 框；
+    \item $|A \cap B|$ 是两个框的交集面积；
+    \item $|A \cup B|$ 是两个框的并集面积。
+\end{itemize}
+
+IoU 的取值范围是：
+
+\[
+0 \leq IoU \leq 1
+\]
+
+如果两个框完全重合：
+
+\[
+IoU=1
+\]
+
+如果两个框完全不重合：
+
+\[
+IoU=0
+\]
+
+在目标检测中，IoU 衡量的是预测框和真实框的重叠程度。
+
+\subsection{GIoU}
+
+GIoU 是 Generalized IoU。它在 IoU 的基础上加入了最小外接框惩罚。
+
+公式为：
+
+\[
+GIoU(A,B)
+=
+IoU(A,B)
+-
+\frac{|C|-|A\cup B|}{|C|}
+\]
+
+其中 $C$ 是同时包住 $A$ 和 $B$ 的最小外接框。
+
+GIoU 的优势是：
+
+\begin{itemize}[leftmargin=2em]
+    \item 当两个框有重叠时，它和 IoU 一样关注重叠程度；
+    \item 当两个框不重叠时，IoU 恒为 0，无法区分两个框距离远近；
+    \item GIoU 可以通过最小外接框惩罚反映两个框之间的距离关系。
+\end{itemize}
+
+我们的 box loss 使用：
+
+\[
+\mathcal{L}_{box}=1-GIoU
+\]
+
+\subsection{BCE}
+
+BCE 是 Binary Cross Entropy，二分类交叉熵。
+
+如果模型预测概率为 $p$，target 为 $y$，则：
+
+\[
+BCE(p,y)
+=
+-\left[
+y\log(p)
++(1-y)\log(1-p)
+\right]
+\]
+
+其中：
+
+\[
+0 \leq p \leq 1,\quad 0 \leq y \leq 1
+\]
+
+在代码中我们使用的是：
+
+\[
+BCEWithLogits(z,y)
+\]
+
+它的输入 $z$ 是 logit，而不是概率。内部会先做 sigmoid：
+
+\[
+p=\sigma(z)=\frac{1}{1+e^{-z}}
+\]
+
+然后再计算 BCE：
+
+\[
+BCEWithLogits(z,y)
+=
+BCE(\sigma(z),y)
+\]
+
+我们在两个地方使用 BCE：
+
+\begin{itemize}[leftmargin=2em]
+    \item objectness BCE：判断某个 slot 是否有目标，以及目标质量；
+    \item classification BCE：对 COCO 80 个类别分别做二分类预测。
+\end{itemize}
+
+最终我们使用的是 quality target：
+
+\[
+objectness\ target = IoU
+\]
+
+\[
+classification\ positive\ target = IoU
+\]
+
+因此模型学习到的置信度不只是“有没有目标”或“是不是这个类别”，还会和预测框质量绑定。
+
+\section{总结}
+
+最终 loss 的核心设计是：
+
+\begin{enumerate}[leftmargin=2em]
+    \item 使用 dynamic assignment 根据当前预测质量选择正样本；
+    \item 使用 GIoU loss 优化 bbox 定位；
+    \item 使用 IoU soft target 优化 objectness；
+    \item 使用 quality BCE 优化 classification；
+    \item 使用 p4/p5 双尺度 loss 相加作为最终训练目标。
+\end{enumerate}
+
+一句话总结：
+
+\[
+\boxed{
+\mathcal{L}_{total}
+=
+\mathcal{L}_{p4}
++
+\mathcal{L}_{p5},
+\quad
+\mathcal{L}_{scale}
+=
+5\mathcal{L}_{box}
++
+\mathcal{L}_{obj}
++
+\mathcal{L}_{cls}
+}
+\]
+
+\end{document}
