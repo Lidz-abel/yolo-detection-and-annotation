@@ -369,9 +369,9 @@ async function runPredict() {
   try {
     const form = new FormData();
     form.append("image", state.imageFile);
-    form.append("score_threshold", els.scoreInput.value || "0.05");
+    form.append("score_threshold", els.scoreInput.value || "0.5");
     form.append("top_k", els.topKInput.value || "100");
-    form.append("nms_iou_threshold", els.nmsInput.value || "0.5");
+    form.append("nms_iou_threshold", els.nmsInput.value || "0.3");
     const response = await fetch(endpoint("/model_predict"), { method: "POST", body: form });
     const payload = await response.json();
     if (!response.ok || !payload.success) {

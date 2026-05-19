@@ -260,7 +260,7 @@ def model_predict():
     try:
         score_threshold = parse_float(
             request.form.get("score_threshold"),
-            default=0.05,
+            default=0.5,
             name="score_threshold",
             minimum=0.0,
             maximum=1.0,
@@ -274,7 +274,7 @@ def model_predict():
         )
         nms_iou_threshold = parse_float(
             request.form.get("nms_iou_threshold"),
-            default=0.5,
+            default=0.3,
             name="nms_iou_threshold",
             minimum=0.0,
             maximum=1.0,

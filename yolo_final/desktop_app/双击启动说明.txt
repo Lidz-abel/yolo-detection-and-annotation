@@ -1,0 +1,20 @@
+YOLO 检测工具使用说明
+
+一、如果你只是运行现有离线包
+1. 第一次使用需要安装依赖：
+   pip install -r requirements_windows.txt
+
+2. 然后双击：
+   run_yolo_desktop.bat
+
+二、如果你想做成真正的软件 exe
+1. 双击：
+   desktop_app\build_windows_exe.bat
+
+2. 等待构建完成后，双击：
+   dist\YOLO_Detection_Tool\YOLO_Detection_Tool.exe
+
+三、说明
+这个软件不连接服务器，不启动网页服务。
+它会在本机直接加载我们最优实验导出的 TorchScript 模型：
+exports\checkpoint8\best_yolofinal_416_lr7e4.torchscript.pt

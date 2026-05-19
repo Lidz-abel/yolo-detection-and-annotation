@@ -29,9 +29,9 @@ function App() {
   const [imageUrl, setImageUrl] = useState("");
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [scoreThreshold, setScoreThreshold] = useState(0.05);
+  const [scoreThreshold, setScoreThreshold] = useState(0.5);
   const [topK, setTopK] = useState(100);
-  const [nmsIou, setNmsIou] = useState(0.5);
+  const [nmsIou, setNmsIou] = useState(0.3);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"ok" | "bad" | "">("");
   const [isPredicting, setIsPredicting] = useState(false);

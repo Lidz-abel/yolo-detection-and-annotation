@@ -17,5 +17,11 @@ Unified.tar.gz
 runs/
 __pycache__/
 *.pyc
+*.zip
+yolo_final/desktop_app_dist/
+final_report/pictures/1.png
+final_report/pictures/2.png
+final_report/pictures/3.png
+final_report/pictures/ChatGPT Image *.png
 *.md
 !README.md

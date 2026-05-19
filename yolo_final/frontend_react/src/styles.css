@@ -116,11 +116,13 @@ button:disabled {
 }
 
 .layout {
-  min-height: calc(100vh - 72px);
+  height: calc(100vh - 72px);
+  min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 392px;
   gap: 18px;
   padding: 18px;
+  overflow: hidden;
 }
 
 .stage,
@@ -136,6 +138,8 @@ button:disabled {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  height: 100%;
+  min-height: 0;
 }
 
 .toolbar {
@@ -175,9 +179,10 @@ button:disabled {
 
 .canvas {
   flex: 1;
-  min-height: calc(100vh - 166px);
+  min-height: 0;
   display: grid;
-  place-items: center;
+  justify-items: center;
+  align-items: start;
   padding: 16px;
   overflow: hidden;
   background:
@@ -187,6 +192,10 @@ button:disabled {
     linear-gradient(-45deg, transparent 75%, #eef2f7 75%);
   background-size: 24px 24px;
   background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+}
+
+.canvas.empty {
+  place-items: center;
 }
 
 .emptyState {
@@ -285,7 +294,9 @@ button:disabled {
 .sidebar {
   display: flex;
   flex-direction: column;
+  height: 100%;
   min-height: 0;
+  overflow: hidden;
 }
 
 .sidebar section {

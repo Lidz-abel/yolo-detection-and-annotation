@@ -2,6 +2,12 @@
 set -euo pipefail
 
 MODE="${1:-int8-cpu}"
+DEFAULT_YOLO_PYTHON="/home/lidz/miniconda3/envs/yolov1/bin/python"
+if [[ -z "${YOLO_PYTHON:-}" && -x "${DEFAULT_YOLO_PYTHON}" ]]; then
+  YOLO_PYTHON="${DEFAULT_YOLO_PYTHON}"
+else
+  YOLO_PYTHON="${YOLO_PYTHON:-python}"
+fi
 
 export YOLO_BACKEND_CONFIG="${YOLO_BACKEND_CONFIG:-configs/dual_scale_three_box_coco_only_noobj1_416_basic_aug_scale_jitter_50_lr7e4.toml}"
 export YOLO_BACKEND_HOST="${YOLO_BACKEND_HOST:-127.0.0.1}"
@@ -42,6 +48,7 @@ echo "  config: ${YOLO_BACKEND_CONFIG}"
 echo "  device: ${YOLO_BACKEND_DEVICE}"
 echo "  torchscript: ${YOLO_BACKEND_TORCHSCRIPT_MODEL:-}"
 echo "  checkpoint: ${YOLO_BACKEND_CHECKPOINT:-}"
+echo "  python: ${YOLO_PYTHON}"
 echo "  url: http://${YOLO_BACKEND_HOST}:${YOLO_BACKEND_PORT}/"
 
-python backend/app.py
+"${YOLO_PYTHON}" backend/app.py
